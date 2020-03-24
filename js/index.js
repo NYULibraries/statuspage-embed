@@ -1,3 +1,3 @@
-import { alertBanner } from './alertBanner.js';
+import { init as alertBannerInit } from './alertBanner.js';
 
-alertBanner();
+alertBannerInit();

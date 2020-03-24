@@ -2,7 +2,7 @@
 // https://jasmine.github.io/pages/docs_home.html
 
 // Include the alertBanner module
-const alertBanner = require("../dist/alertBanner.js");
+const alertBanner = require("../js/alertBanner.js");
 
 // Mock the DOM with JSDOM
 // https://github.com/jsdom/jsdom
