@@ -1,7 +1,11 @@
+// https://jasmine.github.io/api/3.5/global
+// https://jasmine.github.io/pages/docs_home.html
+
 // Include the alertBanner module
 const alertBanner = require("../dist/alertBanner.js");
 
 // Mock the DOM with JSDOM
+// https://github.com/jsdom/jsdom
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 const { document } = (new JSDOM(`<!DOCTYPE html><html><head></head><body><div class="container"></div></body></html`)).window;

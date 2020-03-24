@@ -19,6 +19,8 @@ Bring up the development environment:
 docker-compose up dev
 ```
 
+and visit `localhost:8080`.
+
 This will also bring up webpack in watch mode so any changes you make to the asset files will recompile live.
 
 ## Test
