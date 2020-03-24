@@ -2,11 +2,11 @@
   "name": "statuspage-embed",
   "description": "Embeddable StatusPage widget for NYU Libraries",
   "scripts": {
-    "test": "jasmine",
     "build": "webpack",
     "build:dev:watch": "NODE_ENV=${NODE_ENV:-development} yarn run build --mode=development --watch --progress",
     "build:dev": "NODE_ENV=${NODE_ENV:-development} yarn run build --mode=development",
-    "build:prod": "NODE_ENV=${NODE_ENV:-production} yarn run build --mode=production"
+    "build:prod": "NODE_ENV=${NODE_ENV:-production} yarn run build --mode=production",
+    "test": "jasmine"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
@@ -18,6 +18,8 @@
     "extract-loader": "^5.0.1",
     "file-loader": "^6.0.0",
     "jasmine": "^3.5.0",
+    "jasmine-node": "^3.0.0",
+    "jsdom": "^16.2.1",
     "node-sass": "^4.13.1",
     "sass-loader": "^8.0.2",
     "webpack": "^4.42.0",

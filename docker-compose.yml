@@ -8,12 +8,13 @@ x-volumes: &default-volumes
     - ./scss:/app/scss
     - ./webpack.config.js:/app/webpack.config.js
     - ./babel.config.js:/app/babel.config.js
+    - ./spec:/app/spec
 
 services:
-  build:
+  compile:
     build: .
     image: statuspage-embed
-    command: yarn build:prod
+    command: ["yarn", "build:prod"]
     environment:
       NODE_ENV: ${NODE_ENV:-production}
     # <<: *default-volumes
@@ -21,7 +22,18 @@ services:
   watch:
     build: .
     image: statuspage-embed
-    command: yarn build:dev:watch
+    command: ["yarn", "build:dev:watch"]
+    <<: *default-volumes
+
+  test:
+    build: .
+    image: statuspage-embed
+    command:
+      - /bin/sh
+      - -c
+      - |
+        yarn build:dev
+        yarn test
     <<: *default-volumes
 
   dev:
