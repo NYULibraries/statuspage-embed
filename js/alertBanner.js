@@ -1,4 +1,4 @@
-const stylesheetUrl = "/dist/index.min.css";
+const stylesheetUrl = '/dist/index.min.css';
 
 const bannerContent = () => {
   // Get this from StatusPage public API
@@ -7,33 +7,34 @@ const bannerContent = () => {
 };
 
 const insertBanner = () => {
-  const alertBannerDiv = document.createElement("aside");
-  alertBannerDiv.setAttribute("id", "nyulibraries-alert-banner");
-  alertBannerDiv.setAttribute("class", "nyulibraries-alert-banner");
-  alertBannerDiv.setAttribute("aria-label", "Service Alert Banner");
+  const alertBannerDiv = document.createElement('aside');
+  alertBannerDiv.setAttribute('id', 'nyulibraries-alert-banner');
+  alertBannerDiv.setAttribute('class', 'nyulibraries-alert-banner');
+  alertBannerDiv.setAttribute('aria-label', 'Service Alert Banner');
   alertBannerDiv.innerHTML = bannerContent();
   document.body.insertBefore(alertBannerDiv, document.body.firstChild);
   return true;
 };
 
 const insertStylesheet = () => {
-  const linkDiv = document.createElement("link");
-  linkDiv.setAttribute("rel", "stylesheet");
-  linkDiv.setAttribute("type", "text/css");
+  const linkDiv = document.createElement('link');
+  linkDiv.setAttribute('rel', 'stylesheet');
+  linkDiv.setAttribute('type', 'text/css');
   // This be configurable?
-  linkDiv.setAttribute("href", stylesheetUrl);
+  linkDiv.setAttribute('href', stylesheetUrl);
   document.getElementsByTagName('head')[0].appendChild(linkDiv);
   return true;
 };
 
 const init = () => {
-  insertStylesheet() && insertBanner();
+  insertStylesheet();
+  insertBanner();
 };
 
-module.exports = { 
+module.exports = {
   init,
   insertStylesheet,
   insertBanner,
   stylesheetUrl,
-  bannerContent
+  bannerContent,
 };
