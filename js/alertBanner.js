@@ -1,17 +1,28 @@
-const stylesheetUrl = '/dist/index.min.css';
+import { https } from 'https';
 
-const bannerContent = () => {
-  // Get this from StatusPage public API
-  // https://nyulibraries.statuspage.io/api
-  return 'As of March 14, NYU Libraries services are all online. Library spaces are closed until further notice. <a href="https://nyulibraries.statuspage.io" target="_blank">See more</a>';
+const stylesheetUrl = '/dist/index.min.css';
+const statuspageUrl = 'https://kyyfz4489y7m.statuspage.io/api/v2/summary.json';
+
+const getStatuspageData = (callback) => {
+  https.get(statuspageUrl, (resp) => {
+    let data = '';
+    resp.on('data', (chunk) => {
+      data += chunk;
+    });
+    resp.on('end', () => {
+      callback(JSON.parse(data));
+    });
+  }).on('error', (err) => {
+    console.log('Unable to load banner data: ' + err.message);
+  });
 };
 
-const insertBanner = () => {
+const insertBanner = (bannerContent) => {
   const alertBannerDiv = document.createElement('aside');
   alertBannerDiv.setAttribute('id', 'nyulibraries-alert-banner');
   alertBannerDiv.setAttribute('class', 'nyulibraries-alert-banner');
   alertBannerDiv.setAttribute('aria-label', 'Service Alert Banner');
-  alertBannerDiv.innerHTML = bannerContent();
+  alertBannerDiv.innerHTML = bannerContent;
   document.body.insertBefore(alertBannerDiv, document.body.firstChild);
   return true;
 };
@@ -28,7 +39,11 @@ const insertStylesheet = () => {
 
 const init = () => {
   insertStylesheet();
-  insertBanner();
+  getStatuspageData((data) => {
+    console.log(data);
+    const message = data.incidents[0].name;
+    insertBanner(message);
+  });
 };
 
 module.exports = {
@@ -36,5 +51,5 @@ module.exports = {
   insertStylesheet,
   insertBanner,
   stylesheetUrl,
-  bannerContent,
+  getStatuspageData,
 };
