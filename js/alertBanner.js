@@ -1,23 +1,18 @@
-import { http as https } from 'http';
-
 const stylesheetUrl = '/dist/index.min.css';
 const statuspageUrl = 'https://kyyfz4489y7m.statuspage.io/api/v2/summary.json';
 
-const getStatuspageData = (callback) => {
-  https.get(statuspageUrl, (resp) => {
-    let data = '';
-    resp.on('data', (chunk) => {
-      data += chunk;
-    });
-    resp.on('end', () => {
-      callback(JSON.parse(data));
-    });
-  }).on('error', (err) => {
-    console.log('Unable to load banner data: ' + err.message);
+export const getStatuspageData = (callback) => {
+  fetch(statuspageUrl).then((response) => {
+    if (response.status >= 200 && response.status < 300) {
+      return response.json();
+    }
+    throw Error(response.statusText);
+  }).then((data) => {
+    callback(data);
   });
 };
 
-const insertBanner = (bannerContent) => {
+export const insertBanner = (bannerContent) => {
   const alertBannerDiv = document.createElement('aside');
   alertBannerDiv.setAttribute('id', 'nyulibraries-alert-banner');
   alertBannerDiv.setAttribute('class', 'nyulibraries-alert-banner');
@@ -27,7 +22,7 @@ const insertBanner = (bannerContent) => {
   return true;
 };
 
-const insertStylesheet = () => {
+export const insertStylesheet = () => {
   const linkDiv = document.createElement('link');
   linkDiv.setAttribute('rel', 'stylesheet');
   linkDiv.setAttribute('type', 'text/css');
@@ -37,20 +32,10 @@ const insertStylesheet = () => {
   return true;
 };
 
-const init = () => {
+export const init = () => {
   insertStylesheet();
   getStatuspageData((data) => {
-    console.log(data);
     const message = data.incidents[0].name;
     insertBanner(message);
   });
 };
-export { init as init };
-
-//module.exports = {
-//  init,
-//  insertStylesheet,
-//  insertBanner,
-//  stylesheetUrl,
-////  getStatuspageData,
-//};
