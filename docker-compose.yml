@@ -23,7 +23,7 @@ services:
     build: .
     image: statuspage-embed
     command: ["yarn", "build:dev:watch"]
-    <<: *default-volumes
+    #<<: *default-volumes
 
   test:
     build: .
@@ -34,7 +34,7 @@ services:
       - |
         yarn build:dev
         yarn test
-    <<: *default-volumes
+        # <<: *default-volumes
 
   dev:
     build:
@@ -45,5 +45,5 @@ services:
       - "8080:8080"
     depends_on:
       - watch
-    <<: *default-volumes
+        #<<: *default-volumes
     
