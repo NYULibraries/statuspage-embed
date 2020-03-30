@@ -1,4 +1,4 @@
-import { https } from 'https';
+import { http as https } from 'http';
 
 const stylesheetUrl = '/dist/index.min.css';
 const statuspageUrl = 'https://kyyfz4489y7m.statuspage.io/api/v2/summary.json';
@@ -45,11 +45,12 @@ const init = () => {
     insertBanner(message);
   });
 };
+export { init as init };
 
-module.exports = {
-  init,
-  insertStylesheet,
-  insertBanner,
-  stylesheetUrl,
-  getStatuspageData,
-};
+//module.exports = {
+//  init,
+//  insertStylesheet,
+//  insertBanner,
+//  stylesheetUrl,
+////  getStatuspageData,
+//};
