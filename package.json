@@ -6,10 +6,11 @@
     "build:dev:watch": "NODE_ENV=${NODE_ENV:-development} yarn run build --mode=development --watch --progress",
     "build:dev": "NODE_ENV=${NODE_ENV:-development} yarn run build --mode=development",
     "build:prod": "NODE_ENV=${NODE_ENV:-production} yarn run build --mode=production",
-    "test": "jasmine"
+    "test": "babel-node spec/run.js"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
+    "@babel/node": "^7.8.7",
     "@babel/plugin-transform-runtime": "^7.9.0",
     "@babel/preset-env": "^7.9.0",
     "babel-loader": "^8.1.0",
