@@ -1,8 +1,12 @@
 env:
   browser: true
   es6: true
+  jasmine: true
 extends:
   - airbnb-base
+  - 'plugin:jasmine/recommended'
+plugins:
+  - jasmine
 globals:
   Atomics: readonly
   SharedArrayBuffer: readonly
