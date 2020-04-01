@@ -22,9 +22,8 @@ const insertBanner = (bannerMessage, linkPath) => {
   link.setAttribute('href', linkPath);
   link.setAttribute('target', '_blank');
   link.innerHTML = 'See more';
-  document.body.insertBefore(alertBannerDiv, document.body.firstChild);
   alertBannerDiv.append(link);
-  return true;
+  return document.body.insertBefore(alertBannerDiv, document.body.firstChild);
 };
 
 const insertStylesheet = () => {
