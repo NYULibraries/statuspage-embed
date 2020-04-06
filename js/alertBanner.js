@@ -12,13 +12,18 @@ const getStatuspageData = (callback) => {
   });
 };
 
-const insertBanner = (bannerContent) => {
+const insertBanner = (bannerMessage, linkPath) => {
   const alertBannerDiv = document.createElement('aside');
   alertBannerDiv.setAttribute('id', 'nyulibraries-alert-banner');
   alertBannerDiv.setAttribute('class', 'nyulibraries-alert-banner');
   alertBannerDiv.setAttribute('aria-label', 'Service Alert Banner');
-  alertBannerDiv.innerHTML = bannerContent;
+  alertBannerDiv.innerHTML = `${bannerMessage}&nbsp;`;
+  const link = document.createElement('a');
+  link.setAttribute('href', linkPath);
+  link.setAttribute('target', '_blank');
+  link.innerHTML = 'See more';
   document.body.insertBefore(alertBannerDiv, document.body.firstChild);
+  alertBannerDiv.append(link);
   return true;
 };
 
@@ -36,7 +41,8 @@ const init = () => {
   insertStylesheet();
   getStatuspageData((data) => {
     const message = data.incidents[0].name;
-    insertBanner(message);
+    const link = data.incidents[0].shortlink;
+    insertBanner(message, link);
   });
 };
 
