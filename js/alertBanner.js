@@ -32,8 +32,7 @@ const insertStylesheet = () => {
   linkDiv.setAttribute('type', 'text/css');
   // This be configurable?
   linkDiv.setAttribute('href', stylesheetUrl);
-  document.getElementsByTagName('head')[0].appendChild(linkDiv);
-  return true;
+  return document.head.appendChild(linkDiv);
 };
 
 const init = () => {
@@ -45,4 +44,4 @@ const init = () => {
   });
 };
 
-export { getStatuspageData, insertBanner, insertStylesheet, init };
+export { getStatuspageData, insertBanner, insertStylesheet, init, stylesheetUrl };
