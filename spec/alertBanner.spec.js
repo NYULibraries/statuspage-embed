@@ -1,9 +1,5 @@
-
 // Include the alertBanner module
 import AlertBanner, { stylesheetUrl } from '../js/alertBanner';
-import getStatuspageData from '../js/getStatuspageData';
-
-jest.mock('../js/getStatuspageData');
 
 let alertBanner;
 
@@ -11,10 +7,6 @@ let alertBanner;
 beforeEach(() => {
   document.body.innerHTML = '<div class="container"></div>';
   alertBanner = new AlertBanner();
-});
-
-describe('#getStatuspageData', () => {
-  it.todo('write test');
 });
 
 describe('#insertBanner', () => {
@@ -54,17 +46,19 @@ describe('#init', () => {
   beforeEach(() => {
     jest.spyOn(AlertBanner, 'insertStylesheet').mockImplementation(() => true);
     jest.spyOn(alertBanner, 'insertBanner').mockImplementation(() => true);
-    mockData = {incidents: [{name: 'Test Name', shortlink: 'http://example.com'}]};
-    getStatuspageData.mockImplementation(() => mockData);
+    mockData = { incidents: [{ name: 'Test Name', shortlink: 'http://example.com' }] };
+    jest.spyOn(alertBanner.statuspage, 'getData').mockImplementation(() => {
+      alertBanner.statuspage.data = mockData;
+    });
   });
 
   it('should call helpers in order', async () => {
     await alertBanner.init();
     expect(AlertBanner.insertStylesheet).toHaveBeenCalled();
-    expect(getStatuspageData).toHaveBeenCalled();
+    expect(alertBanner.statuspage.getData).toHaveBeenCalled();
     expect(alertBanner.insertBanner).toHaveBeenCalled();
   });
-  
+
   it('should assign values', async () => {
     await alertBanner.init();
     expect(alertBanner.message).toEqual(mockData.incidents[0].name);

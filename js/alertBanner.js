@@ -1,9 +1,13 @@
-import getStatuspageData from './getStatuspageData';
+import StatuspageApi from './statuspageApi';
 
 // This be configurable?
 const stylesheetUrl = '/dist/index.min.css';
 
 class AlertBanner {
+  constructor() {
+    this.statuspage = new StatuspageApi();
+  }
+
   insertBanner() {
     const alertBannerDiv = document.createElement('aside');
     alertBannerDiv.setAttribute('id', 'nyulibraries-alert-banner');
@@ -28,15 +32,10 @@ class AlertBanner {
 
   async init() {
     this.constructor.insertStylesheet();
-    const data = await getStatuspageData();
-    this.message = data.incidents[0].name;
-    this.linkPath = data.incidents[0].shortlink;
+    await this.statuspage.getData();
+    this.message = this.statuspage.incidentName();
+    this.linkPath = this.statuspage.incidentUrl();
     return this.insertBanner();
-    //getStatuspageData((data) => {
-    //  const message = data.incidents[0].name;
-    //  const link = data.incidents[0].shortlink;
-    //  return insertBanner(message, link);
-    //});
   }
 }
 
