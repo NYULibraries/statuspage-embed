@@ -1,5 +1,9 @@
+
 // Include the alertBanner module
 import * as alertBanner from '../js/alertBanner';
+import getStatuspageData from '../js/getStatuspageData';
+
+jest.mock('../js/getStatuspageData');
 
 // Setup DOM for testing
 beforeEach(() => {
@@ -40,5 +44,39 @@ describe('#insertStylesheet', () => {
 });
 
 describe('#init', () => {
-  it.todo('write test');
+  let mockData;
+
+  beforeEach(() => {
+    alertBanner.insertStylesheet = jest.fn();
+    alertBanner.insertBanner = jest.fn();
+    //alertBanner.getStatuspageData = jest.fn();
+    //jest.spyOn(alertBanner, 'getStatuspageData').mockImplementation(() => true);
+    //jest.spyOn(alertBanner, 'insertStylesheet').mockImplementation(() => true);
+    //jest.spyOn(alertBanner, 'insertBanner').mockImplementation(() => true);
+    mockData = {incidents: [{name: 'Test Name', shortlink: 'http://example.com'}]};
+    getStatuspageData.mockImplementation(() => mockData);
+  });
+
+  it('should call helpers in order', async () => {
+    //alertBanner.insertStylesheet = jest.fn();
+    //alertBanner.insertBanner = jest.fn();
+    //alertBanner.getStatuspageData = jest.fn();
+    //getStatuspageData.mockImplementation((callback) => {
+    //  callback(mockData);
+    //  expect(alertBanner.insertStylesheet.mock.calls.length).toBe(1);
+    //  expect(alertBanner.insertBanner.mock.calls.length).toBe(1);
+    //  expect(alertBanner.insertBanner).toBeCalled();
+    //  done();
+    //});
+    //expect(alertBanner.insertBanner('blah', 'blah')).toEqual(true);
+    //await expect(alertBanner.init()).resolves.toEqual(true);
+    alertBanner.init();
+    //alertBanner.insertStylesheet();
+    expect(alertBanner.insertStylesheet).toHaveBeenCalled();
+    expect(getStatuspageData).toHaveBeenCalled();
+    //expect(alertBanner.insertStylesheet).toHaveBeenCalled();
+    //expect(alertBanner.insertBanner).toHaveBeenCalled();
+    //expect(alertBanner.insertStylesheet.mock.calls.length).toBe(1);
+    expect(alertBanner.insertBanner).toHaveBeenCalled();
+  });
 });

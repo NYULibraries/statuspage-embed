@@ -1,16 +1,6 @@
-const stylesheetUrl = '/dist/index.min.css';
-const statuspageUrl = 'https://kyyfz4489y7m.statuspage.io/api/v2/summary.json';
+import getStatuspageData from './getStatuspageData';
 
-const getStatuspageData = (callback) => {
-  fetch(statuspageUrl).then((response) => {
-    if (response.status >= 200 && response.status < 300) {
-      return response.json();
-    }
-    throw Error(response.statusText);
-  }).then((data) => {
-    callback(data);
-  });
-};
+const stylesheetUrl = '/dist/index.min.css';
 
 const insertBanner = (bannerMessage, linkPath) => {
   const alertBannerDiv = document.createElement('aside');
@@ -35,13 +25,17 @@ const insertStylesheet = () => {
   return document.head.appendChild(linkDiv);
 };
 
-const init = () => {
+const init = async () => {
   insertStylesheet();
-  getStatuspageData((data) => {
-    const message = data.incidents[0].name;
-    const link = data.incidents[0].shortlink;
-    insertBanner(message, link);
-  });
+  const data = await getStatuspageData();
+  const message = data.incidents[0].name;
+  const link = data.incidents[0].shortlink;
+  return insertBanner(message, link);
+  //getStatuspageData((data) => {
+  //  const message = data.incidents[0].name;
+  //  const link = data.incidents[0].shortlink;
+  //  return insertBanner(message, link);
+  //});
 };
 
-export { getStatuspageData, insertBanner, insertStylesheet, init, stylesheetUrl };
+export { insertBanner, insertStylesheet, init, stylesheetUrl };
