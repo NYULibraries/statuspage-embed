@@ -1,13 +1,12 @@
 // Include the alertBanner module
-import * as alertBanner from '../js/alertBanner';
+import AlertBanner, { stylesheetUrl } from '../js/alertBanner';
+
+let alertBanner;
 
 // Setup DOM for testing
 beforeEach(() => {
   document.body.innerHTML = '<div class="container"></div>';
-});
-
-describe('#getStatuspageData', () => {
-  it.todo('write test');
+  alertBanner = new AlertBanner();
 });
 
 describe('#insertBanner', () => {
@@ -16,7 +15,9 @@ describe('#insertBanner', () => {
   });
 
   it('should insert banner element when called', () => {
-    expect(alertBanner.insertBanner('Some content', 'http://example.com')).toBeTruthy();
+    alertBanner.message = 'Some content';
+    alertBanner.linkPath = 'http://example.com';
+    expect(alertBanner.insertBanner()).toBeTruthy();
     expect(document.body.children.length).toBe(2);
     expect(document.body.firstChild.tagName).toContain('ASIDE');
     expect(document.body.firstChild.classList).toContain('nyulibraries-alert-banner');
@@ -30,15 +31,37 @@ describe('#insertStylesheet', () => {
   });
 
   it('should insert stylesheet when called', () => {
-    expect(alertBanner.insertStylesheet()).toBeTruthy();
+    expect(AlertBanner.insertStylesheet()).toBeTruthy();
     expect(document.head.children.length).toBe(1);
     expect(document.head.firstChild.tagName).toEqual('LINK');
-    expect(document.head.firstChild.href).toEqual(`http://localhost${alertBanner.stylesheetUrl}`);
+    expect(document.head.firstChild.href).toEqual(`http://localhost${stylesheetUrl}`);
     expect(document.head.firstChild.rel).toEqual('stylesheet');
     expect(document.head.firstChild.type).toEqual('text/css');
   });
 });
 
 describe('#init', () => {
-  it.todo('write test');
+  let mockData;
+
+  beforeEach(() => {
+    jest.spyOn(AlertBanner, 'insertStylesheet').mockImplementation(() => true);
+    jest.spyOn(alertBanner, 'insertBanner').mockImplementation(() => true);
+    mockData = { incidents: [{ name: 'Test Name', shortlink: 'http://example.com' }] };
+    jest.spyOn(alertBanner.statuspage, 'getData').mockImplementation(() => {
+      alertBanner.statuspage.data = mockData;
+    });
+  });
+
+  it('should call helpers in order', async () => {
+    await alertBanner.init();
+    expect(AlertBanner.insertStylesheet).toHaveBeenCalled();
+    expect(alertBanner.statuspage.getData).toHaveBeenCalled();
+    expect(alertBanner.insertBanner).toHaveBeenCalled();
+  });
+
+  it('should assign values', async () => {
+    await alertBanner.init();
+    expect(alertBanner.message).toEqual(mockData.incidents[0].name);
+    expect(alertBanner.linkPath).toEqual(mockData.incidents[0].shortlink);
+  });
 });

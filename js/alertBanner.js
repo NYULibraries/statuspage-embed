@@ -1,47 +1,42 @@
+import StatuspageApi from './statuspageApi';
+
+// This be configurable?
 const stylesheetUrl = '/dist/index.min.css';
-const statuspageUrl = 'https://kyyfz4489y7m.statuspage.io/api/v2/summary.json';
 
-const getStatuspageData = (callback) => {
-  fetch(statuspageUrl).then((response) => {
-    if (response.status >= 200 && response.status < 300) {
-      return response.json();
-    }
-    throw Error(response.statusText);
-  }).then((data) => {
-    callback(data);
-  });
-};
+class AlertBanner {
+  constructor() {
+    this.statuspage = new StatuspageApi();
+  }
 
-const insertBanner = (bannerMessage, linkPath) => {
-  const alertBannerDiv = document.createElement('aside');
-  alertBannerDiv.setAttribute('id', 'nyulibraries-alert-banner');
-  alertBannerDiv.setAttribute('class', 'nyulibraries-alert-banner');
-  alertBannerDiv.setAttribute('aria-label', 'Service Alert Banner');
-  alertBannerDiv.innerHTML = `${bannerMessage}&nbsp;`;
-  const link = document.createElement('a');
-  link.setAttribute('href', linkPath);
-  link.setAttribute('target', '_blank');
-  link.innerHTML = 'See more';
-  alertBannerDiv.append(link);
-  return document.body.insertBefore(alertBannerDiv, document.body.firstChild);
-};
+  insertBanner() {
+    const alertBannerDiv = document.createElement('aside');
+    alertBannerDiv.setAttribute('id', 'nyulibraries-alert-banner');
+    alertBannerDiv.setAttribute('class', 'nyulibraries-alert-banner');
+    alertBannerDiv.setAttribute('aria-label', 'Service Alert Banner');
+    alertBannerDiv.innerHTML = `${this.message}&nbsp;`;
+    const link = document.createElement('a');
+    link.setAttribute('href', this.linkPath);
+    link.setAttribute('target', '_blank');
+    link.innerHTML = 'See more';
+    alertBannerDiv.append(link);
+    return document.body.insertBefore(alertBannerDiv, document.body.firstChild);
+  }
 
-const insertStylesheet = () => {
-  const linkDiv = document.createElement('link');
-  linkDiv.setAttribute('rel', 'stylesheet');
-  linkDiv.setAttribute('type', 'text/css');
-  // This be configurable?
-  linkDiv.setAttribute('href', stylesheetUrl);
-  return document.head.appendChild(linkDiv);
-};
+  static insertStylesheet() {
+    const linkDiv = document.createElement('link');
+    linkDiv.setAttribute('rel', 'stylesheet');
+    linkDiv.setAttribute('type', 'text/css');
+    linkDiv.setAttribute('href', stylesheetUrl);
+    return document.head.appendChild(linkDiv);
+  }
 
-const init = () => {
-  insertStylesheet();
-  getStatuspageData((data) => {
-    const message = data.incidents[0].name;
-    const link = data.incidents[0].shortlink;
-    insertBanner(message, link);
-  });
-};
+  async init() {
+    this.constructor.insertStylesheet();
+    await this.statuspage.getData();
+    this.message = this.statuspage.incidentName();
+    this.linkPath = this.statuspage.incidentUrl();
+    return this.insertBanner();
+  }
+}
 
-export { getStatuspageData, insertBanner, insertStylesheet, init, stylesheetUrl };
+export { AlertBanner as default, stylesheetUrl };
