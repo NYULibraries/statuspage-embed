@@ -17,13 +17,13 @@ services:
     command: ["yarn", "build:prod"]
     environment:
       NODE_ENV: ${NODE_ENV:-production}
-    # <<: *default-volumes
+    <<: *default-volumes
   
   watch:
     build: .
     image: statuspage-embed
     command: ["yarn", "build:dev:watch"]
-    #<<: *default-volumes
+    <<: *default-volumes
 
   test:
     build: .
@@ -45,5 +45,5 @@ services:
       - "8080:8080"
     depends_on:
       - watch
-        #<<: *default-volumes
+    <<: *default-volumes
     

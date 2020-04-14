@@ -1,3 +1,3 @@
-import { init as alertBannerInit } from './alertBanner';
+import AlertBanner from './alertBanner';
 
-alertBannerInit();
+(new AlertBanner()).init();
