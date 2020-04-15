@@ -51,18 +51,22 @@ describe('#bannerClass', () => {
 });
 
 describe('#insertBanner', () => {
+  beforeEach(() => {
+    alertBanner.message = 'Some content';
+    alertBanner.linkPath = 'http://example.com';
+    alertBanner.bannerClass = jest.fn(() => ('mock-banner-class1 mock-banner-class2'));
+  });
+
   it('should not be called automatically', () => {
     expect(document.body.children.length).toBe(1);
   });
 
   it('should insert banner element when called', () => {
-    alertBanner.message = 'Some content';
-    alertBanner.linkPath = 'http://example.com';
     expect(alertBanner.insertBanner()).toBeTruthy();
     expect(document.body.children.length).toBe(2);
     expect(document.body.firstChild.tagName).toContain('ASIDE');
-    expect(document.body.firstChild.classList).toContain('nyulibraries-alert-banner');
-    expect(document.body.firstChild.classList).toContain('alert-undefined');
+    expect(document.body.firstChild.classList).toContain('mock-banner-class1');
+    expect(document.body.firstChild.classList).toContain('mock-banner-class2');
     expect(document.body.firstChild.innerHTML).toEqual('Some content&nbsp;<a href="http://example.com" target="_blank">See more</a>');
   });
 });
@@ -84,41 +88,56 @@ describe('#insertStylesheet', () => {
 
 describe('#init', () => {
   let mockData;
-  let body;
+  //let body;
+  let mockHasMatchingHashtag;
 
   beforeEach(() => {
-    jest.spyOn(AlertBanner, 'insertStylesheet').mockImplementation(() => true);
-    jest.spyOn(alertBanner, 'insertBanner').mockImplementation(() => true);
-    body = "There's gonna be a #majoroutage tonight";
-    mockData = { incidents: [{ name: 'Test Name', shortlink: 'http://example.com', incident_updates: [{ body, status: 'identified' }] }] };
-    jest.spyOn(alertBanner.statuspage, 'getData').mockImplementation(() => {
-      alertBanner.statuspage.data = mockData;
-    });
+    AlertBanner.insertStylesheet = jest.fn(() => true);
+    alertBanner.insertBanner = jest.fn(() => true);
+    alertBanner.statuspage.getData = jest.fn(() => true);
+    alertBanner.statuspage.hasMatchingHashtag = jest.fn(() => mockHasMatchingHashtag);
+    alertBanner.statuspage.incidentName = jest.fn(() => 'Incident Name');
+    alertBanner.statuspage.incidentUrl = jest.fn(() => 'http://example.com/path');
+    alertBanner.statuspage.lastStatus = jest.fn(() => 'somestatus');
   });
 
-  it('should call helpers in order', async () => {
-    await alertBanner.init();
-    expect(AlertBanner.insertStylesheet).toHaveBeenCalled();
-    expect(alertBanner.statuspage.getData).toHaveBeenCalled();
-    expect(alertBanner.insertBanner).toHaveBeenCalled();
-  });
-
-  it('should assign values', async () => {
-    await alertBanner.init();
-    expect(alertBanner.message).toEqual(mockData.incidents[0].name);
-    expect(alertBanner.linkPath).toEqual(mockData.incidents[0].shortlink);
-  });
-
-  describe('when body has no hashtag', () => {
+  describe('with matching hashtag', () => {
     beforeEach(() => {
-      body = 'Something without a hashtag';
+      mockHasMatchingHashtag = true;
     });
 
-    xit('should not call insertBanner', async () => {
+    it('should call helpers in order', async () => {
+      await alertBanner.init();
+      expect(AlertBanner.insertStylesheet).toHaveBeenCalled();
+      expect(alertBanner.statuspage.getData).toHaveBeenCalled();
+      expect(alertBanner.insertBanner).toHaveBeenCalled();
+    });
+
+    it('should assign values', async () => {
+      await alertBanner.init();
+      expect(alertBanner.message).toEqual('Incident Name');
+      expect(alertBanner.linkPath).toEqual('http://example.com/path');
+      expect(alertBanner.lastStatus).toEqual('somestatus');
+    });
+  });
+
+  describe('without matching hashtag', () => {
+    beforeEach(() => {
+      mockHasMatchingHashtag = false;
+    });
+
+    it('should not call insertBanner', async () => {
       await alertBanner.init();
       expect(AlertBanner.insertStylesheet).toHaveBeenCalled();
       expect(alertBanner.statuspage.getData).toHaveBeenCalled();
       expect(alertBanner.insertBanner).not.toHaveBeenCalled();
+    });
+
+    it('should not assign values', async () => {
+      await alertBanner.init();
+      expect(alertBanner.message).toBeUndefined();
+      expect(alertBanner.linkPath).toBeUndefined();
+      expect(alertBanner.lastStatus).toBeUndefined();
     });
   });
 });

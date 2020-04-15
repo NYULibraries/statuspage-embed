@@ -7,16 +7,16 @@ class StatuspageApi {
     this.data = await response.json();
   }
 
-  firstIncident() {
+  lastIncident() {
     return this.data.incidents[0];
   }
 
   incidentName() {
-    return this.firstIncident().name;
+    return this.lastIncident().name;
   }
 
   incidentUrl() {
-    return this.firstIncident().shortlink;
+    return this.lastIncident().shortlink;
   }
 
   lastStatus() {
@@ -28,7 +28,7 @@ class StatuspageApi {
   }
 
   lastUpdate() {
-    return this.firstIncident().incident_updates[0];
+    return this.lastIncident().incident_updates[0];
   }
 }
 

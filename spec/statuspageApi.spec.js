@@ -44,13 +44,13 @@ describe('#getData', () => {
   });
 });
 
-describe('#firstIncident', () => {
+describe('#lastIncident', () => {
   beforeEach(() => {
     statuspageApi.data = getMockData();
   });
 
-  it('should return first incident', () => {
-    expect(statuspageApi.firstIncident()).toEqual(getMockData().incidents[0]);
+  it('should return last incident', () => {
+    expect(statuspageApi.lastIncident()).toEqual(getMockData().incidents[0]);
   });
 });
 
@@ -59,7 +59,7 @@ describe('#incidentName', () => {
     statuspageApi.data = getMockData();
   });
 
-  it('should return first incident name', () => {
+  it('should return last incident name', () => {
     expect(statuspageApi.incidentName()).toEqual('First');
   });
 });
@@ -69,7 +69,7 @@ describe('#incidentUrl', () => {
     statuspageApi.data = getMockData();
   });
 
-  it('should return first incident name', () => {
+  it('should return last incident name', () => {
     expect(statuspageApi.incidentUrl()).toEqual('http://example.com/1');
   });
 });
