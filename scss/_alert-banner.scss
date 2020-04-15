@@ -1,4 +1,22 @@
 aside.nyulibraries-alert-banner {
-  background-color: orange;
-  padding: 1em;
+  background-color: #CC0D00;
+  padding: 1em; 
+  font-weight: bold;
+  font-size: 18px;
+
+  &, a {
+    color: #ffffff;
+  }
+}
+
+aside.nyulibraries-alert-banner.alert-orange {
+  background-color: #F89763;
+
+  &, a {
+    color: #333333;
+  }
+}
+
+aside.nyulibraries-alert-banner.alert-green {
+  background-color: #1C7533;
 }

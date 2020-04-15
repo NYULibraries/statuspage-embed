@@ -9,6 +9,47 @@ beforeEach(() => {
   alertBanner = new AlertBanner();
 });
 
+describe('#bannerClass', () => {
+  it('should return red when investigating', () => {
+    alertBanner.lastStatus = 'investigating';
+    expect(alertBanner.bannerClass()).toEqual('nyulibraries-alert-banner alert-red');
+  });
+
+  it('should return orange when identified', () => {
+    alertBanner.lastStatus = 'identified';
+    expect(alertBanner.bannerClass()).toEqual('nyulibraries-alert-banner alert-orange');
+  });
+
+  it('should return orange when in_progress', () => {
+    alertBanner.lastStatus = 'in_progress';
+    expect(alertBanner.bannerClass()).toEqual('nyulibraries-alert-banner alert-orange');
+  });
+
+  it('should return green when monitoring', () => {
+    alertBanner.lastStatus = 'monitoring';
+    expect(alertBanner.bannerClass()).toEqual('nyulibraries-alert-banner alert-green');
+  });
+
+  it('should return green when resolved', () => {
+    alertBanner.lastStatus = 'resolved';
+    expect(alertBanner.bannerClass()).toEqual('nyulibraries-alert-banner alert-green');
+  });
+
+  it('should return green when scheduled', () => {
+    alertBanner.lastStatus = 'scheduled';
+    expect(alertBanner.bannerClass()).toEqual('nyulibraries-alert-banner alert-green');
+  });
+
+  it('should return undefined when unrecognized', () => {
+    alertBanner.lastStatus = 'something else';
+    expect(alertBanner.bannerClass()).toEqual('nyulibraries-alert-banner alert-undefined');
+  });
+
+  it('should return undefined when blank', () => {
+    expect(alertBanner.bannerClass()).toEqual('nyulibraries-alert-banner alert-undefined');
+  });
+});
+
 describe('#insertBanner', () => {
   it('should not be called automatically', () => {
     expect(document.body.children.length).toBe(1);
@@ -21,6 +62,7 @@ describe('#insertBanner', () => {
     expect(document.body.children.length).toBe(2);
     expect(document.body.firstChild.tagName).toContain('ASIDE');
     expect(document.body.firstChild.classList).toContain('nyulibraries-alert-banner');
+    expect(document.body.firstChild.classList).toContain('alert-undefined');
     expect(document.body.firstChild.innerHTML).toEqual('Some content&nbsp;<a href="http://example.com" target="_blank">See more</a>');
   });
 });
@@ -42,11 +84,13 @@ describe('#insertStylesheet', () => {
 
 describe('#init', () => {
   let mockData;
+  let body;
 
   beforeEach(() => {
     jest.spyOn(AlertBanner, 'insertStylesheet').mockImplementation(() => true);
     jest.spyOn(alertBanner, 'insertBanner').mockImplementation(() => true);
-    mockData = { incidents: [{ name: 'Test Name', shortlink: 'http://example.com' }] };
+    body = "There's gonna be a #majoroutage tonight";
+    mockData = { incidents: [{ name: 'Test Name', shortlink: 'http://example.com', incident_updates: [{ body, status: 'identified' }] }] };
     jest.spyOn(alertBanner.statuspage, 'getData').mockImplementation(() => {
       alertBanner.statuspage.data = mockData;
     });
@@ -63,5 +107,18 @@ describe('#init', () => {
     await alertBanner.init();
     expect(alertBanner.message).toEqual(mockData.incidents[0].name);
     expect(alertBanner.linkPath).toEqual(mockData.incidents[0].shortlink);
+  });
+
+  describe('when body has no hashtag', () => {
+    beforeEach(() => {
+      body = 'Something without a hashtag';
+    });
+
+    xit('should not call insertBanner', async () => {
+      await alertBanner.init();
+      expect(AlertBanner.insertStylesheet).toHaveBeenCalled();
+      expect(alertBanner.statuspage.getData).toHaveBeenCalled();
+      expect(alertBanner.insertBanner).not.toHaveBeenCalled();
+    });
   });
 });
