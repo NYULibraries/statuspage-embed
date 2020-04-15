@@ -67,7 +67,7 @@ describe('#insertBanner', () => {
     expect(document.body.firstChild.tagName).toContain('ASIDE');
     expect(document.body.firstChild.classList).toContain('mock-banner-class1');
     expect(document.body.firstChild.classList).toContain('mock-banner-class2');
-    expect(document.body.firstChild.innerHTML).toEqual('Some content&nbsp;<a href="http://example.com" target="_blank">See more</a>');
+    expect(document.body.firstChild.innerHTML).toEqual('Some content <a href="http://example.com" target="_blank">See more</a>');
   });
 });
 
@@ -87,8 +87,6 @@ describe('#insertStylesheet', () => {
 });
 
 describe('#init', () => {
-  let mockData;
-  //let body;
   let mockHasMatchingHashtag;
 
   beforeEach(() => {
