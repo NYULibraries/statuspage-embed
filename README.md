@@ -25,15 +25,19 @@ This will also bring up webpack in watch mode so any changes you make to the ass
 
 ## Test
 
-To run the unit tests with Jasmine:
+To run the unit tests with Jest:
 
 ```
 docker-compose run test
 ```
 
+To watch and re-run tests automatically, after uncommenting the volumes under the `test` service in the docker-compose file:
+
+```
+docker-compose run test jest --watchAll
+```
+
 ## To-do
 
-- Pull status text and link from StatusPage public API based on open issues with certain hash tags
-- Full unit test coverage -- Consider mocha/chai instead of Jasmine if it simplifies
 - Integration tests with karma?
 - Deploy to S3 CDN bucket via CircleCI (see libguides-styles for implementation)
