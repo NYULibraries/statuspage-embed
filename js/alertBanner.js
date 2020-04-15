@@ -2,22 +2,41 @@ import StatuspageApi from './statuspageApi';
 
 // This be configurable?
 const stylesheetUrl = '/dist/index.min.css';
+const colorMapping = {
+  investigating: 'red',
+  identified: 'orange',
+  in_progress: 'orange',
+  monitoring: 'green',
+  resolved: 'green',
+  scheduled: 'green',
+};
+
+const createElementWithAttrs = (tagName, content, attributes) => {
+  const elem = document.createElement(tagName);
+  Object.keys(attributes).forEach((attr) => {
+    elem.setAttribute(attr, attributes[attr]);
+  });
+  elem.textContent = content;
+  return elem;
+};
 
 class AlertBanner {
   constructor() {
     this.statuspage = new StatuspageApi();
   }
 
+  bannerClass() {
+    const color = colorMapping[this.lastStatus];
+    return `nyulibraries-alert-banner alert-${color}`;
+  }
+
   insertBanner() {
-    const alertBannerDiv = document.createElement('aside');
-    alertBannerDiv.setAttribute('id', 'nyulibraries-alert-banner');
-    alertBannerDiv.setAttribute('class', 'nyulibraries-alert-banner');
-    alertBannerDiv.setAttribute('aria-label', 'Service Alert Banner');
-    alertBannerDiv.innerHTML = `${this.message}&nbsp;`;
-    const link = document.createElement('a');
-    link.setAttribute('href', this.linkPath);
-    link.setAttribute('target', '_blank');
-    link.innerHTML = 'See more';
+    const alertBannerDiv = createElementWithAttrs('aside', `${this.message} `, {
+      id: 'nyulibraries-alert-banner',
+      class: this.bannerClass(),
+      'aria-label': 'Service Alert Banner',
+    });
+    const link = createElementWithAttrs('a', 'See more', { href: this.linkPath, target: '_blank' });
     alertBannerDiv.append(link);
     return document.body.insertBefore(alertBannerDiv, document.body.firstChild);
   }
@@ -33,8 +52,12 @@ class AlertBanner {
   async init() {
     this.constructor.insertStylesheet();
     await this.statuspage.getData();
+    if (!this.statuspage.hasMatchingHashtag()) {
+      return false;
+    }
     this.message = this.statuspage.incidentName();
     this.linkPath = this.statuspage.incidentUrl();
+    this.lastStatus = this.statuspage.lastStatus();
     return this.insertBanner();
   }
 }

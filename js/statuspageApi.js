@@ -1,4 +1,5 @@
 const statuspageUrl = 'https://kyyfz4489y7m.statuspage.io/api/v2/summary.json';
+const hashtagRegexp = new RegExp('#(majoroutage|weatherclosure|buildingclosure|scheduledmaintenance)');
 
 class StatuspageApi {
   async getData() {
@@ -6,16 +7,28 @@ class StatuspageApi {
     this.data = await response.json();
   }
 
-  firstIncident() {
+  lastIncident() {
     return this.data.incidents[0];
   }
 
   incidentName() {
-    return this.firstIncident().name;
+    return this.lastIncident().name;
   }
 
   incidentUrl() {
-    return this.firstIncident().shortlink;
+    return this.lastIncident().shortlink;
+  }
+
+  lastStatus() {
+    return this.lastUpdate().status;
+  }
+
+  hasMatchingHashtag() {
+    return !!hashtagRegexp.exec(this.lastUpdate().body);
+  }
+
+  lastUpdate() {
+    return this.lastIncident().incident_updates[0];
   }
 }
 
