@@ -27,6 +27,13 @@ webpack_copy: &webpack_copy
     command: |
       docker cp $(docker ps -a -q --filter name=compile):/app/dist ./
 
+aws_env: &aws_env
+  run:
+    name: Export AWS env vars
+    command: |
+      echo 'export AWS_ACCESS_KEY_ID=${WEB_CDN_AWS_ACCESS_KEY_ID}' >> $BASH_ENV
+      echo 'export AWS_SECRET_ACCESS_KEY=${WEB_CDN_AWS_SECRET_ACCESS_KEY}' >> $BASH_ENV
+
 s3_deploy: &s3_deploy
   aws-s3/sync:
     from: dist
@@ -44,11 +51,12 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - <<: *docker_build
-      - <<: *test
-      - <<: *webpack_compile
-      - <<: *webpack_copy
-      - <<: *s3_deploy
+      - *docker_build
+      - *test
+      - *webpack_compile
+      - *webpack_copy
+      - *aws_env
+      - *s3_deploy
 
 workflows:
   version: 2.1
