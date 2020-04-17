@@ -3,18 +3,63 @@ docker-defaults: &docker-defaults
     - image: quay.io/nyulibraries/circleci_docker:18.06.3-dc-1.24.1-0
   working_directory: ~/app
 
+docker_build: &docker_build
+  run:
+    name: Docker build
+    command: |
+      docker-compose build test compile
+
+test: &test
+  run:
+    name: Test
+    command: |
+      docker-compose run test
+
+webpack_compile: &webpack_copy
+  run:
+    name: Webpack compile
+    command: |
+      docker-compose run compile
+
+webpack_copy: &webpack_copy
+  run:
+    name: Copy Webpack build
+    command: |
+      docker cp $(docker ps -a -q --filter name=compile):/app/dist ./
+
+s3_deploy: &s3_deploy
+  aws-s3/sync:
+    from: dist
+    to: '${S3_URI}/statuspage-embed'
+    arguments: |
+      --delete
+    overwrite: true
+
 version: 2
 jobs:
-  build:
+  build_test_and_deploy:
     <<: *docker-defaults
     steps:
       - checkout
       - setup_remote_docker
-      - run:
-          name: Build
-          command: |
-            docker-compose build
-      - run:
-          name: Test
-          command: |
-            docker-compose run test
+      - *docker_build
+      - *test
+      - *webpack_compile
+      - *webpack_copy
+      - *s3_deploy
+
+workflows:
+  version: 2.1
+  build-and-deploy:
+    jobs:
+      - build_test_and_deploy:
+          context: web-cdn-aws-nyulitsdev
+          filters:
+            branches:
+              ignore:
+                - master
+      - build_test_and_deploy:
+          context: web-cdn-aws-nyulits
+          filters:
+            branches:
+              only: master
