@@ -15,7 +15,7 @@ test: &test
     command: |
       docker-compose run test
 
-webpack_compile: &webpack_copy
+webpack_compile: &webpack_compile
   run:
     name: Webpack compile
     command: |
