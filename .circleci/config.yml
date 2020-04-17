@@ -44,11 +44,11 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - *docker_build
-      - *test
-      - *webpack_compile
-      - *webpack_copy
-      - *s3_deploy
+      - <<: *docker_build
+      - <<: *test
+      - <<: *webpack_compile
+      - <<: *webpack_copy
+      - <<: *s3_deploy
 
 workflows:
   version: 2.1
