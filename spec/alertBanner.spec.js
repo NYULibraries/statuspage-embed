@@ -1,5 +1,5 @@
 // Include the alertBanner module
-import AlertBanner, { stylesheetUrl } from '../js/alertBanner';
+import AlertBanner from '../js/alertBanner';
 
 let alertBanner;
 
@@ -80,7 +80,7 @@ describe('#insertStylesheet', () => {
     expect(AlertBanner.insertStylesheet()).toBeTruthy();
     expect(document.head.children.length).toBe(1);
     expect(document.head.firstChild.tagName).toEqual('LINK');
-    expect(document.head.firstChild.href).toEqual('https://cdn-dev.library.nyu.edu/statuspage-embed/index.min.css');
+    expect(document.head.firstChild.href).toEqual('http://localhost/dist/index.min.css');
     expect(document.head.firstChild.rel).toEqual('stylesheet');
     expect(document.head.firstChild.type).toEqual('text/css');
   });

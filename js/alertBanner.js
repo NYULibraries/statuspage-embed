@@ -1,16 +1,5 @@
 import StatuspageApi from './statuspageApi';
-
-// This be configurable?
-//const stylesheetUrl = '/dist/index.min.css';
-const stylesheetUrl = 'https://cdn-dev.library.nyu.edu/statuspage-embed/index.min.css';
-const colorMapping = {
-  investigating: 'red',
-  identified: 'orange',
-  in_progress: 'orange',
-  monitoring: 'green',
-  resolved: 'green',
-  scheduled: 'green',
-};
+import config from './config';
 
 const createElementWithAttrs = (tagName, content, attributes) => {
   const elem = document.createElement(tagName);
@@ -27,7 +16,7 @@ class AlertBanner {
   }
 
   bannerClass() {
-    const color = colorMapping[this.lastStatus];
+    const color = config.statusToColorMapping[this.lastStatus];
     return `nyulibraries-alert-banner alert-${color}`;
   }
 
@@ -46,7 +35,7 @@ class AlertBanner {
     const linkDiv = document.createElement('link');
     linkDiv.setAttribute('rel', 'stylesheet');
     linkDiv.setAttribute('type', 'text/css');
-    linkDiv.setAttribute('href', stylesheetUrl);
+    linkDiv.setAttribute('href', config.stylesheetUrl);
     return document.head.appendChild(linkDiv);
   }
 
@@ -63,4 +52,4 @@ class AlertBanner {
   }
 }
 
-export { AlertBanner as default, stylesheetUrl };
+export { AlertBanner as default };
