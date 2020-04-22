@@ -17,7 +17,7 @@ services:
     command: ["yarn", "build:prod"]
     environment:
       NODE_ENV: ${NODE_ENV:-production}
-    <<: *default-volumes
+      #<<: *default-volumes
   
   watch:
     build: .
@@ -34,7 +34,7 @@ services:
       - |
         yarn build:dev
         yarn test
-        # <<: *default-volumes
+        #<<: *default-volumes
 
   dev:
     build:

@@ -7,6 +7,10 @@ aside.nyulibraries-alert-banner {
   &, a {
     color: #ffffff;
   }
+
+  a {
+    text-decoration: underline;
+  }
 }
 
 aside.nyulibraries-alert-banner.alert-orange {

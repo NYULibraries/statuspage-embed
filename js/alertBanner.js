@@ -1,7 +1,8 @@
 import StatuspageApi from './statuspageApi';
 
 // This be configurable?
-const stylesheetUrl = '/dist/index.min.css';
+//const stylesheetUrl = '/dist/index.min.css';
+const stylesheetUrl = 'https://cdn-dev.library.nyu.edu/statuspage-embed/index.min.css';
 const colorMapping = {
   investigating: 'red',
   identified: 'orange',
