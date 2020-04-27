@@ -22,6 +22,7 @@ const config = {
   statuspageUrl: 'https://kyyfz4489y7m.statuspage.io/api/v2/summary.json',
 };
 
-config.stylesheetUrl = getBaseUrl() + config.stylesheetPath;
+config.stylesheetUrl = () => (getBaseUrl() + config.stylesheetPath);
+
 
 export { config as default };

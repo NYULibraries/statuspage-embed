@@ -35,7 +35,7 @@ class AlertBanner {
     const linkDiv = document.createElement('link');
     linkDiv.setAttribute('rel', 'stylesheet');
     linkDiv.setAttribute('type', 'text/css');
-    linkDiv.setAttribute('href', config.stylesheetUrl);
+    linkDiv.setAttribute('href', config.stylesheetUrl());
     return document.head.appendChild(linkDiv);
   }
 
