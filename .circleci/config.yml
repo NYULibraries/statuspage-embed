@@ -46,11 +46,31 @@ version: 2.1
 orbs:
   aws-s3: circleci/aws-s3@1.0.11
 jobs:
-  build_test_and_deploy:
+  deploy_dev:
     <<: *docker-defaults
     steps:
       - checkout
       - setup_remote_docker
+      - run:
+          name: Export Dev environment
+          command: |
+            echo 'export DEPLOY_ENV=dev' >> $BASH_ENV
+      - *docker_build
+      - *test
+      - *webpack_compile
+      - *webpack_copy
+      - *aws_env
+      - *s3_deploy
+
+  deploy_prod:
+    <<: *docker-defaults
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Export Dev environment
+          command: |
+            echo 'export DEPLOY_ENV=prod' >> $BASH_ENV
       - *docker_build
       - *test
       - *webpack_compile

@@ -1,8 +1,8 @@
 const getBaseUrl = () => {
   switch (process.env.DEPLOY_ENV) {
-    case 'production':
+    case 'prod':
       return 'https://cdn.library.nyu.edu/statuspage-embed';
-    case 'staging':
+    case 'dev':
       return 'https://cdn-dev.library.nyu.edu/statuspage-embed';
     default:
       return '/dist';
