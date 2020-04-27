@@ -15,11 +15,17 @@ test: &test
     command: |
       docker-compose run test
 
-webpack_compile: &webpack_compile
+webpack_compile_dev: &webpack_compile_dev
   run:
     name: Webpack compile
     command: |
-      docker-compose run compile
+      DEPLOY_ENV=dev docker-compose run compile
+
+webpack_compile_prod: &webpack_compile_prod
+  run:
+    name: Webpack compile
+    command: |
+      DEPLOY_ENV=prod docker-compose run compile
 
 webpack_copy: &webpack_copy
   run:
@@ -51,13 +57,9 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run:
-          name: Export Dev environment
-          command: |
-            echo 'export DEPLOY_ENV=dev' >> $BASH_ENV
       - *docker_build
       - *test
-      - *webpack_compile
+      - *webpack_compile_dev
       - *webpack_copy
       - *aws_env
       - *s3_deploy
@@ -67,13 +69,9 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run:
-          name: Export Dev environment
-          command: |
-            echo 'export DEPLOY_ENV=prod' >> $BASH_ENV
       - *docker_build
       - *test
-      - *webpack_compile
+      - *webpack_compile_prod
       - *webpack_copy
       - *aws_env
       - *s3_deploy
