@@ -14,10 +14,8 @@ services:
   compile:
     build: .
     image: statuspage-embed
-    command: ["yarn", "build:prod"]
-    environment:
-      NODE_ENV: ${NODE_ENV:-production}
-      #<<: *default-volumes
+    entrypoint: ["yarn"]
+    #<<: *default-volumes
   
   watch:
     build: .

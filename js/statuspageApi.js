@@ -1,9 +1,10 @@
-const statuspageUrl = 'https://kyyfz4489y7m.statuspage.io/api/v2/summary.json';
+import config from './config';
+
 const hashtagRegexp = new RegExp('#(majoroutage|weatherclosure|buildingclosure|scheduledmaintenance)');
 
 class StatuspageApi {
   async getData() {
-    const response = await fetch(statuspageUrl);
+    const response = await fetch(config.statuspageUrl);
     this.data = await response.json();
   }
 

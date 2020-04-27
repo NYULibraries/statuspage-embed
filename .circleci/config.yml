@@ -15,12 +15,6 @@ test: &test
     command: |
       docker-compose run test
 
-webpack_compile: &webpack_compile
-  run:
-    name: Webpack compile
-    command: |
-      docker-compose run compile
-
 webpack_copy: &webpack_copy
   run:
     name: Copy Webpack build
@@ -46,14 +40,32 @@ version: 2.1
 orbs:
   aws-s3: circleci/aws-s3@1.0.11
 jobs:
-  build_test_and_deploy:
+  deploy_dev:
     <<: *docker-defaults
     steps:
       - checkout
       - setup_remote_docker
       - *docker_build
       - *test
-      - *webpack_compile
+      - run:
+          name: Webpack compile stage
+          command: |
+            docker-compose run compile build:stage
+      - *webpack_copy
+      - *aws_env
+      - *s3_deploy
+
+  deploy_prod:
+    <<: *docker-defaults
+    steps:
+      - checkout
+      - setup_remote_docker
+      - *docker_build
+      - *test
+      - run:
+          name: Webpack compile prod 
+          command: |
+            docker-compose run compile build:prod
       - *webpack_copy
       - *aws_env
       - *s3_deploy
@@ -62,13 +74,13 @@ workflows:
   version: 2.1
   build-and-deploy:
     jobs:
-      - build_test_and_deploy:
+      - deploy_dev:
           context: web-cdn-aws-nyulitsdev
           filters:
             branches:
               ignore:
                 - master
-      - build_test_and_deploy:
+      - deploy_prod:
           context: web-cdn-aws-nyulits
           filters:
             branches:
