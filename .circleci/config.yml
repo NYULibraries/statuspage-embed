@@ -15,18 +15,6 @@ test: &test
     command: |
       docker-compose run test
 
-webpack_compile_dev: &webpack_compile_dev
-  run:
-    name: Webpack compile
-    command: |
-      DEPLOY_ENV=dev docker-compose run compile
-
-webpack_compile_prod: &webpack_compile_prod
-  run:
-    name: Webpack compile
-    command: |
-      DEPLOY_ENV=prod docker-compose run compile
-
 webpack_copy: &webpack_copy
   run:
     name: Copy Webpack build
@@ -59,7 +47,10 @@ jobs:
       - setup_remote_docker
       - *docker_build
       - *test
-      - *webpack_compile_dev
+      - run:
+        name: Webpack compile stage
+        command: |
+          docker-compose run compile build:stage
       - *webpack_copy
       - *aws_env
       - *s3_deploy
@@ -71,7 +62,10 @@ jobs:
       - setup_remote_docker
       - *docker_build
       - *test
-      - *webpack_compile_prod
+      - run:
+        name: Webpack compile prod 
+        command: |
+          docker-compose run compile build:prod
       - *webpack_copy
       - *aws_env
       - *s3_deploy
