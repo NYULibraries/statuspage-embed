@@ -82,13 +82,13 @@ workflows:
   version: 2.1
   build-and-deploy:
     jobs:
-      - build_test_and_deploy:
+      - deploy_dev:
           context: web-cdn-aws-nyulitsdev
           filters:
             branches:
               ignore:
                 - master
-      - build_test_and_deploy:
+      - deploy_prod:
           context: web-cdn-aws-nyulits
           filters:
             branches:
