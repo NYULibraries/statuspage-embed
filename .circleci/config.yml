@@ -48,9 +48,9 @@ jobs:
       - *docker_build
       - *test
       - run:
-        name: Webpack compile stage
-        command: |
-          docker-compose run compile build:stage
+          name: Webpack compile stage
+          command: |
+            docker-compose run compile build:stage
       - *webpack_copy
       - *aws_env
       - *s3_deploy
@@ -63,9 +63,9 @@ jobs:
       - *docker_build
       - *test
       - run:
-        name: Webpack compile prod 
-        command: |
-          docker-compose run compile build:prod
+          name: Webpack compile prod 
+          command: |
+            docker-compose run compile build:prod
       - *webpack_copy
       - *aws_env
       - *s3_deploy
