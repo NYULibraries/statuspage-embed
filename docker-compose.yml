@@ -14,7 +14,8 @@ services:
   compile:
     build: .
     image: statuspage-embed
-    command: ["yarn", "build:prod"]
+    #command: ["yarn", "build:prod"]
+    command: ["/bin/sh", "-c", "echo $DEPLOY_ENV && yarn build:prod"]
     environment:
       NODE_ENV: ${NODE_ENV:-production}
       DEPLOY_ENV: ${DEPLOY_ENV}
