@@ -1,3 +1,4 @@
+// determine base url for stylesheet based on environment
 const getBaseUrl = () => {
   switch (process.env.DEPLOY_ENV) {
     case 'production':
@@ -9,6 +10,7 @@ const getBaseUrl = () => {
   }
 };
 
+// need to factor this out into separate yaml/json file
 const config = {
   statusToColorMapping: {
     investigating: 'red',

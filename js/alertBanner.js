@@ -43,7 +43,7 @@ class AlertBanner {
     return document.head.appendChild(linkDiv);
   }
 
-  // initialize banner: pull latest statuspage data, and insert if matching matching hastag
+  // initialize banner: pull latest statuspage data, and insert if matching hastag
   async init() {
     this.constructor.insertStylesheet();
     await this.statuspage.getData();
