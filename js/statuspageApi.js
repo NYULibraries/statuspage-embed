@@ -24,10 +24,12 @@ class StatuspageApi {
     return this.lastUpdate().status;
   }
 
+  // true if matches hashtag from regexp above
   hasMatchingHashtag() {
     return !!hashtagRegexp.exec(this.lastUpdate().body);
   }
 
+  // private / protected method
   lastUpdate() {
     return this.lastIncident().incident_updates[0];
   }
