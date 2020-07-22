@@ -3,11 +3,14 @@ import StatuspageApi from '../js/statuspageApi';
 let statuspageApi;
 // Define mock data as function so we can edit incident update body for certain tests
 let body = 'Test body #majoroutage';
+let firstIncidentsDate = "2020-07-15T09:11:40.438-04:00" 
+let firstMaintenanceDate = "2020-07-15T09:11:40.438-04:00"
 const getMockData = () => ({
   incidents: [
     {
       name: 'First',
       shortlink: 'http://example.com/1',
+      updated_at: firstIncidentsDate,
       incident_updates: [
         { body, status: 'identified' },
         { body: 'Fake body', status: 'monitoring' },
@@ -16,12 +19,33 @@ const getMockData = () => ({
     {
       name: 'Second',
       shortlink: 'http://example.com/2',
+      updated_at: '2019-07-01T09:11:40.438-04:00',
+      incident_updates: [
+        { body: 'Another fake body', status: 'investigating' },
+        { body: 'Fake body', status: 'monitoring' },
+      ],
+    },
+  ],
+  scheduled_maintenances: [
+    {
+      name: 'FirstMaintenance',
+      shortlink: 'http://example.com/1',
+      updated_at: firstMaintenanceDate,
+      incident_updates: [
+        { body: '#scheduledmaintenance', status: 'identified' },
+        { body: 'Fake body', status: 'in_progress' },
+      ],
+    },
+    {
+      name: 'SecondMaintenance',
+      shortlink: 'http://example.com/2',
+      updated_at: '2019-07-01T09:11:40.438-04:00',
       incident_updates: [
         { body: 'Another fake body', status: 'scheduled' },
         { body: 'Fake body', status: 'monitoring' },
       ],
     },
-  ],
+  ]
 });
 
 beforeEach(() => {
@@ -101,7 +125,7 @@ describe('#hasMatchingHashtag', () => {
       statuspageApi.data = getMockData();
     });
 
-    it('should return truthy', () => {
+    it('should return falsy', () => {
       expect(statuspageApi.hasMatchingHashtag()).toBeFalsy();
     });
   });
@@ -112,7 +136,7 @@ describe('#hasMatchingHashtag', () => {
       statuspageApi.data = getMockData();
     });
 
-    it('should return truthy', () => {
+    it('should return falsy', () => {
       expect(statuspageApi.hasMatchingHashtag()).toBeFalsy();
     });
   });
@@ -123,8 +147,28 @@ describe('#hasMatchingHashtag', () => {
       statuspageApi.data = getMockData();
     });
 
-    it('should return truthy', () => {
+    it('should return falsy', () => {
       expect(statuspageApi.hasMatchingHashtag()).toBeFalsy();
     });
   });
 });
+
+describe('#scheduledMaintenances', () => {
+  describe('prioritizes whichever is the most recent incident', () => {
+    beforeEach(() => {
+      firstMaintenanceDate = "2020-07-20T09:11:40.438-04:00"
+      statuspageApi.data = getMockData();
+    });
+
+    it('should return the most recent alert, regardless of type', () => {
+      expect(statuspageApi.incidentName()).toEqual('FirstMaintenance');
+    })
+  })
+  describe('if two alerts occur at the same time, prioritize incidents', () => {
+    beforeEach(() => {
+      firstMaintenanceDate = "2020-07-20T09:11:40.438-04:00"
+      statuspageApi.data = getMockData();
+    });
+  })
+})
+

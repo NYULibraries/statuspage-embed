@@ -9,7 +9,12 @@ class StatuspageApi {
   }
 
   lastIncident() {
-    return this.data.incidents[0];
+    const incidents = this.data.incidents[0]
+    const scheduledMaintenances = this.data.scheduled_maintenances[0]
+    if (incidents.updated_at < scheduledMaintenances.updated_at){
+      return scheduledMaintenances
+    }
+      return incidents
   }
 
   incidentName() {
