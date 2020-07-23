@@ -9,12 +9,33 @@ class StatuspageApi {
   }
 
   lastIncident() {
-    const incidents = this.data.incidents[0]
-    const scheduledMaintenances = this.data.scheduled_maintenances[0]
-    if (incidents.updated_at < scheduledMaintenances.updated_at){
-      return scheduledMaintenances
+    let chosenIncident = undefined;
+    let incidents = this.data.incidents[0];
+    let scheduledMaintenances;
+
+    // if scheduled_maintenances has a relevant hashtag, add to the scheduledMaintenances variable
+    // if not, the chosenIncident is automatically incidents
+    hashtagRegexp.test(
+      this.data.scheduled_maintenances[0].incident_updates[0].body
+    )
+      ? (scheduledMaintenances = this.data.scheduled_maintenances[0])
+      : (chosenIncident = incidents);
+
+    // if chosenIncident is still undefined
+    if (chosenIncident === undefined) {
+
+      // check if they were updated at the same time
+      if (incidents.updated_at == scheduledMaintenances.updated_at){
+        chosenIncident = incidents
+      } else {
+
+        // else, check which one was the most recent
+        incidents.updated_at < scheduledMaintenances.updated_at
+        ? (chosenIncident = scheduledMaintenances)
+        : (chosenIncident = incidents);
+      }
     }
-      return incidents
+    return chosenIncident;
   }
 
   incidentName() {
