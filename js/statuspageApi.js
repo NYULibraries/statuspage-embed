@@ -15,7 +15,7 @@ class StatuspageApi {
     let incidents = this.data.incidents[0];
     let scheduledMaintenances;
     let incidentUpdated;
-    let maintenancesUpdated;
+    let maintenanceUpdated;
 
     // if scheduled_maintenances has a relevant hashtag, add to the scheduledMaintenances variable
     // if not, the chosenIncident is automatically incidents
@@ -31,9 +31,11 @@ class StatuspageApi {
     }
 
     if (chosenIncident === undefined) {
+      incidentUpdated = incidents.updated_at.slice(0,19)
+      maintenanceUpdated = scheduledMaintenances.updated_at.slice(0,19)
 
       // check if they were updated at the same time
-      if (incidents.updated_at === scheduledMaintenances.updated_at) {
+      if (incidentUpdated === maintenanceUpdated) {
         chosenIncident = incidents;
       } else {
         // else, check which one was the most recent
