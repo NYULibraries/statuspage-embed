@@ -1,7 +1,7 @@
 import config from './config';
 
 const hashtagRegexp = new RegExp(
-  '#(majoroutage|weatherclosure|buildingclosure|scheduledmaintenance)'
+  '#(majoroutage|weatherclosure|buildingclosure|scheduledmaintenance)',
 );
 
 class StatuspageApi {
@@ -11,28 +11,21 @@ class StatuspageApi {
   }
 
   lastIncident() {
-    let chosenIncident = undefined;
-    let incidents = this.data.incidents[0];
-    let scheduledMaintenances;
+    const incidents = this.data.incidents[0];
+    const scheduledMaintenances = this.doesScheduledMaintenanceMatchHashtag();
+    let chosenIncident;
     let incidentUpdated;
     let maintenanceUpdated;
 
     // if scheduled_maintenances has a relevant hashtag, add to the scheduledMaintenances variable
     // if not, the chosenIncident is automatically incidents
-    if (
-      this.data.scheduled_maintenances === undefined ||
-      !hashtagRegexp.test(
-        this.data.scheduled_maintenances[0].incident_updates[0].body
-      )
-    ) {
+    if (!scheduledMaintenances) {
       chosenIncident = incidents;
-    } else {
-      scheduledMaintenances = this.data.scheduled_maintenances[0];
     }
 
     if (chosenIncident === undefined) {
-      incidentUpdated = incidents.updated_at.slice(0,19)
-      maintenanceUpdated = scheduledMaintenances.updated_at.slice(0,19)
+      incidentUpdated = incidents.updated_at.slice(0, 19);
+      maintenanceUpdated = scheduledMaintenances.updated_at.slice(0, 19);
 
       // check if they were updated at the same time
       if (incidentUpdated === maintenanceUpdated) {
@@ -62,6 +55,13 @@ class StatuspageApi {
   // true if matches hashtag from regexp above
   hasMatchingHashtag() {
     return !!hashtagRegexp.exec(this.lastUpdate().body);
+  }
+
+  doesScheduledMaintenanceMatchHashtag() {
+    if (hashtagRegexp.test(this.data.scheduled_maintenances[0].incident_updates[0].body)) {
+      return this.data.scheduled_maintenances[0];
+    }
+    return false;
   }
 
   // private / protected method

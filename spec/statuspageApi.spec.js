@@ -4,8 +4,8 @@ let statuspageApi;
 // Define mock data as function so we can edit incident update body for certain tests
 let body = 'Test body #majoroutage';
 let scheduledMaintenanceBody = 'Test';
-let firstIncidentsDate = '2020-07-15T09:11:40.438-04:00' 
-let firstMaintenanceDate = '2020-07-15T09:11:40.438-04:00'
+let firstIncidentsDate = '2020-07-15T09:11:40.438-04:00';
+let firstMaintenanceDate = '2020-07-15T09:11:40.438-04:00';
 const getMockData = () => ({
   incidents: [
     {
@@ -46,7 +46,7 @@ const getMockData = () => ({
         { body: 'Fake body', status: 'monitoring' },
       ],
     },
-  ]
+  ],
 });
 
 beforeEach(() => {
@@ -154,29 +154,53 @@ describe('#hasMatchingHashtag', () => {
   });
 });
 
+describe('#doesScheduledMaintenanceMatchHashtag', () => {
+  describe('with no hashtag in body', () => {
+    beforeEach(() => {
+      statuspageApi.data = getMockData();
+    });
+
+    it('should return falsy', () => {
+      expect(statuspageApi.doesScheduledMaintenanceMatchHashtag()).toBeFalsy();
+    });
+  });
+
+  describe('with matching hashtag in body', () => {
+    beforeEach(() => {
+      scheduledMaintenanceBody = '#scheduledmaintenance';
+      statuspageApi.data = getMockData();
+    });
+
+    it('should return truthy', () => {
+      expect(statuspageApi.doesScheduledMaintenanceMatchHashtag()).toBeTruthy();
+    });
+  });
+});
+
+
 describe('#scheduledMaintenances', () => {
   describe('prioritizes whichever is the most recent incident', () => {
     beforeEach(() => {
-      firstMaintenanceDate = '2020-07-20T09:11:40.438-04:00'
-      scheduledMaintenanceBody = '#scheduledmaintenance'
+      firstMaintenanceDate = '2020-07-20T09:11:40.438-04:00';
+      scheduledMaintenanceBody = '#scheduledmaintenance';
       statuspageApi.data = getMockData();
     });
 
     it('should return the most recent alert, regardless of type', () => {
       expect(statuspageApi.incidentName()).toEqual('FirstMaintenance');
-    })
-  })
+    });
+  });
+
   describe('if two alerts occur at the same time, prioritize incidents', () => {
     beforeEach(() => {
-      firstIncidentsDate = '2020-07-20T09:11:40.438-04:00'
-      firstMaintenanceDate = '2020-07-20T09:11:40.438-04:00'
-      scheduledMaintenanceBody = '#scheduledmaintenance'
+      firstIncidentsDate = '2020-07-20T09:11:40.438-04:00';
+      firstMaintenanceDate = '2020-07-20T09:11:40.438-04:00';
+      scheduledMaintenanceBody = '#scheduledmaintenance';
       statuspageApi.data = getMockData();
     });
 
-    it('should return incidents instead of scheduled maintenance', ()=> {
+    it('should return incidents instead of scheduled maintenance', () => {
       expect(statuspageApi.incidentName()).toEqual('FirstIncident');
-    })
-  })
-})
-
+    });
+  });
+});
