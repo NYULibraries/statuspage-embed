@@ -69,13 +69,13 @@ describe('#getData', () => {
   });
 });
 
-describe('#lastIncident', () => {
+describe('#mostRecentIncident', () => {
   beforeEach(() => {
     statuspageApi.data = getMockData();
   });
 
   it('should return last incident', () => {
-    expect(statuspageApi.lastIncident()).toEqual(getMockData().incidents[0]);
+    expect(statuspageApi.mostRecentIncident()).toEqual(getMockData().incidents[0]);
   });
 });
 

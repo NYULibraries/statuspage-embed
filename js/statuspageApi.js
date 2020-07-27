@@ -10,12 +10,12 @@ class StatuspageApi {
     this.data = await response.json();
   }
 
-  lastIncident() {
+  mostRecentIncident() {
     const incidents = this.data.incidents[0];
     const scheduledMaintenances = this.doesScheduledMaintenanceMatchHashtag();
     let chosenIncident;
-    let incidentUpdated;
-    let maintenanceUpdated;
+    let incidentUpdatedAt;
+    let maintenanceUpdatedAt;
 
     // if scheduled_maintenances has a relevant hashtag, add to the scheduledMaintenances variable
     // if not, the chosenIncident is automatically incidents
@@ -24,15 +24,15 @@ class StatuspageApi {
     }
 
     if (chosenIncident === undefined) {
-      incidentUpdated = incidents.updated_at.slice(0, 19);
-      maintenanceUpdated = scheduledMaintenances.updated_at.slice(0, 19);
+      incidentUpdatedAt = incidents.updated_at.slice(0, 19);
+      maintenanceUpdatedAt = scheduledMaintenances.updated_at.slice(0, 19);
 
       // check if they were updated at the same time
-      if (incidentUpdated === maintenanceUpdated) {
+      if (incidentUpdatedAt === maintenanceUpdatedAt) {
         chosenIncident = incidents;
       } else {
         // else, check which one was the most recent
-        incidents.updated_at < scheduledMaintenances.updated_at
+        incidentUpdatedAt < maintenanceUpdatedAt
           ? (chosenIncident = scheduledMaintenances)
           : (chosenIncident = incidents);
       }
@@ -41,11 +41,11 @@ class StatuspageApi {
   }
 
   incidentName() {
-    return this.lastIncident().name;
+    return this.mostRecentIncident().name;
   }
 
   incidentUrl() {
-    return this.lastIncident().shortlink;
+    return this.mostRecentIncident().shortlink;
   }
 
   lastStatus() {
@@ -66,7 +66,7 @@ class StatuspageApi {
 
   // private / protected method
   lastUpdate() {
-    return this.lastIncident().incident_updates[0];
+    return this.mostRecentIncident().incident_updates[0];
   }
 }
 
