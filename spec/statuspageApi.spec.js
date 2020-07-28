@@ -177,8 +177,7 @@ describe('#doesScheduledMaintenanceMatchHashtag', () => {
   });
 });
 
-
-describe('#scheduledMaintenances', () => {
+describe('#compareTime', () => {
   describe('prioritizes whichever is the most recent incident', () => {
     beforeEach(() => {
       firstMaintenanceDate = '2020-07-20T09:11:40.438-04:00';
@@ -187,7 +186,8 @@ describe('#scheduledMaintenances', () => {
     });
 
     it('should return the most recent alert, regardless of type', () => {
-      expect(statuspageApi.incidentName()).toEqual('FirstMaintenance');
+      const test = statuspageApi.compareTime();
+      expect(test.name).toEqual('FirstMaintenance');
     });
   });
 
@@ -200,7 +200,7 @@ describe('#scheduledMaintenances', () => {
     });
 
     it('should return incidents instead of scheduled maintenance', () => {
-      expect(statuspageApi.incidentName()).toEqual('FirstIncident');
+      expect(statuspageApi.compareTime().name).toEqual('FirstIncident');
     });
   });
 });

@@ -14,29 +14,13 @@ class StatuspageApi {
     const incidents = this.data.incidents[0];
     const scheduledMaintenances = this.doesScheduledMaintenanceMatchHashtag();
     let chosenIncident;
-    let incidentUpdatedAt;
-    let maintenanceUpdatedAt;
 
     // if scheduled_maintenances has a relevant hashtag, add to the scheduledMaintenances variable
     // if not, the chosenIncident is automatically incidents
-    if (!scheduledMaintenances) {
-      chosenIncident = incidents;
-    }
+    if (!scheduledMaintenances) chosenIncident = incidents;
 
-    if (chosenIncident === undefined) {
-      incidentUpdatedAt = incidents.updated_at.slice(0, 19);
-      maintenanceUpdatedAt = scheduledMaintenances.updated_at.slice(0, 19);
+    if (chosenIncident === undefined) chosenIncident = this.compareTime();
 
-      // check if they were updated at the same time
-      if (incidentUpdatedAt === maintenanceUpdatedAt) {
-        chosenIncident = incidents;
-      } else {
-        // else, check which one was the most recent
-        incidentUpdatedAt < maintenanceUpdatedAt
-          ? (chosenIncident = scheduledMaintenances)
-          : (chosenIncident = incidents);
-      }
-    }
     return chosenIncident;
   }
 
@@ -62,6 +46,22 @@ class StatuspageApi {
       return this.data.scheduled_maintenances[0];
     }
     return false;
+  }
+
+  compareTime() {
+    const incidentUpdatedAt = this.data.incidents[0].updated_at.slice(0, 19);
+    const maintenanceUpdatedAt = this.data.scheduled_maintenances[0].updated_at.slice(0, 19);
+
+    // check if they were updated at the same time
+    if (incidentUpdatedAt === maintenanceUpdatedAt) {
+      return this.data.incidents[0];
+    }
+    return this.mostRecent(incidentUpdatedAt, maintenanceUpdatedAt);
+  }
+
+  mostRecent(incident, maintenance) {
+    if (incident > maintenance) return this.data.incidents[0];
+    return this.data.scheduled_maintenances[0];
   }
 
   // private / protected method
