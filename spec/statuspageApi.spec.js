@@ -69,13 +69,13 @@ describe('#getData', () => {
   });
 });
 
-describe('#mostRecentIncident', () => {
+describe('#chosenIncident', () => {
   beforeEach(() => {
     statuspageApi.data = getMockData();
   });
 
   it('should return last incident', () => {
-    expect(statuspageApi.mostRecentIncident()).toEqual(getMockData().incidents[0]);
+    expect(statuspageApi.chosenIncident()).toEqual(getMockData().incidents[0]);
   });
 });
 
@@ -177,7 +177,7 @@ describe('#doesScheduledMaintenanceMatchHashtag', () => {
   });
 });
 
-describe('#compareTime', () => {
+describe('#choosePriorityIncident', () => {
   describe('prioritizes whichever is the most recent incident', () => {
     beforeEach(() => {
       firstMaintenanceDate = '2020-07-20T09:11:40.438-04:00';
@@ -186,7 +186,7 @@ describe('#compareTime', () => {
     });
 
     it('should return the most recent alert, regardless of type', () => {
-      const test = statuspageApi.compareTime();
+      const test = statuspageApi.choosePriorityIncident();
       expect(test.name).toEqual('FirstMaintenance');
     });
   });
@@ -200,7 +200,7 @@ describe('#compareTime', () => {
     });
 
     it('should return incidents instead of scheduled maintenance', () => {
-      expect(statuspageApi.compareTime().name).toEqual('FirstIncident');
+      expect(statuspageApi.choosePriorityIncident().name).toEqual('FirstIncident');
     });
   });
 });

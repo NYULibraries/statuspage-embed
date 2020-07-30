@@ -10,26 +10,24 @@ class StatuspageApi {
     this.data = await response.json();
   }
 
-  mostRecentIncident() {
+  chosenIncident() {
     const incidents = this.data.incidents[0];
     const scheduledMaintenances = this.doesScheduledMaintenanceMatchHashtag();
-    let chosenIncident;
+    let selectedIncident;
 
-    // if scheduled_maintenances has a relevant hashtag, add to the scheduledMaintenances variable
-    // if not, the chosenIncident is automatically incidents
-    if (!scheduledMaintenances) chosenIncident = incidents;
+    if (!scheduledMaintenances) selectedIncident = incidents;
 
-    if (chosenIncident === undefined) chosenIncident = this.compareTime();
+    if (selectedIncident === undefined) selectedIncident = this.choosePriorityIncident();
 
-    return chosenIncident;
+    return selectedIncident;
   }
 
   incidentName() {
-    return this.mostRecentIncident().name;
+    return this.chosenIncident().name;
   }
 
   incidentUrl() {
-    return this.mostRecentIncident().shortlink;
+    return this.chosenIncident().shortlink;
   }
 
   lastStatus() {
@@ -48,7 +46,7 @@ class StatuspageApi {
     return false;
   }
 
-  compareTime() {
+  choosePriorityIncident() {
     const incidentUpdatedAt = this.data.incidents[0].updated_at.slice(0, 19);
     const maintenanceUpdatedAt = this.data.scheduled_maintenances[0].updated_at.slice(0, 19);
 
@@ -56,17 +54,17 @@ class StatuspageApi {
     if (incidentUpdatedAt === maintenanceUpdatedAt) {
       return this.data.incidents[0];
     }
-    return this.mostRecent(incidentUpdatedAt, maintenanceUpdatedAt);
+    return this.chooseRecentIncident(incidentUpdatedAt, maintenanceUpdatedAt);
   }
 
-  mostRecent(incident, maintenance) {
+  chooseRecentIncident(incident, maintenance) {
     if (incident > maintenance) return this.data.incidents[0];
     return this.data.scheduled_maintenances[0];
   }
 
   // private / protected method
   lastUpdate() {
-    return this.mostRecentIncident().incident_updates[0];
+    return this.chosenIncident().incident_updates[0];
   }
 }
 
