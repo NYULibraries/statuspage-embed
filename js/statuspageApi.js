@@ -1,6 +1,8 @@
 import config from './config';
 
-const hashtagRegexp = new RegExp('#(majoroutage|weatherclosure|buildingclosure|scheduledmaintenance)');
+const hashtagRegexp = new RegExp(
+  '#(majoroutage|weatherclosure|buildingclosure|scheduledmaintenance)',
+);
 
 class StatuspageApi {
   async getData() {
@@ -8,16 +10,24 @@ class StatuspageApi {
     this.data = await response.json();
   }
 
-  lastIncident() {
-    return this.data.incidents[0];
+  chosenIncident() {
+    const incidents = this.data.incidents[0];
+    const scheduledMaintenances = this.doesScheduledMaintenanceMatchHashtag();
+    let selectedIncident;
+
+    if (!scheduledMaintenances) selectedIncident = incidents;
+
+    if (selectedIncident === undefined) selectedIncident = this.choosePriorityIncident();
+
+    return selectedIncident;
   }
 
   incidentName() {
-    return this.lastIncident().name;
+    return this.chosenIncident().name;
   }
 
   incidentUrl() {
-    return this.lastIncident().shortlink;
+    return this.chosenIncident().shortlink;
   }
 
   lastStatus() {
@@ -29,9 +39,32 @@ class StatuspageApi {
     return !!hashtagRegexp.exec(this.lastUpdate().body);
   }
 
+  doesScheduledMaintenanceMatchHashtag() {
+    if (hashtagRegexp.test(this.data.scheduled_maintenances[0].incident_updates[0].body)) {
+      return this.data.scheduled_maintenances[0];
+    }
+    return false;
+  }
+
+  choosePriorityIncident() {
+    const incidentUpdatedAt = this.data.incidents[0].updated_at.slice(0, 19);
+    const maintenanceUpdatedAt = this.data.scheduled_maintenances[0].updated_at.slice(0, 19);
+
+    // check if they were updated at the same time
+    if (incidentUpdatedAt === maintenanceUpdatedAt) {
+      return this.data.incidents[0];
+    }
+    return this.chooseRecentIncident(incidentUpdatedAt, maintenanceUpdatedAt);
+  }
+
+  chooseRecentIncident(incident, maintenance) {
+    if (incident > maintenance) return this.data.incidents[0];
+    return this.data.scheduled_maintenances[0];
+  }
+
   // private / protected method
   lastUpdate() {
-    return this.lastIncident().incident_updates[0];
+    return this.chosenIncident().incident_updates[0];
   }
 }
 
