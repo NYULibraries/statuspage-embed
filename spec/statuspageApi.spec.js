@@ -204,3 +204,25 @@ describe('#choosePriorityIncident', () => {
     });
   });
 });
+
+describe('#areThereScheduledMaintenances', () => {
+  beforeEach(() => {
+    statuspageApi.data = {
+      incidents: [
+        {
+          name: 'FirstIncident',
+          shortlink: 'http://example.com/1',
+          updated_at: '2020-07-20T09:11:40.438-04:00',
+          incident_updates: [
+            { body, status: 'identified' },
+            { body: 'Fake body', status: 'monitoring' },
+          ],
+        },
+      ],
+    };
+  });
+
+  it('should return false when there are no scheduled maintenances', () => {
+    expect(statuspageApi.areThereScheduledMaintenances()).toBeFalsy();
+  });
+});
