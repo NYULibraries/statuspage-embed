@@ -1,7 +1,7 @@
 import config from './config';
 
 const hashtagRegexp = new RegExp(
-  '#(majoroutage|weatherclosure|buildingclosure|scheduledmaintenance)',
+  '#(majoroutage|weatherclosure|buildingclosure|scheduledmaintenance|nyureturns)',
 );
 
 class StatuspageApi {
