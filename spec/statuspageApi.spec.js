@@ -70,11 +70,13 @@ describe('#getData', () => {
 });
 
 describe('#chosenIncident', () => {
-  beforeEach(() => {
-    statuspageApi.data = getMockData();
+  it('should return null if no active incidents', () => {
+    statuspageApi.data = { incidents: [] };
+    expect(statuspageApi.chosenIncident()).toEqual(null);
   });
 
-  it('should return last incident', () => {
+  it('should return last incident, if populated', () => {
+    statuspageApi.data = getMockData();
     expect(statuspageApi.chosenIncident()).toEqual(getMockData().incidents[0]);
   });
 });

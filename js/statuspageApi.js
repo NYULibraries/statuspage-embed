@@ -19,15 +19,15 @@ class StatuspageApi {
     if (!scheduledMaintenances) selectedIncident = incidents;
     if (selectedIncident === undefined) selectedIncident = this.choosePriorityIncident();
 
-    return selectedIncident ?? null;
+    return selectedIncident;
   }
 
   incidentName() {
-    return this.chosenIncident()?.name;
+    return this.chosenIncident().name;
   }
 
   incidentUrl() {
-    return this.chosenIncident()?.shortlink;
+    return this.chosenIncident().shortlink;
   }
 
   lastStatus() {
@@ -40,7 +40,9 @@ class StatuspageApi {
   }
 
   areThereIncidents() {
-   return this.data.incidents[0] ?? null
+    const incidentsList = this.data?.incidents ? this.data.incidents : null;
+    const incident = incidentsList?.length ? incidentsList[0] : null
+    return incident;
   }
 
   areThereScheduledMaintenances() {
