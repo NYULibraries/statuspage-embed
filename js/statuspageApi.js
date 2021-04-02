@@ -16,8 +16,8 @@ class StatuspageApi {
     let selectedIncident;
 
     if (this.areThereScheduledMaintenances()) scheduledMaintenances = this.doesScheduledMaintenanceMatchHashtag();
-    if (!scheduledMaintenances) selectedIncident = incidents;
-    if (selectedIncident === undefined) selectedIncident = this.choosePriorityIncident();
+    if (!scheduledMaintenances && incidents) selectedIncident = incidents;
+    if (selectedIncident === undefined && incidents) selectedIncident = this.choosePriorityIncident();
 
     return selectedIncident;
   }
