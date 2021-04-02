@@ -11,24 +11,23 @@ class StatuspageApi {
   }
 
   chosenIncident() {
-    const incidents = this.data.incidents[0];
+    const incidents = this.areThereIncidents();
     let scheduledMaintenances;
     let selectedIncident;
 
     if (this.areThereScheduledMaintenances()) scheduledMaintenances = this.doesScheduledMaintenanceMatchHashtag();
     if (!scheduledMaintenances) selectedIncident = incidents;
-
     if (selectedIncident === undefined) selectedIncident = this.choosePriorityIncident();
 
-    return selectedIncident;
+    return selectedIncident ?? null;
   }
 
   incidentName() {
-    return this.chosenIncident().name;
+    return this.chosenIncident()?.name;
   }
 
   incidentUrl() {
-    return this.chosenIncident().shortlink;
+    return this.chosenIncident()?.shortlink;
   }
 
   lastStatus() {
@@ -38,6 +37,10 @@ class StatuspageApi {
   // true if matches hashtag from regexp above
   hasMatchingHashtag() {
     return !!hashtagRegexp.exec(this.lastUpdate().body);
+  }
+
+  areThereIncidents() {
+   return this.data.incidents[0] ?? null
   }
 
   areThereScheduledMaintenances() {
