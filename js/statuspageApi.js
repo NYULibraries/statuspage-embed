@@ -11,7 +11,7 @@ class StatuspageApi {
   }
 
   chosenIncident() {
-    const incidents = this.areThereIncidents();
+    const incidents = this.areThereIncidents() ? this.data.incidents[0] : null
     let scheduledMaintenances;
     let selectedIncident;
 
@@ -42,7 +42,8 @@ class StatuspageApi {
   areThereIncidents() {
     const incidentsList = this.data?.incidents ? this.data.incidents : null;
     const incident = incidentsList?.length ? incidentsList[0] : null
-    return incident;
+    if (incident) return true
+    return false
   }
 
   areThereScheduledMaintenances() {
