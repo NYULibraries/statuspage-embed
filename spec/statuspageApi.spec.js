@@ -207,6 +207,18 @@ describe('#choosePriorityIncident', () => {
   });
 });
 
+describe('#areThereIncidents', () => {
+  it('should return null if incidents array is not present', () => {
+    statuspageApi.data = {};
+    expect(statuspageApi.chosenIncident()).toEqual(null);
+  });
+
+  it('should return null if incidents array is empty', () => {
+    statuspageApi.data = { incidents: [] };
+    expect(statuspageApi.chosenIncident()).toEqual(null);
+  });
+});
+
 describe('#areThereScheduledMaintenances', () => {
   beforeEach(() => {
     statuspageApi.data = {
