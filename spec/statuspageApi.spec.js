@@ -72,7 +72,7 @@ describe('#getData', () => {
 describe('#chosenIncident', () => {
   it('should return null if no active incidents', () => {
     statuspageApi.data = { incidents: [] };
-    expect(statuspageApi.chosenIncident()).toEqual(null);
+    expect(statuspageApi.chosenIncident()).toEqual(false);
   });
 
   it('should return last incident, if populated', () => {
