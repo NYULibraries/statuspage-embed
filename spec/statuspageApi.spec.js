@@ -70,7 +70,7 @@ describe('#getData', () => {
 });
 
 describe('#chosenIncident', () => {
-  it('should return null if no active incidents', () => {
+  it('should return false if no active incidents', () => {
     statuspageApi.data = { incidents: [] };
     expect(statuspageApi.chosenIncident()).toEqual(false);
   });
@@ -208,12 +208,12 @@ describe('#choosePriorityIncident', () => {
 });
 
 describe('#areThereIncidents', () => {
-  it('should return null if incidents array is not present', () => {
+  it('should return false if incidents array is not present', () => {
     statuspageApi.data = {};
     expect(statuspageApi.areThereIncidents()).toEqual(false);
   });
 
-  it('should return null if incidents array is empty', () => {
+  it('should return false if incidents array is empty', () => {
     statuspageApi.data = { incidents: [] };
     expect(statuspageApi.areThereIncidents()).toEqual(false);
   });
