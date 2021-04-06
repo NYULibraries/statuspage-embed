@@ -10,6 +10,10 @@ class StatuspageApi {
     this.data = await response.json();
   }
 
+  validIncident() {
+    return this.hasMatchingHashtag();
+  }
+
   chosenIncident() {
     const incident = this.areThereIncidents() ? this.data.incidents[0] : false
     let scheduledMaintenances;
@@ -36,7 +40,8 @@ class StatuspageApi {
 
   // true if matches hashtag from regexp above
   hasMatchingHashtag() {
-    return !!hashtagRegexp.exec(this.lastUpdate().body);
+    if(this.chosenIncident()) return !!hashtagRegexp.exec(this.lastUpdate().body);
+    return false
   }
 
   areThereIncidents() {

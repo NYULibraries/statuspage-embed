@@ -47,7 +47,7 @@ class AlertBanner {
   async init() {
     this.constructor.insertStylesheet();
     await this.statuspage.getData();
-    if (!this.statuspage.chosenIncident() || !this.statuspage.hasMatchingHashtag()) {
+    if (!this.statuspage.validIncident()) {
       return false;
     }
     this.message = this.statuspage.incidentName();
