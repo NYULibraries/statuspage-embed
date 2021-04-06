@@ -15,12 +15,11 @@ class StatuspageApi {
   }
 
   chosenIncident() {
-    const incident = this.areThereIncidents() ? this.data.incidents[0] : false
-    let scheduledMaintenances;
+    const incident = this.areThereIncidents() ? this.data.incidents[0] : false;
+    const scheduledMaintenance = this.areThereScheduledMaintenances() ? this.data.scheduled_maintenances[0] : false;
     let selectedIncident = false;
 
-    if (this.areThereScheduledMaintenances()) scheduledMaintenances = this.data.scheduled_maintenances[0];
-    if (!scheduledMaintenances && incident) selectedIncident = incident;
+    if (!scheduledMaintenance && incident) selectedIncident = incident;
     if (!selectedIncident && incident) selectedIncident = this.choosePriorityIncident(); 
 
     return selectedIncident;
