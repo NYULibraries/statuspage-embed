@@ -19,9 +19,9 @@ class StatuspageApi {
     let scheduledMaintenances;
     let selectedIncident = false;
 
-    if (this.areThereScheduledMaintenances()) scheduledMaintenances = this.doesScheduledMaintenanceMatchHashtag();
+    if (this.areThereScheduledMaintenances()) scheduledMaintenances = this.data.scheduled_maintenances[0];
     if (!scheduledMaintenances && incident) selectedIncident = incident;
-    if (selectedIncident === undefined && incident) selectedIncident = this.choosePriorityIncident();
+    if (!selectedIncident && incident) selectedIncident = this.choosePriorityIncident(); 
 
     return selectedIncident;
   }
@@ -53,13 +53,6 @@ class StatuspageApi {
 
   areThereScheduledMaintenances() {
     if (this.data.scheduled_maintenances && this.data.scheduled_maintenances.length) return true;
-    return false;
-  }
-
-  doesScheduledMaintenanceMatchHashtag() {
-    if (hashtagRegexp.test(this.data.scheduled_maintenances[0].incident_updates[0].body)) {
-      return this.data.scheduled_maintenances[0];
-    }
     return false;
   }
 

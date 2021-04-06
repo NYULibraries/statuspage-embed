@@ -156,29 +156,6 @@ describe('#hasMatchingHashtag', () => {
   });
 });
 
-describe('#doesScheduledMaintenanceMatchHashtag', () => {
-  describe('with no hashtag in body', () => {
-    beforeEach(() => {
-      statuspageApi.data = getMockData();
-    });
-
-    it('should return falsy', () => {
-      expect(statuspageApi.doesScheduledMaintenanceMatchHashtag()).toBeFalsy();
-    });
-  });
-
-  describe('with matching hashtag in body', () => {
-    beforeEach(() => {
-      scheduledMaintenanceBody = '#scheduledmaintenance';
-      statuspageApi.data = getMockData();
-    });
-
-    it('should return truthy', () => {
-      expect(statuspageApi.doesScheduledMaintenanceMatchHashtag()).toBeTruthy();
-    });
-  });
-});
-
 describe('#choosePriorityIncident', () => {
   describe('prioritizes whichever is the most recent incident', () => {
     beforeEach(() => {
