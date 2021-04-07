@@ -70,11 +70,13 @@ describe('#getData', () => {
 });
 
 describe('#chosenIncident', () => {
-  beforeEach(() => {
-    statuspageApi.data = getMockData();
+  it('should return false if no active incidents', () => {
+    statuspageApi.data = { incidents: [] };
+    expect(statuspageApi.chosenIncident()).toEqual(false);
   });
 
-  it('should return last incident', () => {
+  it('should return last incident, if populated', () => {
+    statuspageApi.data = getMockData();
     expect(statuspageApi.chosenIncident()).toEqual(getMockData().incidents[0]);
   });
 });
@@ -154,29 +156,6 @@ describe('#hasMatchingHashtag', () => {
   });
 });
 
-describe('#doesScheduledMaintenanceMatchHashtag', () => {
-  describe('with no hashtag in body', () => {
-    beforeEach(() => {
-      statuspageApi.data = getMockData();
-    });
-
-    it('should return falsy', () => {
-      expect(statuspageApi.doesScheduledMaintenanceMatchHashtag()).toBeFalsy();
-    });
-  });
-
-  describe('with matching hashtag in body', () => {
-    beforeEach(() => {
-      scheduledMaintenanceBody = '#scheduledmaintenance';
-      statuspageApi.data = getMockData();
-    });
-
-    it('should return truthy', () => {
-      expect(statuspageApi.doesScheduledMaintenanceMatchHashtag()).toBeTruthy();
-    });
-  });
-});
-
 describe('#choosePriorityIncident', () => {
   describe('prioritizes whichever is the most recent incident', () => {
     beforeEach(() => {
@@ -202,6 +181,18 @@ describe('#choosePriorityIncident', () => {
     it('should return incidents instead of scheduled maintenance', () => {
       expect(statuspageApi.choosePriorityIncident().name).toEqual('FirstIncident');
     });
+  });
+});
+
+describe('#areThereIncidents', () => {
+  it('should return false if incidents array is not present', () => {
+    statuspageApi.data = {};
+    expect(statuspageApi.areThereIncidents()).toEqual(false);
+  });
+
+  it('should return false if incidents array is empty', () => {
+    statuspageApi.data = { incidents: [] };
+    expect(statuspageApi.areThereIncidents()).toEqual(false);
   });
 });
 

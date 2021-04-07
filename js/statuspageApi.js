@@ -10,15 +10,17 @@ class StatuspageApi {
     this.data = await response.json();
   }
 
+  validIncident() {
+    return this.hasMatchingHashtag();
+  }
+
   chosenIncident() {
-    const incidents = this.data.incidents[0];
-    let scheduledMaintenances;
-    let selectedIncident;
+    const incident = this.areThereIncidents() ? this.data.incidents[0] : false;
+    const scheduledMaintenance = this.areThereScheduledMaintenances() ? this.data.scheduled_maintenances[0] : false;
+    let selectedIncident = false;
 
-    if (this.areThereScheduledMaintenances()) scheduledMaintenances = this.doesScheduledMaintenanceMatchHashtag();
-    if (!scheduledMaintenances) selectedIncident = incidents;
-
-    if (selectedIncident === undefined) selectedIncident = this.choosePriorityIncident();
+    if (!scheduledMaintenance && incident) selectedIncident = incident;
+    if (!selectedIncident && incident) selectedIncident = this.choosePriorityIncident(); 
 
     return selectedIncident;
   }
@@ -37,18 +39,19 @@ class StatuspageApi {
 
   // true if matches hashtag from regexp above
   hasMatchingHashtag() {
-    return !!hashtagRegexp.exec(this.lastUpdate().body);
+    if(this.chosenIncident()) return !!hashtagRegexp.exec(this.lastUpdate().body);
+    return false
+  }
+
+  areThereIncidents() {
+    const incidentsList = this.data?.incidents ? this.data.incidents : null;
+    const incident = incidentsList?.length ? incidentsList[0] : null
+    if (incident) return true
+    return false
   }
 
   areThereScheduledMaintenances() {
     if (this.data.scheduled_maintenances && this.data.scheduled_maintenances.length) return true;
-    return false;
-  }
-
-  doesScheduledMaintenanceMatchHashtag() {
-    if (hashtagRegexp.test(this.data.scheduled_maintenances[0].incident_updates[0].body)) {
-      return this.data.scheduled_maintenances[0];
-    }
     return false;
   }
 

@@ -88,11 +88,13 @@ describe('#insertStylesheet', () => {
 
 describe('#init', () => {
   let mockHasMatchingHashtag;
+  let mockChosenIncident = true;
 
   beforeEach(() => {
     AlertBanner.insertStylesheet = jest.fn(() => true);
     alertBanner.insertBanner = jest.fn(() => true);
     alertBanner.statuspage.getData = jest.fn(() => true);
+    alertBanner.statuspage.chosenIncident = jest.fn(() => mockChosenIncident);
     alertBanner.statuspage.hasMatchingHashtag = jest.fn(() => mockHasMatchingHashtag);
     alertBanner.statuspage.incidentName = jest.fn(() => 'Incident Name');
     alertBanner.statuspage.incidentUrl = jest.fn(() => 'http://example.com/path');
@@ -122,6 +124,26 @@ describe('#init', () => {
   describe('without matching hashtag', () => {
     beforeEach(() => {
       mockHasMatchingHashtag = false;
+    });
+
+    it('should not call insertBanner', async () => {
+      await alertBanner.init();
+      expect(AlertBanner.insertStylesheet).toHaveBeenCalled();
+      expect(alertBanner.statuspage.getData).toHaveBeenCalled();
+      expect(alertBanner.insertBanner).not.toHaveBeenCalled();
+    });
+
+    it('should not assign values', async () => {
+      await alertBanner.init();
+      expect(alertBanner.message).toBeUndefined();
+      expect(alertBanner.linkPath).toBeUndefined();
+      expect(alertBanner.lastStatus).toBeUndefined();
+    });
+  });
+
+  describe('without valid incident', () => {
+    beforeEach(() => {
+      mockChosenIncident = false;
     });
 
     it('should not call insertBanner', async () => {
