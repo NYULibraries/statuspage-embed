@@ -72,32 +72,32 @@ describe('#getData', () => {
 describe('#chosenIncident', () => {
   it('should return false if no active incidents', () => {
     statuspageApi.data = { incidents: [] };
-    expect(statuspageApi.chosenIncident()).toEqual(false);
+    expect(statuspageApi.chosenAlert()).toEqual(false);
   });
 
   it('should return last incident, if populated', () => {
     statuspageApi.data = getMockData();
-    expect(statuspageApi.chosenIncident()).toEqual(getMockData().incidents[0]);
+    expect(statuspageApi.chosenAlert()).toEqual(getMockData().incidents[0]);
   });
 });
 
-describe('#incidentName', () => {
+describe('#alertName', () => {
+  beforeEach(() => {
+    statuspageApi.data = getMockData();
+  });
+
+  it('should return last alert name', () => {
+    expect(statuspageApi.alertName()).toEqual('FirstIncident');
+  });
+});
+
+describe('#alertUrl', () => {
   beforeEach(() => {
     statuspageApi.data = getMockData();
   });
 
   it('should return last incident name', () => {
-    expect(statuspageApi.incidentName()).toEqual('FirstIncident');
-  });
-});
-
-describe('#incidentUrl', () => {
-  beforeEach(() => {
-    statuspageApi.data = getMockData();
-  });
-
-  it('should return last incident name', () => {
-    expect(statuspageApi.incidentUrl()).toEqual('http://example.com/1');
+    expect(statuspageApi.alertUrl()).toEqual('http://example.com/1');
   });
 });
 
@@ -156,7 +156,7 @@ describe('#hasMatchingHashtag', () => {
   });
 });
 
-describe('#choosePriorityIncident', () => {
+describe('#choosePriorityAlert', () => {
   describe('prioritizes whichever is the most recent incident', () => {
     beforeEach(() => {
       firstMaintenanceDate = '2020-07-20T09:11:40.438-04:00';
@@ -165,7 +165,7 @@ describe('#choosePriorityIncident', () => {
     });
 
     it('should return the most recent alert, regardless of type', () => {
-      const test = statuspageApi.choosePriorityIncident();
+      const test = statuspageApi.choosePriorityAlert();
       expect(test.name).toEqual('FirstMaintenance');
     });
   });
@@ -179,7 +179,7 @@ describe('#choosePriorityIncident', () => {
     });
 
     it('should return incidents instead of scheduled maintenance', () => {
-      expect(statuspageApi.choosePriorityIncident().name).toEqual('FirstIncident');
+      expect(statuspageApi.choosePriorityAlert().name).toEqual('FirstIncident');
     });
   });
 });

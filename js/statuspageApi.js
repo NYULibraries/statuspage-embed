@@ -10,27 +10,27 @@ class StatuspageApi {
     this.data = await response.json();
   }
 
-  validIncident() {
+  validAlert() {
     return this.hasMatchingHashtag();
   }
 
-  chosenIncident() {
+  chosenAlert() {
     const incident = this.areThereIncidents() ? this.data.incidents[0] : false;
     const scheduledMaintenance = this.areThereScheduledMaintenances() ? this.data.scheduled_maintenances[0] : false;
-    let selectedIncident = false;
+    let selectedAlert = false;
 
-    if (!scheduledMaintenance && incident) selectedIncident = incident;
-    if (!selectedIncident && incident) selectedIncident = this.choosePriorityIncident(); 
+    if (!scheduledMaintenance && incident) selectedAlert = incident;
+    if (!selectedAlert && incident) selectedAlert = this.choosePriorityAlert(); 
 
-    return selectedIncident;
+    return selectedAlert;
   }
 
-  incidentName() {
-    return this.chosenIncident().name;
+  alertName() {
+    return this.chosenAlert().name;
   }
 
-  incidentUrl() {
-    return this.chosenIncident().shortlink;
+  alertUrl() {
+    return this.chosenAlert().shortlink;
   }
 
   lastStatus() {
@@ -39,7 +39,7 @@ class StatuspageApi {
 
   // true if matches hashtag from regexp above
   hasMatchingHashtag() {
-    if(this.chosenIncident()) return !!hashtagRegexp.exec(this.lastUpdate().body);
+    if(this.chosenAlert()) return !!hashtagRegexp.exec(this.lastUpdate().body);
     return false
   }
 
@@ -55,7 +55,7 @@ class StatuspageApi {
     return false;
   }
 
-  choosePriorityIncident() {
+  choosePriorityAlert() {
     const incidentUpdatedAt = this.data.incidents[0].updated_at.slice(0, 19);
     const maintenanceUpdatedAt = this.data.scheduled_maintenances[0].updated_at.slice(0, 19);
 
@@ -63,17 +63,17 @@ class StatuspageApi {
     if (incidentUpdatedAt === maintenanceUpdatedAt) {
       return this.data.incidents[0];
     }
-    return this.chooseRecentIncident(incidentUpdatedAt, maintenanceUpdatedAt);
+    return this.chooseRecentAlert(incidentUpdatedAt, maintenanceUpdatedAt);
   }
 
-  chooseRecentIncident(incident, maintenance) {
+  chooseRecentAlert(incident, maintenance) {
     if (incident > maintenance) return this.data.incidents[0];
     return this.data.scheduled_maintenances[0];
   }
 
   // private / protected method
   lastUpdate() {
-    return this.chosenIncident().incident_updates[0];
+    return this.chosenAlert().incident_updates[0];
   }
 }
 
