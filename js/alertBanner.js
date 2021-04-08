@@ -47,11 +47,11 @@ class AlertBanner {
   async init() {
     this.constructor.insertStylesheet();
     await this.statuspage.getData();
-    if (!this.statuspage.validIncident()) {
+    if (!this.statuspage.validAlert()) {
       return false;
     }
-    this.message = this.statuspage.incidentName();
-    this.linkPath = this.statuspage.incidentUrl();
+    this.message = this.statuspage.alertName();
+    this.linkPath = this.statuspage.alertUrl();
     this.lastStatus = this.statuspage.lastStatus();
     return this.insertBanner();
   }

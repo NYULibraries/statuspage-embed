@@ -96,8 +96,8 @@ describe('#init', () => {
     alertBanner.statuspage.getData = jest.fn(() => true);
     alertBanner.statuspage.chosenIncident = jest.fn(() => mockChosenIncident);
     alertBanner.statuspage.hasMatchingHashtag = jest.fn(() => mockHasMatchingHashtag);
-    alertBanner.statuspage.incidentName = jest.fn(() => 'Incident Name');
-    alertBanner.statuspage.incidentUrl = jest.fn(() => 'http://example.com/path');
+    alertBanner.statuspage.alertName = jest.fn(() => 'Incident Name');
+    alertBanner.statuspage.alertUrl = jest.fn(() => 'http://example.com/path');
     alertBanner.statuspage.lastStatus = jest.fn(() => 'somestatus');
   });
 
