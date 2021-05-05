@@ -23,10 +23,13 @@
     "eslint-plugin-jest": "^23.8.2",
     "extract-loader": "^5.0.1",
     "file-loader": "^6.0.0",
-    "jest": "^25.2.4",
+    "jest": "^26.6.3",
     "node-sass": "^4.13.1",
     "sass-loader": "^8.0.2",
-    "webpack": "^4.42.0",
-    "webpack-cli": "^3.3.11"
+    "webpack": "^5.36.2",
+    "webpack-cli": "^4.6.0"
+  },
+  "resolutions": {
+    "y18n": "^4.0.1"
   }
 }
