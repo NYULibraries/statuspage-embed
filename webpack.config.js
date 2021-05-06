@@ -13,10 +13,6 @@ module.exports = (env) => {
         './scss/index.scss',
       ],
     },
-    output: {
-      path: path.resolve(__dirname, 'dist'),
-      filename: '[name].min.js'
-    },
     devtool: isProduction || isStaging ? 'source-map' : 'eval-source-map',
     module: {
       rules: [
@@ -32,18 +28,18 @@ module.exports = (env) => {
               loader: 'file-loader',
               options: {
                 name: '[name].min.css',
-              }
+              },
             },
             {
-              loader: 'extract-loader'
+              loader: 'extract-loader',
             },
             {
-              loader: 'css-loader?-url'
+              loader: 'css-loader?-url',
             },
             {
-              loader: 'sass-loader'
-            }
-          ]
+              loader: 'sass-loader',
+            },
+          ],
         },
       ],
     },
@@ -51,8 +47,8 @@ module.exports = (env) => {
       new webpack.DefinePlugin({
         'process.env': {
           'DEPLOY_ENV': JSON.stringify(env.DEPLOY_ENV)
-        }
-      })
-    ]
+        },
+      }),
+    ],
   };
 };
