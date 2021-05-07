@@ -13,6 +13,10 @@ module.exports = (env) => {
         './scss/index.scss',
       ],
     },
+    output: {
+      path: path.resolve(__dirname, 'dist'),
+      filename: '[name].min.js',
+    },
     devtool: isProduction || isStaging ? 'source-map' : 'eval-source-map',
     module: {
       rules: [
