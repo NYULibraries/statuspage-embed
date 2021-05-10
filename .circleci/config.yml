@@ -21,6 +21,13 @@ webpack_copy: &webpack_copy
     command: |
       docker cp $(docker ps -a -q --filter name=compile):/app/dist ./
 
+webpack_test: &webpack_test
+  run:
+    name: Test webpack built correct files
+    command: |
+      test -e dist/index.min.css
+      test -e dist/index.min.js
+
 aws_env: &aws_env
   run:
     name: Export AWS env vars
@@ -52,6 +59,7 @@ jobs:
           command: |
             docker-compose run compile build:stage
       - *webpack_copy
+      - *webpack_test
       - *aws_env
       - *s3_deploy
 
@@ -67,6 +75,7 @@ jobs:
           command: |
             docker-compose run compile build:prod
       - *webpack_copy
+      - *webpack_test
       - *aws_env
       - *s3_deploy
 
