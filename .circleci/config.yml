@@ -23,7 +23,7 @@ webpack_copy: &webpack_copy
 
 webpack_test: &webpack_test
   run:
-    name: Test webpack built correct files
+    name: Test that webpack built correct files
     command: |
       test -e dist/index.min.css
       test -e dist/index.min.js
