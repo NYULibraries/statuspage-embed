@@ -31,5 +31,8 @@
   },
   "resolutions": {
     "y18n": "^4.0.1"
+  },
+  "dependencies": {
+    "meow": "^3.7.0"
   }
 }
