@@ -30,9 +30,7 @@
     "webpack-cli": "^3.3.11"
   },
   "resolutions": {
-    "y18n": "^4.0.1"
-  },
-  "dependencies": {
-    "meow": "^3.7.0"
+    "y18n": "^4.0.1",
+    "meow": "^10.1.1"
   }
 }
