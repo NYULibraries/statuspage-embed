@@ -5,10 +5,9 @@ A script for including the NYU Libraries StatusPage alert header.
 ## Usage
 
 Include the following script as close to end of your `body` tag as possible:
+
 ```
-...
 <script src="https://cdn.library.nyu.edu/statuspage-embed/index.min.js"></script>
-</body>
 ```
 
 ## Develop
