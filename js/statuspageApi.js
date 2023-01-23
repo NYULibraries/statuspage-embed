@@ -19,8 +19,10 @@ class StatuspageApi {
     const scheduledMaintenance = this.areThereScheduledMaintenances() ? this.data.scheduled_maintenances[0] : false;
     let selectedAlert = false;
 
+    if (scheduledMaintenance && !incident) selectedAlert = scheduledMaintenance;
     if (!scheduledMaintenance && incident) selectedAlert = incident;
-    if (!selectedAlert && incident) selectedAlert = this.choosePriorityAlert(); 
+    if (scheduledMaintenance && incident) selectedAlert = this.choosePriorityAlert(scheduledMaintenance, incident);
+      
 
     return selectedAlert;
   }
