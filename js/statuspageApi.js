@@ -27,6 +27,11 @@ class StatuspageApi {
     return selectedAlert;
   }
 
+  // private / protected method
+  #lastUpdate() {
+    return this.chosenAlert().incident_updates[0];
+  }
+
   alertName() {
     return this.chosenAlert().name;
   }
@@ -36,12 +41,12 @@ class StatuspageApi {
   }
 
   lastStatus() {
-    return this.lastUpdate().status;
+    return this.#lastUpdate().status;
   }
 
   // true if matches hashtag from regexp above
   hasMatchingHashtag() {
-    if(this.chosenAlert()) return !!hashtagRegexp.exec(this.lastUpdate().body);
+    if(this.chosenAlert()) return !!hashtagRegexp.exec(this.#lastUpdate().body);
     return false
   }
 
@@ -71,11 +76,6 @@ class StatuspageApi {
   chooseRecentAlert(incident, maintenance) {
     if (incident > maintenance) return this.data.incidents[0];
     return this.data.scheduled_maintenances[0];
-  }
-
-  // private / protected method
-  lastUpdate() {
-    return this.chosenAlert().incident_updates[0];
   }
 }
 
