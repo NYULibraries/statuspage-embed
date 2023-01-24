@@ -137,12 +137,10 @@ describe('#chosenAlert', () => {
       ],
     };
 
-    let expected = statuspageApi.data.incidents[0]
+    const expected = statuspageApi.data.incidents[0];
     expect(statuspageApi.chosenAlert()).toEqual(expected);
   });
-
 });
-
 
 describe('#alertName', () => {
   beforeEach(() => {
@@ -286,6 +284,6 @@ describe('Test the private method lastUpdate', () => {
     const statusPage = new StatuspageApi();
     expect(() => {
       statusPage.lastUpdate();
-    }).toThrow("statusPage.lastUpdate is not a function");
+    }).toThrow('statusPage.lastUpdate is not a function');
   });
 });
