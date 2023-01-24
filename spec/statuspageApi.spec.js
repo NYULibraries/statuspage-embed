@@ -110,6 +110,37 @@ describe('#chosenAlert', () => {
     };
     expect(statuspageApi.chosenAlert()).toEqual(statuspageApi.data.scheduled_maintenances[0]);
   });
+
+  it('should return the incident with higher priority', () => {
+    statuspageApi.data = {
+      incidents: [
+        {
+          name: 'FirstIncident',
+          shortlink: 'http://example.com/1',
+          updated_at: '2020-07-15T09:11:40.438-04:00',
+          incident_updates: [
+            { body: 'Another fake body', status: 'investigating' },
+            { body: 'Fake body', status: 'resolved' },
+          ],
+        },
+      ],
+      scheduled_maintenances: [
+        {
+          name: 'FirstMaintenance',
+          shortlink: 'http://example.com/1',
+          updated_at: '2020-07-15T09:11:40.438-04:00',
+          incident_updates: [
+            { body: scheduledMaintenanceBody, status: 'in_progress' },
+            { body: 'Fake body', status: 'identified' },
+          ],
+        },
+      ],
+    };
+
+    let expected = statuspageApi.data.incidents[0]
+    expect(statuspageApi.chosenAlert()).toEqual(expected);
+  });
+
 });
 
 
