@@ -249,3 +249,12 @@ describe('#areThereScheduledMaintenances', () => {
     expect(statuspageApi.areThereScheduledMaintenances()).toBeFalsy();
   });
 });
+
+describe('Test the private method lastUpdate', () => {
+  test('Should throw an error when trying to call the private method lastUpdate', () => {
+    const statusPage = new StatuspageApi();
+    expect(() => {
+      statusPage.lastUpdate();
+    }).toThrow("statusPage.lastUpdate is not a function");
+  });
+});
