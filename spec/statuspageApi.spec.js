@@ -69,7 +69,7 @@ describe('#getData', () => {
   });
 });
 
-describe('#chosenIncident', () => {
+describe('#chosenAlert', () => {
   it('should return false if no active incidents', () => {
     statuspageApi.data = { incidents: [] };
     expect(statuspageApi.chosenAlert()).toEqual(false);
@@ -79,7 +79,39 @@ describe('#chosenIncident', () => {
     statuspageApi.data = getMockData();
     expect(statuspageApi.chosenAlert()).toEqual(getMockData().incidents[0]);
   });
+
+  it('should return false if no scheduled maintenances', () => {
+    statuspageApi.data = { scheduled_maintenances: [] };
+    expect(statuspageApi.chosenAlert()).toEqual(false);
+  });
+
+  it('should return last scheduled maintenance, if populated', () => {
+    statuspageApi.data = {
+      scheduled_maintenances: [
+        {
+          name: 'FirstMaintenance',
+          shortlink: 'http://example.com/1',
+          updated_at: firstMaintenanceDate,
+          incident_updates: [
+            { body: scheduledMaintenanceBody, status: 'in_progress' },
+            { body: 'Fake body', status: 'identified' },
+          ],
+        },
+        {
+          name: 'SecondMaintenance',
+          shortlink: 'http://example.com/2',
+          updated_at: '2019-07-01T09:11:40.438-04:00',
+          incident_updates: [
+            { body: 'Another fake body', status: 'scheduled' },
+            { body: 'Fake body', status: 'monitoring' },
+          ],
+        },
+      ],
+    };
+    expect(statuspageApi.chosenAlert()).toEqual(statuspageApi.data.scheduled_maintenances[0]);
+  });
 });
+
 
 describe('#alertName', () => {
   beforeEach(() => {
