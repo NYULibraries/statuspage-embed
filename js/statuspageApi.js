@@ -15,18 +15,18 @@ class StatuspageApi {
   }
 
   chosenAlert() {
-    const incident = this.areThereIncidents() ? this.data.incidents[0] : false;
-    const scheduledMaintenance = this.areThereScheduledMaintenances()
-      ? this.data.scheduled_maintenances[0] : false;
-    let selectedAlert = false;
+    const incident = this.data?.incidents?.[0];
+    const scheduledMaintenance = this.data?.scheduled_maintenances?.[0];
 
-    if (scheduledMaintenance && !incident) selectedAlert = scheduledMaintenance;
-    if (!scheduledMaintenance && incident) selectedAlert = incident;
-    if (scheduledMaintenance && incident) {
-      selectedAlert = this.choosePriorityAlert(scheduledMaintenance, incident);
-    }
+    if (!incident && !scheduledMaintenance) return false;
+    if (!incident && scheduledMaintenance) return scheduledMaintenance;
+    if (incident && !scheduledMaintenance) return incident;
 
-    return selectedAlert;
+    const incidentUpdatedAt = incident.updated_at.slice(0, 19);
+    const maintenanceUpdatedAt = scheduledMaintenance.updated_at.slice(0, 19);
+
+    if (incidentUpdatedAt === maintenanceUpdatedAt) return incident;
+    return incidentUpdatedAt > maintenanceUpdatedAt ? incident : scheduledMaintenance;
   }
 
   // private / protected method
@@ -50,34 +50,6 @@ class StatuspageApi {
   hasMatchingHashtag() {
     if (this.chosenAlert()) return !!hashtagRegexp.exec(this.#lastUpdate().body);
     return false;
-  }
-
-  areThereIncidents() {
-    const incidentsList = this.data?.incidents ? this.data.incidents : null;
-    const incident = incidentsList?.length ? incidentsList[0] : null;
-    if (incident) return true;
-    return false;
-  }
-
-  areThereScheduledMaintenances() {
-    if (this.data.scheduled_maintenances && this.data.scheduled_maintenances.length) return true;
-    return false;
-  }
-
-  choosePriorityAlert() {
-    const incidentUpdatedAt = this.data.incidents[0].updated_at.slice(0, 19);
-    const maintenanceUpdatedAt = this.data.scheduled_maintenances[0].updated_at.slice(0, 19);
-
-    // check if they were updated at the same time
-    if (incidentUpdatedAt === maintenanceUpdatedAt) {
-      return this.data.incidents[0];
-    }
-    return this.chooseRecentAlert(incidentUpdatedAt, maintenanceUpdatedAt);
-  }
-
-  chooseRecentAlert(incident, maintenance) {
-    if (incident > maintenance) return this.data.incidents[0];
-    return this.data.scheduled_maintenances[0];
   }
 }
 
