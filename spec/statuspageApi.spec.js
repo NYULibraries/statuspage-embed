@@ -3,9 +3,9 @@ import StatuspageApi from '../js/statuspageApi';
 let statuspageApi;
 // Define mock data as function so we can edit incident update body for certain tests
 let body = 'Test body #majoroutage';
-let scheduledMaintenanceBody = 'Test';
-let firstIncidentsDate = '2020-07-15T09:11:40.438-04:00';
-let firstMaintenanceDate = '2020-07-15T09:11:40.438-04:00';
+const scheduledMaintenanceBody = 'Test';
+const firstIncidentsDate = '2020-07-15T09:11:40.438-04:00';
+const firstMaintenanceDate = '2020-07-15T09:11:40.438-04:00';
 const getMockData = () => ({
   incidents: [
     {
@@ -214,68 +214,6 @@ describe('#hasMatchingHashtag', () => {
     it('should return falsy', () => {
       expect(statuspageApi.hasMatchingHashtag()).toBeFalsy();
     });
-  });
-});
-
-describe('#choosePriorityAlert', () => {
-  describe('prioritizes whichever is the most recent incident', () => {
-    beforeEach(() => {
-      firstMaintenanceDate = '2020-07-20T09:11:40.438-04:00';
-      scheduledMaintenanceBody = '#scheduledmaintenance';
-      statuspageApi.data = getMockData();
-    });
-
-    it('should return the most recent alert, regardless of type', () => {
-      const test = statuspageApi.choosePriorityAlert();
-      expect(test.name).toEqual('FirstMaintenance');
-    });
-  });
-
-  describe('if two alerts occur at the same time, prioritize incidents', () => {
-    beforeEach(() => {
-      firstIncidentsDate = '2020-07-20T09:11:40.438-04:00';
-      firstMaintenanceDate = '2020-07-20T09:11:40.438-04:00';
-      scheduledMaintenanceBody = '#scheduledmaintenance';
-      statuspageApi.data = getMockData();
-    });
-
-    it('should return incidents instead of scheduled maintenance', () => {
-      expect(statuspageApi.choosePriorityAlert().name).toEqual('FirstIncident');
-    });
-  });
-});
-
-describe('#areThereIncidents', () => {
-  it('should return false if incidents array is not present', () => {
-    statuspageApi.data = {};
-    expect(statuspageApi.areThereIncidents()).toEqual(false);
-  });
-
-  it('should return false if incidents array is empty', () => {
-    statuspageApi.data = { incidents: [] };
-    expect(statuspageApi.areThereIncidents()).toEqual(false);
-  });
-});
-
-describe('#areThereScheduledMaintenances', () => {
-  beforeEach(() => {
-    statuspageApi.data = {
-      incidents: [
-        {
-          name: 'FirstIncident',
-          shortlink: 'http://example.com/1',
-          updated_at: '2020-07-20T09:11:40.438-04:00',
-          incident_updates: [
-            { body, status: 'identified' },
-            { body: 'Fake body', status: 'monitoring' },
-          ],
-        },
-      ],
-    };
-  });
-
-  it('should return false when there are no scheduled maintenances', () => {
-    expect(statuspageApi.areThereScheduledMaintenances()).toBeFalsy();
   });
 });
 
