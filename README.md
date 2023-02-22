@@ -26,7 +26,7 @@ To render and test alert banners locally:
 - create them using the Internal page of `https://manage.statuspage.io/`
 - comment out the `statuspageUrl` key value of the config object in config.js and replace it with the following string:
 
-`https://$PAGE_ID.statuspage.io/api/v2/summary.json?api_key=$LIB_SERVICES_API_KEY` 
+`https://$INTERNAL_PAGE_ID.statuspage.io/api/v2/summary.json?api_key=$LIB_SERVICES_API_KEY` 
 
 env variables can be found in the `API Info` section of the Profile menu of `https://manage.statuspage.io/`
 
