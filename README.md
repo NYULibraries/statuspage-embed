@@ -22,6 +22,14 @@ and visit `localhost:8080`.
 
 This will also bring up webpack in watch mode so any changes you make to the asset files will recompile live.
 
+To render and test alert banners locally:
+- create them using the Internal page of `https://manage.statuspage.io/`
+- comment out the `statuspageUrl` key value of the config object in config.js and replace it with the following string:
+
+`https://$INTERNAL_PAGE_ID.statuspage.io/api/v2/summary.json?api_key=$LIB_SERVICES_API_KEY` 
+
+env variables can be found in the `API Info` section of the Profile menu of `https://manage.statuspage.io/`
+
 ## Test
 
 To run the unit tests with Jest:
