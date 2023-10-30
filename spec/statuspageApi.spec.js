@@ -173,8 +173,41 @@ describe('#lastStatus', () => {
 });
 
 describe('#hasMatchingHashtag', () => {
-  describe('with matching hashtag in body', () => {
+  describe('with #majoroutage hashtag in body', () => {
     beforeEach(() => {
+      statuspageApi.data = getMockData();
+    });
+
+    it('should return truthy', () => {
+      expect(statuspageApi.hasMatchingHashtag()).toBeTruthy();
+    });
+  });
+
+  describe('with #weatherclosure hashtag in body', () => {
+    beforeEach(() => {
+      body = 'Some other #weatherclosure';
+      statuspageApi.data = getMockData();
+    });
+
+    it('should return truthy', () => {
+      expect(statuspageApi.hasMatchingHashtag()).toBeTruthy();
+    });
+  });
+
+  describe('with #buildingclosure hashtag in body', () => {
+    beforeEach(() => {
+      body = 'Some other #buildingclosure';
+      statuspageApi.data = getMockData();
+    });
+
+    it('should return truthy', () => {
+      expect(statuspageApi.hasMatchingHashtag()).toBeTruthy();
+    });
+  });
+
+  describe('with #scheduledmaintenance hashtag in body', () => {
+    beforeEach(() => {
+      body = 'Some other #scheduledmaintenance';
       statuspageApi.data = getMockData();
     });
 
@@ -191,6 +224,98 @@ describe('#hasMatchingHashtag', () => {
 
     it('should return falsy', () => {
       expect(statuspageApi.hasMatchingHashtag()).toBeFalsy();
+    });
+  });
+
+  describe('with #bobcat hashtag in body', () => {
+    beforeEach(() => {
+      body = 'Some other #bobcat';
+      statuspageApi.data = getMockData();
+    });
+
+    describe('on library.nyu.edu', () => {
+      beforeEach(() => {
+        // must delete before reassigning, otherwise it doesn't work
+        delete window.location;
+        window.location = new URL('https://library.nyu.edu');
+      });
+
+      it('should return falsy', () => {
+        expect(window.location.hostname).toEqual("library.nyu.edu");
+        expect(statuspageApi.hasMatchingHashtag()).toBeFalsy();
+      });
+    });
+
+    describe('on bobcat.library.nyu.edu', () => {
+      beforeEach(() => {
+        // must delete before reassigning, otherwise it doesn't work
+        delete window.location;
+        window.location = new URL('https://bobcat.library.nyu.edu');
+      });
+
+      it('should return truthy', () => {
+        expect(window.location.hostname).toEqual("bobcat.library.nyu.edu");
+        expect(statuspageApi.hasMatchingHashtag()).toBeTruthy();
+      });
+    });
+
+    describe('on bobcatdev.library.nyu.edu', () => {
+      beforeEach(() => {
+        // must delete before reassigning, otherwise it doesn't work
+        delete window.location;
+        window.location = new URL('https://bobcatdev.library.nyu.edu');
+      });
+
+      it('should return falsy', () => {
+        expect(window.location.hostname).toEqual("bobcatdev.library.nyu.edu");
+        expect(statuspageApi.hasMatchingHashtag()).toBeFalsy();
+      });
+    });
+  });
+
+  describe('with #devbobcat hashtag in body', () => {
+    beforeEach(() => {
+      body = 'Some other #devbobcat';
+      statuspageApi.data = getMockData();
+    });
+
+    describe('on library.nyu.edu', () => {
+      beforeEach(() => {
+        // must delete before reassigning, otherwise it doesn't work
+        delete window.location;
+        window.location = new URL('https://library.nyu.edu');
+      });
+
+      it('should return falsy', () => {
+        expect(window.location.hostname).toEqual("library.nyu.edu");
+        expect(statuspageApi.hasMatchingHashtag()).toBeFalsy();
+      });
+    });
+
+    describe('on bobcat.library.nyu.edu', () => {
+      beforeEach(() => {
+        // must delete before reassigning, otherwise it doesn't work
+        delete window.location;
+        window.location = new URL('https://bobcat.library.nyu.edu');
+      });
+
+      it('should return falsy', () => {
+        expect(window.location.hostname).toEqual("bobcat.library.nyu.edu");
+        expect(statuspageApi.hasMatchingHashtag()).toBeFalsy();
+      });
+    });
+
+    describe('on bobcatdev.library.nyu.edu', () => {
+      beforeEach(() => {
+        // must delete before reassigning, otherwise it doesn't work
+        delete window.location;
+        window.location = new URL('https://bobcatdev.library.nyu.edu');
+      });
+
+      it('should return truthy', () => {
+        expect(window.location.hostname).toEqual("bobcatdev.library.nyu.edu");
+        expect(statuspageApi.hasMatchingHashtag()).toBeTruthy();
+      });
     });
   });
 
