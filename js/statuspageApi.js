@@ -48,8 +48,8 @@ class StatuspageApi {
   // private / protected methods
   getHashtagRegexp() {
     const defaultHashtagArr = ["majoroutage", "weatherclosure", "buildingclosure", "scheduledmaintenance", "nyureturns"];
-    const bobcatdevHashtagArr = defaultHashtagArr.concat(["devbobcat"]);
-    const bobcatHashtagArr = defaultHashtagArr.concat(["bobcat"]);
+    const bobcatdevHashtagArr = defaultHashtagArr.concat(["bobcatdevmigration"]);
+    const bobcatHashtagArr = defaultHashtagArr.concat(["bobcatmigration"]);
 
     var hashtagArr;
     switch(this.#getCurrentHostname()) {
