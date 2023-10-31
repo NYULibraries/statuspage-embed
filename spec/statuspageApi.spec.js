@@ -227,9 +227,9 @@ describe('#hasMatchingHashtag', () => {
     });
   });
 
-  describe('with #bobcat hashtag in body', () => {
+  describe('with #bobcatmigration hashtag in body', () => {
     beforeEach(() => {
-      body = 'Some other #bobcat';
+      body = 'Some other #bobcatmigration';
       statuspageApi.data = getMockData();
     });
 
@@ -273,9 +273,9 @@ describe('#hasMatchingHashtag', () => {
     });
   });
 
-  describe('with #devbobcat hashtag in body', () => {
+  describe('with #bobcatdevmigration hashtag in body', () => {
     beforeEach(() => {
-      body = 'Some other #devbobcat';
+      body = 'Some other #bobcatdevmigration';
       statuspageApi.data = getMockData();
     });
 
