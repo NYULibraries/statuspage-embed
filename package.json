@@ -3,11 +3,11 @@
   "description": "Embeddable StatusPage widget for NYU Libraries",
   "scripts": {
     "build": "webpack",
-    "build:dev:watch": "NODE_ENV=${NODE_ENV:-development} yarn run build --mode=development --watch --progress --env.DEPLOY_ENV=dev",
-    "build:dev": "NODE_ENV=${NODE_ENV:-development} yarn run build --mode=development --env.DEPLOY_ENV=dev",
-    "build:stage": "NODE_ENV=${NODE_ENV:-production} yarn run build --mode=production --env.DEPLOY_ENV=staging",
-    "build:prod": "NODE_ENV=${NODE_ENV:-production} yarn run build --mode=production --env.DEPLOY_ENV=production",
-    "test": "jest"
+    "build:dev:watch": "NODE_ENV=${NODE_ENV:-development} yarn run build --mode=development --watch --progress --env DEPLOY_ENV=dev",
+    "build:dev": "NODE_ENV=${NODE_ENV:-development} yarn run build --mode=development --env DEPLOY_ENV=dev",
+    "build:stage": "NODE_ENV=${NODE_ENV:-production} yarn run build --mode=production --env DEPLOY_ENV=staging",
+    "build:prod": "NODE_ENV=${NODE_ENV:-production} yarn run build --mode=production --env DEPLOY_ENV=production",
+    "test": "jest --env=jsdom"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
