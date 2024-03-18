@@ -15,7 +15,7 @@ Include the following script as close to end of your `body` tag as possible:
 Bring up the development environment:
 
 ```
-docker-compose up dev
+docker compose up dev
 ```
 
 and visit `localhost:8080`.
@@ -35,13 +35,13 @@ env variables can be found in the `API Info` section of the Profile menu of `htt
 To run the unit tests with Jest:
 
 ```
-docker-compose run test
+docker compose run test
 ```
 
 To watch and re-run tests automatically, after uncommenting the volumes under the `test` service in the docker-compose file:
 
 ```
-docker-compose run test jest --watchAll
+docker compose run test jest --watchAll
 ```
 
 ## To-do

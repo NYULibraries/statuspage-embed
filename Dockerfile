@@ -1,12 +1,13 @@
-FROM node:16-alpine
+FROM node:20-alpine
 
 ENV INSTALL_PATH /app
 ENV PATH $INSTALL_PATH/node_modules/.bin:$PATH
 
 COPY package.json yarn.lock /tmp/
 # hadolint ignore=DL3003
-RUN cd /tmp && yarn install
-RUN mkdir -p $INSTALL_PATH && cp -a /tmp/node_modules $INSTALL_PATH
+RUN cd /tmp && yarn install --frozen-lockfile \
+    && yarn cache clean \
+    && mkdir -p $INSTALL_PATH && cp -a /tmp/node_modules $INSTALL_PATH
 
 COPY . $INSTALL_PATH
 
