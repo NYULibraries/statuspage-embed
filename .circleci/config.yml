@@ -1,6 +1,6 @@
 machine-defaults: &machine-defaults
-  docker:
-    - image: ubuntu-2204:current
+  machine:
+    image: ubuntu-2204:current
   working_directory: ~/app
 
 docker_build: &docker_build
