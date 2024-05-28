@@ -1,19 +1,19 @@
-docker-defaults: &docker-defaults
+machine-defaults: &machine-defaults
   docker:
-    - image: quay.io/nyulibraries/circleci_docker:18.06.3-dc-1.24.1-0
+    - image: ubuntu-2204:current
   working_directory: ~/app
 
 docker_build: &docker_build
   run:
     name: Docker build
     command: |
-      docker-compose build test compile
+      docker compose build test compile
 
 test: &test
   run:
     name: Test
     command: |
-      docker-compose run test
+      docker compose run test
 
 webpack_copy: &webpack_copy
   run:
@@ -35,20 +35,22 @@ aws_env: &aws_env
       echo 'export AWS_ACCESS_KEY_ID=${WEB_CDN_AWS_ACCESS_KEY_ID}' >> $BASH_ENV
       echo 'export AWS_SECRET_ACCESS_KEY=${WEB_CDN_AWS_SECRET_ACCESS_KEY}' >> $BASH_ENV
 
-s3_deploy: &s3_deploy
-  aws-s3/sync:
-    from: dist
-    to: '${S3_URI}/statuspage-embed'
-    arguments: |
-      --delete
-    overwrite: true
+# Note that `aws s3 sync ... --exact-timestamps` only works for downloads from S3,
+# not uploads: https://github.com/aws/aws-cli/issues/4460.  The only safe way
+# to update is to upload absolutely everything using `cp` and then deleting
+# removed files using `sync --delete`.  There are many other open GitHub issues
+# related to this behavior.  Here's another: https://github.com/aws/aws-cli/issues/3273
+aws-sync-s3: &aws-sync-s3
+  run:
+    name: Deploy to S3
+    command: |
+      aws s3 cp --recursive dist ${S3_URI}/statuspage-embed && \
+      aws s3 sync --delete dist ${S3_URI}/statuspage-embed
 
 version: 2.1
-orbs:
-  aws-s3: circleci/aws-s3@1.0.11
 jobs:
   deploy_dev:
-    <<: *docker-defaults
+    <<: *machine-defaults
     steps:
       - checkout
       - setup_remote_docker
@@ -57,14 +59,14 @@ jobs:
       - run:
           name: Webpack compile stage
           command: |
-            docker-compose run compile build:stage
+            docker compose run compile build:stage
       - *webpack_copy
       - *webpack_test
       - *aws_env
-      - *s3_deploy
+      - *aws-sync-s3
 
   deploy_prod:
-    <<: *docker-defaults
+    <<: *machine-defaults
     steps:
       - checkout
       - setup_remote_docker
@@ -73,11 +75,11 @@ jobs:
       - run:
           name: Webpack compile prod 
           command: |
-            docker-compose run compile build:prod
+            docker compose run compile build:prod
       - *webpack_copy
       - *webpack_test
       - *aws_env
-      - *s3_deploy
+      - *aws-sync-s3
 
 workflows:
   version: 2.1
