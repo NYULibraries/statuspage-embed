@@ -1,5 +1,3 @@
-version: '3.7'
-
 x-volumes: &default-volumes
   volumes:
     - ./nginx/html/index.html:/app/index.html
