@@ -19,6 +19,7 @@ const config = {
     monitoring: 'green',
     resolved: 'green',
     scheduled: 'green',
+    verifying: 'green',
   },
   stylesheetPath: '/index.min.css',
   statuspageUrl: 'https://kyyfz4489y7m.statuspage.io/api/v2/summary.json',
