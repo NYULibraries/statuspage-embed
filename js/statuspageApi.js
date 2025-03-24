@@ -1,9 +1,9 @@
-import config from './config';
+import { getStatuspageSummaryUrl } from './config';
 
 
 class StatuspageApi {
   async getData() {
-    const response = await fetch(config.statuspageUrl);
+    const response = await fetch(getStatuspageSummaryUrl());
     this.data = await response.json();
   }
 
