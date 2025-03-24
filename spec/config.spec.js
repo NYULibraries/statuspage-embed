@@ -1,6 +1,6 @@
 import { getBaseUrl } from '../js/config';
 
-describe('#getBaseUrl', () => {
+describe('getBaseUrl', () => {
   const OLD_ENV = process.env;
 
   beforeEach(() => {
