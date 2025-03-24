@@ -40,7 +40,7 @@ class StatuspageApi {
 
   // true if matches hashtag from lists below, which depend on hostname
   hasMatchingHashtag() {
-    if (this.chosenAlert()) 
+    if (this.chosenAlert())
       return !!this.getHashtagRegexp().exec(this.#lastUpdate().body);
     return false;
   }
