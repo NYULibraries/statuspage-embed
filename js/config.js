@@ -1,5 +1,5 @@
 // determine base url for stylesheet based on environment
-const getBaseUrl = () => {
+function getBaseUrl() {
   switch (process.env.DEPLOY_ENV) {
     case 'production':
       return 'https://cdn.library.nyu.edu/statuspage-embed';
@@ -8,7 +8,7 @@ const getBaseUrl = () => {
     default:
       return '/dist';
   }
-};
+}
 
 // need to factor this out into separate yaml/json file
 const config = {
