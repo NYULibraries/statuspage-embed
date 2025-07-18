@@ -22,7 +22,12 @@ const config = {
     verifying: 'green',
   },
   stylesheetPath: '/index.min.css',
-  statuspageUrl: 'https://kyyfz4489y7m.statuspage.io/api/v2/summary.json',
+  // The official URL is documented at https://alerts.library.nyu.edu/api/v2/,
+  // section "Summary".
+  // The "https://kyyfz4489y7m.statuspage.io/api/v2/summary.json" URL works, but
+  // it is deprecated. See response from Daniel Eads in this forum post page:
+  // https://community.atlassian.com/forums/Statuspage-questions/StatusPage-io-v2-api-subscribers-endpoint-not-returning-all/qaq-p/944674
+  statuspageUrl: 'https://alerts.library.nyu.edu/api/v2/summary.json',
 };
 
 config.stylesheetUrl = getBaseUrl() + config.stylesheetPath;
