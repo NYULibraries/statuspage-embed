@@ -1,9 +1,9 @@
-import config from './config';
+import { getStatuspageSummaryUrl } from './config';
 
 
 class StatuspageApi {
   async getData() {
-    const response = await fetch(config.statuspageUrl);
+    const response = await fetch(getStatuspageSummaryUrl());
     this.data = await response.json();
   }
 
@@ -40,7 +40,7 @@ class StatuspageApi {
 
   // true if matches hashtag from lists below, which depend on hostname
   hasMatchingHashtag() {
-    if (this.chosenAlert()) 
+    if (this.chosenAlert())
       return !!this.getHashtagRegexp().exec(this.#lastUpdate().body);
     return false;
   }

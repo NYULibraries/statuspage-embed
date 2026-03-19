@@ -57,6 +57,9 @@ describe('#getData', () => {
   let mockResponse;
 
   beforeEach(() => {
+    // Prevent error "TypeError: Invalid URL".
+    document.currentScript.src = 'https://does-not-matter.com';
+
     mockResponse = {};
     global.fetch = jest.fn(() => mockResponse);
     mockResponse.json = jest.fn(() => getMockData());
