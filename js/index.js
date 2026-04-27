@@ -1,3 +1,3 @@
 import AlertBanner from './alertBanner';
 
-(new AlertBanner()).init();
+new AlertBanner().init();
