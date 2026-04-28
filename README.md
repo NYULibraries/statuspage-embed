@@ -12,6 +12,8 @@ Include the following script as close to end of your `body` tag as possible:
 
 ## Develop
 
+EDIT: This is currently broken.  See code comment in _docker-compose.yml_.
+
 Bring up the development environment:
 
 ```
