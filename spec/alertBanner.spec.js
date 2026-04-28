@@ -1,3 +1,5 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 // Include the alertBanner module
 import AlertBanner from '../js/alertBanner';
 
@@ -54,7 +56,7 @@ describe( '#insertBanner', () => {
     beforeEach( () => {
         alertBanner.message = 'Some content';
         alertBanner.linkPath = 'http://example.com';
-        alertBanner.bannerClass = jest.fn( () => 'mock-banner-class1 mock-banner-class2' );
+        alertBanner.bannerClass = vi.fn( () => 'mock-banner-class1 mock-banner-class2' );
     } );
 
     it( 'should not be called automatically', () => {
@@ -80,7 +82,7 @@ describe( '#insertStylesheet', () => {
         expect( AlertBanner.insertStylesheet() ).toBeTruthy();
         expect( document.head.children.length ).toBe( 1 );
         expect( document.head.firstChild.tagName ).toEqual( 'LINK' );
-        expect( document.head.firstChild.href ).toEqual( 'http://localhost/dist/index.min.css' );
+        expect( document.head.firstChild.href ).toEqual( 'http://localhost:3000/dist/index.min.css' );
         expect( document.head.firstChild.rel ).toEqual( 'stylesheet' );
         expect( document.head.firstChild.type ).toEqual( 'text/css' );
     } );
@@ -91,14 +93,14 @@ describe( '#init', () => {
     let mockChosenIncident = true;
 
     beforeEach( () => {
-        AlertBanner.insertStylesheet = jest.fn( () => true );
-        alertBanner.insertBanner = jest.fn( () => true );
-        alertBanner.statuspage.getData = jest.fn( () => true );
-        alertBanner.statuspage.chosenIncident = jest.fn( () => mockChosenIncident );
-        alertBanner.statuspage.hasMatchingHashtag = jest.fn( () => mockHasMatchingHashtag );
-        alertBanner.statuspage.alertName = jest.fn( () => 'Incident Name' );
-        alertBanner.statuspage.alertUrl = jest.fn( () => 'http://example.com/path' );
-        alertBanner.statuspage.lastStatus = jest.fn( () => 'somestatus' );
+        AlertBanner.insertStylesheet = vi.fn( () => true );
+        alertBanner.insertBanner = vi.fn( () => true );
+        alertBanner.statuspage.getData = vi.fn( () => true );
+        alertBanner.statuspage.chosenIncident = vi.fn( () => mockChosenIncident );
+        alertBanner.statuspage.hasMatchingHashtag = vi.fn( () => mockHasMatchingHashtag );
+        alertBanner.statuspage.alertName = vi.fn( () => 'Incident Name' );
+        alertBanner.statuspage.alertUrl = vi.fn( () => 'http://example.com/path' );
+        alertBanner.statuspage.lastStatus = vi.fn( () => 'somestatus' );
     } );
 
     describe( 'with matching hashtag', () => {

@@ -1,3 +1,5 @@
+import { beforeEach, describe, expect, it, test, vi } from 'vitest';
+
 import StatuspageApi from '../js/statuspageApi';
 
 let statuspageApi;
@@ -61,8 +63,8 @@ describe( '#getData', () => {
         document.currentScript.src = 'https://does-not-matter.com';
 
         mockResponse = {};
-        global.fetch = jest.fn( () => mockResponse );
-        mockResponse.json = jest.fn( () => getMockData() );
+        global.fetch = vi.fn( () => mockResponse );
+        mockResponse.json = vi.fn( () => getMockData() );
     } );
 
     it( 'assign json data from fetch', async () => {

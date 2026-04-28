@@ -1,3 +1,5 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
 import {
     DEV_STATUSPAGE_SUMMARY_URL,
     PROD_STATUSPAGE_SUMMARY_URL,
@@ -9,7 +11,7 @@ describe( 'getBaseUrl', () => {
     const OLD_ENV = process.env;
 
     beforeEach( () => {
-        jest.resetModules();
+        vi.resetModules();
         process.env = { ...OLD_ENV };
     } );
 
