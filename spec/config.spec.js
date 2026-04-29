@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
     DEV_STATUSPAGE_SUMMARY_URL,
@@ -8,28 +8,22 @@ import {
 } from '../js/config';
 
 describe( 'getBaseUrl', () => {
-    const OLD_ENV = process.env;
-
     beforeEach( () => {
         vi.resetModules();
-        process.env = { ...OLD_ENV };
-    } );
-
-    afterEach( () => {
-        process.env = OLD_ENV;
     } );
 
     it( 'should set properly for local', () => {
+        document.currentScript.src = 'https://localhost';
         expect( getBaseUrl() ).toEqual( '/dist' );
     } );
 
-    it( 'should set properly for staging', () => {
-        process.env.DEPLOY_ENV = 'staging';
+    it( 'should set properly for dev', () => {
+        document.currentScript.src = 'https://cdn-dev.library.nyu.edu';
         expect( getBaseUrl() ).toEqual( 'https://cdn-dev.library.nyu.edu/statuspage-embed' );
     } );
 
-    it( 'should set properly for production', () => {
-        process.env.DEPLOY_ENV = 'production';
+    it( 'should set properly for prod', () => {
+        document.currentScript.src = 'https://cdn.library.nyu.edu';
         expect( getBaseUrl() ).toEqual( 'https://cdn.library.nyu.edu/statuspage-embed' );
     } );
 } );

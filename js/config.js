@@ -1,3 +1,6 @@
+const DEV_CDN_HOSTNAME = 'cdn-dev.library.nyu.edu';
+const PROD_CDN_HOSTNAME = 'cdn.library.nyu.edu';
+
 const DEV_STATUSPAGE_SUMMARY_URL =
     'https://alerts-dev.library.nyu.edu/api/v2/summary.json';
 const PROD_STATUSPAGE_SUMMARY_URL =
@@ -5,10 +8,12 @@ const PROD_STATUSPAGE_SUMMARY_URL =
 
 // determine base url for stylesheet based on environment
 function getBaseUrl() {
-    switch ( process.env.DEPLOY_ENV ) {
-        case 'production':
+    const sourceFileHostname = new URL( document.currentScript.src ).hostname;
+
+    switch ( sourceFileHostname ) {
+        case PROD_CDN_HOSTNAME:
             return 'https://cdn.library.nyu.edu/statuspage-embed';
-        case 'staging':
+        case DEV_CDN_HOSTNAME:
             return 'https://cdn-dev.library.nyu.edu/statuspage-embed';
         default:
             return '/dist';
