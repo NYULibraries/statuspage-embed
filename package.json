@@ -9,7 +9,8 @@
     "build:prod": "NODE_ENV=${NODE_ENV:-production} npm run build -- --mode=production --env DEPLOY_ENV=production",
     "eslint": "eslint . --ext .js,.jsx,.cjs,.mjs",
     "eslint:fix": "npm run eslint -- --fix",
-    "test": "vitest"
+    "test": "vitest run",
+    "test:watch": "vitest watch"
   },
   "devDependencies": {
     "@babel/core": "7.24.7",
