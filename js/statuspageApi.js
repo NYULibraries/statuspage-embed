@@ -1,6 +1,5 @@
 import { getStatuspageSummaryUrl } from './config';
 
-
 class StatuspageApi {
     async getData() {
         const response = await fetch( getStatuspageSummaryUrl() );
@@ -20,10 +19,13 @@ class StatuspageApi {
         if ( incident && !scheduledMaintenance ) return incident;
 
         const incidentUpdatedAt = incident.updated_at.slice( 0, 19 );
-        const maintenanceUpdatedAt = scheduledMaintenance.updated_at.slice( 0, 19 );
+        const maintenanceUpdatedAt =
+            scheduledMaintenance.updated_at.slice( 0, 19 );
 
         if ( incidentUpdatedAt === maintenanceUpdatedAt ) return incident;
-        return incidentUpdatedAt > maintenanceUpdatedAt ? incident : scheduledMaintenance;
+        return incidentUpdatedAt > maintenanceUpdatedAt ?
+            incident :
+            scheduledMaintenance;
     }
 
     alertName() {
@@ -47,9 +49,17 @@ class StatuspageApi {
 
     // private / protected methods
     getHashtagRegexp() {
-        const defaultHashtagArr = [ 'majoroutage', 'weatherclosure', 'buildingclosure', 'scheduledmaintenance', 'nyureturns' ];
-        const bobcatdevHashtagArr = defaultHashtagArr.concat( [ 'bobcatdevmigration' ] );
-        const bobcatHashtagArr = defaultHashtagArr.concat( [ 'bobcatmigration' ] );
+        const defaultHashtagArr = [
+            'majoroutage',
+            'weatherclosure',
+            'buildingclosure',
+            'scheduledmaintenance',
+            'nyureturns',
+        ];
+        const bobcatdevHashtagArr =
+            defaultHashtagArr.concat( [ 'bobcatdevmigration' ] );
+        const bobcatHashtagArr =
+            defaultHashtagArr.concat( [ 'bobcatmigration' ] );
 
         var hashtagArr;
         switch ( this.#getCurrentHostname() ) {
