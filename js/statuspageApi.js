@@ -1,13 +1,20 @@
 import { getStatuspageSummaryUrl } from './config';
 
 class StatuspageApi {
-    async getData() {
-        const response = await fetch( getStatuspageSummaryUrl() );
-        this.data = await response.json();
+    #getCurrentHostname() {
+        return window.location.hostname;
     }
 
-    validAlert() {
-        return this.hasMatchingHashtag();
+    #lastUpdate() {
+        return this.chosenAlert().incident_updates[ 0 ];
+    }
+
+    alertName() {
+        return this.chosenAlert().name;
+    }
+
+    alertUrl() {
+        return this.chosenAlert().shortlink;
     }
 
     chosenAlert() {
@@ -28,23 +35,9 @@ class StatuspageApi {
             scheduledMaintenance;
     }
 
-    alertName() {
-        return this.chosenAlert().name;
-    }
-
-    alertUrl() {
-        return this.chosenAlert().shortlink;
-    }
-
-    lastStatus() {
-        return this.#lastUpdate().status;
-    }
-
-    // true if matches hashtag from lists below, which depend on hostname
-    hasMatchingHashtag() {
-        if ( this.chosenAlert() )
-            return !!this.getHashtagRegexp().exec( this.#lastUpdate().body );
-        return false;
+    async getData() {
+        const response = await fetch( getStatuspageSummaryUrl() );
+        this.data = await response.json();
     }
 
     // private / protected methods
@@ -75,14 +68,21 @@ class StatuspageApi {
         return new RegExp( '#(' + hashtagArr.join( '|' ) + ')($|[^a-zA-Z0-9_])' );
     }
 
-    #getCurrentHostname() {
-        return window.location.hostname;
+
+    // true if matches hashtag from lists below, which depend on hostname
+    hasMatchingHashtag() {
+        if ( this.chosenAlert() )
+            return !!this.getHashtagRegexp().exec( this.#lastUpdate().body );
+        return false;
     }
 
-    #lastUpdate() {
-        return this.chosenAlert().incident_updates[ 0 ];
+    lastStatus() {
+        return this.#lastUpdate().status;
     }
 
+    validAlert() {
+        return this.hasMatchingHashtag();
+    }
 }
 
 export { StatuspageApi as default };
