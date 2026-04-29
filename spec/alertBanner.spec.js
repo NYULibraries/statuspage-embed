@@ -79,6 +79,8 @@ describe( '#insertStylesheet', () => {
     } );
 
     it( 'should insert stylesheet when called', () => {
+        document.currentScript.src = 'https://localhost';
+
         expect( AlertBanner.insertStylesheet() ).toBeTruthy();
         expect( document.head.children.length ).toBe( 1 );
         expect( document.head.firstChild.tagName ).toEqual( 'LINK' );
