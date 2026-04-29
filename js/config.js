@@ -30,6 +30,9 @@ function getStatuspageSummaryUrl() {
 
 // need to factor this out into separate yaml/json file
 const config = {
+    getStylesheetUrl: function() {
+        return getBaseUrl() + '/index.min.css';
+    },
     statusToColorMapping: {
         investigating: 'red',
         identified   : 'orange',
@@ -39,10 +42,7 @@ const config = {
         scheduled    : 'green',
         verifying    : 'green',
     },
-    stylesheetPath: '/index.min.css',
 };
-
-config.stylesheetUrl = getBaseUrl() + config.stylesheetPath;
 
 export {
     config as default,
