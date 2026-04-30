@@ -7,6 +7,7 @@ let alertBanner;
 
 // Setup DOM for testing
 beforeEach( () => {
+    document.currentScript.src = 'https://localhost';
     document.body.innerHTML = '<div class="container"></div>';
     alertBanner = new AlertBanner();
 } );
@@ -14,41 +15,49 @@ beforeEach( () => {
 describe( '#bannerClass', () => {
     it( 'should return red when investigating', () => {
         alertBanner.lastStatus = 'investigating';
-        expect( alertBanner.bannerClass() ).toEqual( 'nyulibraries-alert-banner alert-red' );
+        expect( alertBanner.bannerClass() ).toEqual(
+            'nyulibraries-alert-banner alert-red' );
     } );
 
     it( 'should return orange when identified', () => {
         alertBanner.lastStatus = 'identified';
-        expect( alertBanner.bannerClass() ).toEqual( 'nyulibraries-alert-banner alert-orange' );
+        expect( alertBanner.bannerClass() ).toEqual(
+            'nyulibraries-alert-banner alert-orange' );
     } );
 
     it( 'should return orange when in_progress', () => {
         alertBanner.lastStatus = 'in_progress';
-        expect( alertBanner.bannerClass() ).toEqual( 'nyulibraries-alert-banner alert-orange' );
+        expect( alertBanner.bannerClass() ).toEqual(
+            'nyulibraries-alert-banner alert-orange' );
     } );
 
     it( 'should return green when monitoring', () => {
         alertBanner.lastStatus = 'monitoring';
-        expect( alertBanner.bannerClass() ).toEqual( 'nyulibraries-alert-banner alert-green' );
+        expect( alertBanner.bannerClass() ).toEqual(
+            'nyulibraries-alert-banner alert-green' );
     } );
 
     it( 'should return green when resolved', () => {
         alertBanner.lastStatus = 'resolved';
-        expect( alertBanner.bannerClass() ).toEqual( 'nyulibraries-alert-banner alert-green' );
+        expect( alertBanner.bannerClass() ).toEqual(
+            'nyulibraries-alert-banner alert-green' );
     } );
 
     it( 'should return green when scheduled', () => {
         alertBanner.lastStatus = 'scheduled';
-        expect( alertBanner.bannerClass() ).toEqual( 'nyulibraries-alert-banner alert-green' );
+        expect( alertBanner.bannerClass() ).toEqual(
+            'nyulibraries-alert-banner alert-green' );
     } );
 
     it( 'should return undefined when unrecognized', () => {
         alertBanner.lastStatus = 'something else';
-        expect( alertBanner.bannerClass() ).toEqual( 'nyulibraries-alert-banner alert-undefined' );
+        expect( alertBanner.bannerClass() ).toEqual(
+            'nyulibraries-alert-banner alert-undefined' );
     } );
 
     it( 'should return undefined when blank', () => {
-        expect( alertBanner.bannerClass() ).toEqual( 'nyulibraries-alert-banner alert-undefined' );
+        expect( alertBanner.bannerClass() ).toEqual(
+            'nyulibraries-alert-banner alert-undefined' );
     } );
 } );
 
@@ -56,7 +65,8 @@ describe( '#insertBanner', () => {
     beforeEach( () => {
         alertBanner.message = 'Some content';
         alertBanner.linkPath = 'http://example.com';
-        alertBanner.bannerClass = vi.fn( () => 'mock-banner-class1 mock-banner-class2' );
+        alertBanner.bannerClass =
+            vi.fn( () => 'mock-banner-class1 mock-banner-class2' );
     } );
 
     it( 'should not be called automatically', () => {
@@ -67,9 +77,12 @@ describe( '#insertBanner', () => {
         expect( alertBanner.insertBanner() ).toBeTruthy();
         expect( document.body.children.length ).toBe( 2 );
         expect( document.body.firstChild.tagName ).toContain( 'ASIDE' );
-        expect( document.body.firstChild.classList ).toContain( 'mock-banner-class1' );
-        expect( document.body.firstChild.classList ).toContain( 'mock-banner-class2' );
-        expect( document.body.firstChild.innerHTML ).toEqual( 'Some content <a href="http://example.com" target="_blank">See more</a>' );
+        expect( document.body.firstChild.classList ).toContain(
+            'mock-banner-class1' );
+        expect( document.body.firstChild.classList ).toContain(
+            'mock-banner-class2' );
+        expect( document.body.firstChild.innerHTML ).toEqual(
+            'Some content <a href="http://example.com" target="_blank">See more</a>'  );
     } );
 } );
 
@@ -84,7 +97,8 @@ describe( '#insertStylesheet', () => {
         expect( AlertBanner.insertStylesheet() ).toBeTruthy();
         expect( document.head.children.length ).toBe( 1 );
         expect( document.head.firstChild.tagName ).toEqual( 'LINK' );
-        expect( document.head.firstChild.href ).toEqual( 'http://localhost:3000/dist/index.min.css' );
+        expect( document.head.firstChild.href ).toEqual(
+            'http://localhost:3000/dist/index.min.css' );
         expect( document.head.firstChild.rel ).toEqual( 'stylesheet' );
         expect( document.head.firstChild.type ).toEqual( 'text/css' );
     } );
@@ -98,11 +112,16 @@ describe( '#init', () => {
         AlertBanner.insertStylesheet = vi.fn( () => true );
         alertBanner.insertBanner = vi.fn( () => true );
         alertBanner.statuspage.getData = vi.fn( () => true );
-        alertBanner.statuspage.chosenIncident = vi.fn( () => mockChosenIncident );
-        alertBanner.statuspage.hasMatchingHashtag = vi.fn( () => mockHasMatchingHashtag );
-        alertBanner.statuspage.alertName = vi.fn( () => 'Incident Name' );
-        alertBanner.statuspage.alertUrl = vi.fn( () => 'http://example.com/path' );
-        alertBanner.statuspage.lastStatus = vi.fn( () => 'somestatus' );
+        alertBanner.statuspage.chosenIncident = vi.fn(
+            () => mockChosenIncident );
+        alertBanner.statuspage.hasMatchingHashtag = vi.fn(
+            () => mockHasMatchingHashtag );
+        alertBanner.statuspage.alertName = vi.fn(
+            () => 'Incident Name' );
+        alertBanner.statuspage.alertUrl = vi.fn(
+            () => 'http://example.com/path' );
+        alertBanner.statuspage.lastStatus = vi.fn(
+            () => 'somestatus' );
     } );
 
     describe( 'with matching hashtag', () => {
