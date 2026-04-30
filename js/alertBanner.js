@@ -24,12 +24,14 @@ class AlertBanner {
 
     // inserts banner with message and appropriate color from bannerClass
     insertBanner() {
-        const alertBannerDiv = createElementWithAttrs( 'aside', `${ this.message } `, {
-            id          : 'nyulibraries-alert-banner',
-            class       : this.bannerClass(),
-            'aria-label': 'Service Alert Banner',
-        } );
-        const link = createElementWithAttrs( 'a', 'See more', { href: this.linkPath, target: '_blank' } );
+        const alertBannerDiv = createElementWithAttrs( 'aside',
+            `${ this.message } `, {
+                id          : 'nyulibraries-alert-banner',
+                class       : this.bannerClass(),
+                'aria-label': 'Service Alert Banner',
+            } );
+        const link = createElementWithAttrs( 'a',
+            'See more', { href: this.linkPath, target: '_blank' } );
         alertBannerDiv.append( link );
         return document.body.insertBefore( alertBannerDiv, document.body.firstChild );
     }
