@@ -73,16 +73,29 @@ in [What are the different APIs under Statuspage?](https://support.atlassian.com
 
 ## Test
 
-To run the unit tests with Jest:
+To run the unit tests:
+
+```shell
+npm run test
+```
+
+In Docker:
 
 ```
 docker compose run test
 ```
 
-To watch and re-run tests automatically, after uncommenting the volumes under the `test` service in the docker-compose file:
+To watch and re-run tests automatically:
 
+```shell
+npm run test:watch
 ```
-docker compose run test jest --watchAll
+
+In Docker, after uncommenting the volumes under the `test` service in the
+_docker-compose.yaml_:
+
+```shell
+docker compose run test:watch
 ```
 
 ## To-do
