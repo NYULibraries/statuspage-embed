@@ -1,6 +1,5 @@
 x-volumes: &default-volumes
   volumes:
-    - ./nginx/html/index.html:/app/index.html
     - ./dist:/app/dist
     - ./js:/app/js
     - ./scss:/app/scss
@@ -32,21 +31,13 @@ services:
         npm run test
         #<<: *default-volumes
 
-# This is currently failing with this error:
-#
-# failed to solve: quay.io/nyulibraries/nginx:1.17.3-0: failed to resolve source
-# metadata for quay.io/nyulibraries/nginx:1.17.3-0: support Docker Image manifest
-# version 2, schema 1 has been removed. More information at
-# https://docs.docker.com/go/deprecated-image-specs/
-#
-#  dev:
-#    build:
-#      context: ./nginx
-#      dockerfile: Dockerfile
-#    image: statuspage-embed-nginx
-#    ports:
-#      - "8080:8080"
-#    depends_on:
-#      - watch
-#    <<: *default-volumes
+  dev:
+    build:
+      dockerfile: Dockerfile.test-local-build
+    image: statuspage-embed-test-local-build
+    ports:
+      - "3000:3000"
+    depends_on:
+      - watch
+    <<: *default-volumes
 
