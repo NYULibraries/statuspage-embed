@@ -10,7 +10,7 @@ module.exports = ( env ) => {
         entry  : {
             index: [
                 './js/index.js',
-                './scss/index.scss',
+                './css/index.css',
             ],
         },
         output: {
@@ -26,7 +26,7 @@ module.exports = ( env ) => {
                     loader : 'babel-loader',
                 },
                 {
-                    test: /\.scss$/,
+                    test: /\.css$/,
                     use : [
                         {
                             loader : 'file-loader',
@@ -42,9 +42,6 @@ module.exports = ( env ) => {
                             options: {
                                 url: true,
                             },
-                        },
-                        {
-                            loader: 'sass-loader',
                         },
                     ],
                 },

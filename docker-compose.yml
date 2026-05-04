@@ -2,7 +2,7 @@ x-volumes: &default-volumes
   volumes:
     - ./dist:/app/dist
     - ./js:/app/js
-    - ./scss:/app/scss
+    - ./css:/app/css
     - ./webpack.config.js:/app/webpack.config.js
     - ./babel.config.js:/app/babel.config.js
     - ./spec:/app/spec
