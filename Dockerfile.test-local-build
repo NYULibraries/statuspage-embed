@@ -1,0 +1,10 @@
+FROM node:24.15.0-trixie
+
+WORKDIR /app
+
+COPY package.json .
+COPY tools/test-local-build ./tools/test-local-build
+
+EXPOSE 3000
+
+CMD ["npm", "run", "dev"]
