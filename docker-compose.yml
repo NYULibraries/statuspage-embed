@@ -33,8 +33,8 @@ services:
 
   dev:
     build:
-      dockerfile: Dockerfile.test-local-build
-    image: statuspage-embed-test-local-build
+      dockerfile: Dockerfile.dev-server
+    image: statuspage-embed-dev-server
     ports:
       - "3000:3000"
     depends_on:

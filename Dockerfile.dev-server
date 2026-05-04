@@ -3,7 +3,7 @@ FROM node:24.15.0-trixie
 WORKDIR /app
 
 COPY package.json .
-COPY tools/test-local-build ./tools/test-local-build
+COPY tools/dev-server ./tools/dev-server
 
 EXPOSE 3000
 
