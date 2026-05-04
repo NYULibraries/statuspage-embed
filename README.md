@@ -97,8 +97,3 @@ _docker-compose.yaml_:
 ```shell
 docker compose run test:watch
 ```
-
-## To-do
-
-- Integration tests with karma?
-- Deploy to S3 CDN bucket via CircleCI (see libguides-styles for implementation)
