@@ -2,12 +2,8 @@
   "name": "statuspage-embed",
   "description": "Embeddable StatusPage widget for NYU Libraries",
   "scripts": {
-    "build": "webpack",
-    "build:dev:watch": "NODE_ENV=${NODE_ENV:-development} npm run build -- --mode=development --watch --progress --env DEPLOY_ENV=dev",
-    "build:dev": "NODE_ENV=${NODE_ENV:-development} npm run build -- --mode=development --env DEPLOY_ENV=dev",
-    "build:stage": "NODE_ENV=${NODE_ENV:-production} npm run build -- --mode=production --env DEPLOY_ENV=staging",
-    "build:prod": "NODE_ENV=${NODE_ENV:-production} npm run build -- --mode=production --env DEPLOY_ENV=production",
-    "dev": "node tools/dev-server/server.mjs",
+    "build": "vite build",
+    "dev": "vite dev",
     "eslint": "eslint . --ext .js,.jsx,.cjs,.mjs",
     "eslint:fix": "npm run eslint -- --fix",
     "test": "vitest run",
@@ -30,6 +26,7 @@
     "extract-loader": "5.0.1",
     "file-loader": "6.0.0",
     "jsdom": "24.1.0",
+    "vite": "8.0.0",
     "vitest": "4.0.18",
     "webpack": "5.92.1",
     "webpack-cli": "5.1.4"
