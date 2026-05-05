@@ -12,10 +12,13 @@ services:
     entrypoint: ["npm", "run"]
     #<<: *default-volumes
 
-  watch:
-    build: .
+  dev:
+    build:
+      dockerfile: Dockerfile.development
     image: statuspage-embed
-    command: ["npm", "run", "build:dev:watch"]
+    ports:
+      - "5173:5173"
+    command: ["npm", "run", "dev"]
     <<: *default-volumes
 
   test:
@@ -28,14 +31,3 @@ services:
         npm run build:dev
         npm run test
         #<<: *default-volumes
-
-  dev:
-    build:
-      dockerfile: Dockerfile.dev-server
-    image: statuspage-embed-dev-server
-    ports:
-      - "3000:3000"
-    depends_on:
-      - watch
-    <<: *default-volumes
-
