@@ -1,3 +1,5 @@
+// Names of hosts which serve statuspage-embed.
+const LOCALHOST_HOSTNAME = 'localhost';
 const DEV_CDN_HOSTNAME = 'cdn-dev.library.nyu.edu';
 const PROD_CDN_HOSTNAME = 'cdn.library.nyu.edu';
 
@@ -8,7 +10,7 @@ const PROD_STATUSPAGE_SUMMARY_URL =
 
 // determine base url for stylesheet based on environment
 function getBaseUrl() {
-    const sourceFileHostname = new URL( document.currentScript.src ).hostname;
+    const sourceFileHostname = getSourceFileHostname();
 
     switch ( sourceFileHostname ) {
         case PROD_CDN_HOSTNAME:
@@ -16,16 +18,34 @@ function getBaseUrl() {
         case DEV_CDN_HOSTNAME:
             return 'https://cdn-dev.library.nyu.edu/statuspage-embed';
         default:
-            return '/dist';
+            return '/public';
+    }
+}
+
+function getSourceFileHostname() {
+    if ( document.currentScript ) {
+        return new URL( document.currentScript.src ).hostname;
+    } else if ( document.location.hostname === LOCALHOST_HOSTNAME ) {
+        // Vite dev server, most likely
+        return LOCALHOST_HOSTNAME;
+    } else {
+        // Should never get here!
+        throw new Error(
+            'ERROR: getSourceFileHostname() can\'t determine hostname',
+        );
     }
 }
 
 function getStatuspageSummaryUrl() {
-    const sourceFileHostname = new URL( document.currentScript.src ).hostname;
+    const sourceFileHostname = getSourceFileHostname();
 
     // If this is the dev CDN instance of this widget, use the dev Statuspage page
     // API endpoint.
     if ( sourceFileHostname === 'cdn-dev.library.nyu.edu' ) {
+        return DEV_STATUSPAGE_SUMMARY_URL;
+    } else if ( sourceFileHostname === LOCALHOST_HOSTNAME ) {
+        // TODO: Make a statuspage REST API for local development.  For now,
+        //       just use dev.
         return DEV_STATUSPAGE_SUMMARY_URL;
     }
 
