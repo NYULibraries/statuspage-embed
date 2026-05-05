@@ -14,7 +14,7 @@ describe( 'getBaseUrl', () => {
 
     it( 'should set properly for local', () => {
         document.currentScript.src = 'https://localhost';
-        expect( getBaseUrl() ).toEqual( '/dist' );
+        expect( getBaseUrl() ).toEqual( '/public' );
     } );
 
     it( 'should set properly for dev', () => {
