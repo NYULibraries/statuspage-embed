@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, test, vi } from 'vitest';
 
-import StatuspageApi from '../js/statuspageApi';
+import StatuspageApi from '../src/js/statuspageApi';
 
 let statuspageApi;
 // Define mock data as function so we can edit incident update body for certain tests

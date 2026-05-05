@@ -5,7 +5,7 @@ import {
     PROD_STATUSPAGE_SUMMARY_URL,
     getBaseUrl,
     getStatuspageSummaryUrl,
-} from '../js/config';
+} from '../src/js/config';
 
 describe( 'getBaseUrl', () => {
     beforeEach( () => {

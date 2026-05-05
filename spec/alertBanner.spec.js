@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Include the alertBanner module
-import AlertBanner from '../js/alertBanner';
+import AlertBanner from '../src/js/alertBanner';
 
 let alertBanner;
 
