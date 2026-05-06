@@ -28,6 +28,5 @@ services:
       - /bin/sh
       - -c
       - |
-        npm run build:dev
         npm run test
         #<<: *default-volumes
