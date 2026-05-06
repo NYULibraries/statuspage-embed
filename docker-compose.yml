@@ -19,22 +19,18 @@ services:
     ports:
       - "5173:5173"
     command: ["npm", "run", "dev"]
+    # See the note about HMR not picking up changes to source files made in the
+    # hypervisor in the "Develop" section of README.md.
     #<<: *default-volumes
 
   test:
     build: .
     image: statuspage-embed
-    command:
-      - /bin/sh
-      - -c
-      - |
-        npm run test
+    command: ["npm", "run", "test"]
+    #<<: *default-volumes
 
   test-watch:
     build: .
     image: statuspage-embed
-    command:
-      - /bin/sh
-      - -c
-      - |
-        npm run test:watch
+    command: ["npm", "run", "test:watch"]
+    #<<: *default-volumes
