@@ -12,4 +12,4 @@ COPY . $INSTALL_PATH
 
 WORKDIR $INSTALL_PATH
 
-CMD ["NODE_ENV=production", "npm", "run", "build:prod"]
+CMD ["npm", "run", "build"]
