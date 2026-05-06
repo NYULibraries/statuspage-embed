@@ -2,7 +2,7 @@
   "name": "statuspage-embed",
   "description": "Embeddable StatusPage widget for NYU Libraries",
   "scripts": {
-    "build": "vite build",
+    "build": "vite build && rm dist/index.html",
     "dev": "vite dev",
     "eslint": "eslint . --ext .js,.jsx,.cjs,.mjs",
     "eslint:fix": "npm run eslint -- --fix",
