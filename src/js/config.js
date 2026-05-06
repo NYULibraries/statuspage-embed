@@ -17,8 +17,17 @@ function getBaseUrl() {
             return 'https://cdn.library.nyu.edu/statuspage-embed';
         case DEV_CDN_HOSTNAME:
             return 'https://cdn-dev.library.nyu.edu/statuspage-embed';
+        case LOCALHOST_HOSTNAME:
+            // User is most likely viewing the fake host page served by the Vite
+            // dev server, which is also going to be serving the widget, so
+            // return the current origin.  We use `document.URL` instead of
+            // `window.location.href` because we are already using a `document`
+            // fake in tests, so it will be more convenient to just add `URL` to
+            // it.
+            return new URL( document.URL ).origin;
         default:
-            return '/public';
+            // Should never get here, but just in case...
+            return `https://${ sourceFileHostname }/statuspage-embed`;
     }
 }
 

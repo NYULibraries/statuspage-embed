@@ -98,7 +98,7 @@ describe( '#insertStylesheet', () => {
         expect( document.head.children.length ).toBe( 1 );
         expect( document.head.firstChild.tagName ).toEqual( 'LINK' );
         expect( document.head.firstChild.href ).toEqual(
-            'http://localhost:3000/public/index.min.css' );
+            'http://localhost:3000/index.min.css' );
         expect( document.head.firstChild.rel ).toEqual( 'stylesheet' );
         expect( document.head.firstChild.type ).toEqual( 'text/css' );
     } );

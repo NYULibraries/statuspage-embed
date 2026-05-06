@@ -14,7 +14,7 @@ describe( 'getBaseUrl', () => {
 
     it( 'should set properly for local', () => {
         document.currentScript.src = 'https://localhost';
-        expect( getBaseUrl() ).toEqual( '/public' );
+        expect( getBaseUrl() ).toEqual( 'http://localhost:3000' );
     } );
 
     it( 'should set properly for dev', () => {
