@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Include the alertBanner module
-import AlertBanner from '../js/alertBanner';
+import AlertBanner from '../src/js/alertBanner';
 
 let alertBanner;
 
@@ -98,7 +98,7 @@ describe( '#insertStylesheet', () => {
         expect( document.head.children.length ).toBe( 1 );
         expect( document.head.firstChild.tagName ).toEqual( 'LINK' );
         expect( document.head.firstChild.href ).toEqual(
-            'http://localhost:3000/dist/index.min.css' );
+            'http://localhost:3000/index.min.css' );
         expect( document.head.firstChild.rel ).toEqual( 'stylesheet' );
         expect( document.head.firstChild.type ).toEqual( 'text/css' );
     } );

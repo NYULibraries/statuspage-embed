@@ -2,42 +2,35 @@ x-volumes: &default-volumes
   volumes:
     - ./dist:/app/dist
     - ./js:/app/js
-    - ./scss:/app/scss
-    - ./webpack.config.js:/app/webpack.config.js
-    - ./babel.config.js:/app/babel.config.js
+    - ./public:/app/public
     - ./spec:/app/spec
 
 services:
   compile:
     build: .
     image: statuspage-embed
-    entrypoint: ["npm", "run"]
+    entrypoint: ["npm", "run", "build"]
     #<<: *default-volumes
 
-  watch:
-    build: .
+  dev:
+    build:
+      dockerfile: Dockerfile.development
     image: statuspage-embed
-    command: ["npm", "run", "build:dev:watch"]
-    <<: *default-volumes
+    ports:
+      - "5173:5173"
+    command: ["npm", "run", "dev"]
+    # See the note about HMR not picking up changes to source files made in the
+    # hypervisor in the "Develop" section of README.md.
+    #<<: *default-volumes
 
   test:
     build: .
     image: statuspage-embed
-    command:
-      - /bin/sh
-      - -c
-      - |
-        npm run build:dev
-        npm run test
-        #<<: *default-volumes
+    command: ["npm", "run", "test"]
+    #<<: *default-volumes
 
-  dev:
-    build:
-      dockerfile: Dockerfile.test-local-build
-    image: statuspage-embed-test-local-build
-    ports:
-      - "3000:3000"
-    depends_on:
-      - watch
-    <<: *default-volumes
-
+  test-watch:
+    build: .
+    image: statuspage-embed
+    command: ["npm", "run", "test:watch"]
+    #<<: *default-volumes

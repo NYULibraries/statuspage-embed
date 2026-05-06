@@ -1,4 +1,4 @@
-FROM node:20-alpine
+FROM node:24.15.0-trixie
 
 ENV INSTALL_PATH /app
 ENV PATH $INSTALL_PATH/node_modules/.bin:$PATH
@@ -12,4 +12,4 @@ COPY . $INSTALL_PATH
 
 WORKDIR $INSTALL_PATH
 
-CMD ["NODE_ENV=production", "npm", "run", "build:prod"]
+CMD ["npm", "run", "build"]

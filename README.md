@@ -12,27 +12,11 @@ Include the following script as close to end of your `body` tag as possible:
 
 ## Develop
 
-Run the local build server at `localhost:3000` which serves a fake host page that
-loads the local _./dist/_ build:
+Run the vite dev server with HMR:
 
 ```shell
 npm run dev
 ```
-
-To enable automatic rebuild of _./dist/_ on source code change, run:
-
-```shell
-npm run build:dev:watch
-```
-
-Note that the local build server is not the `webpack` dev server and will not
-hot reload when _./dist/_ is rebuilt.  You will need to manually refresh the
-page.  Note also that `npm run build:dev:watch` and `npm run dev` can not easily
-be combined into a single command, `build:dev:watch` will not allow further
-input from the user, so these commands must run in separate processes.
-
-Later after we move from `webpack` to `vite`, we could try and set up a typical
-HMR workflow with a fake host page served by the `vite` dev server. 
 
 In Docker:
 
@@ -40,12 +24,11 @@ In Docker:
 docker compose up dev
 ```
 
-This will run both the `watch` and `dev` services.  Note that even though `watch`
-is mounting the _./dist/_ and _./js/_ directories as volumes, `webpack` only
-does not seem able to detect changes in _./js/_ made in the hypervisor, so all
-changes need to be made to the source code from inside the container.
+Note that HMR does not seem able to detect changes in the source files made in
+the hypervisor, so all changes need to be made to the source code from inside
+the container.
 
-# To render and test alert banners locally
+## Render and test alert banners locally
 
 Unless there is an active Incident or Maintenance, nothing will be visible on
 the local test page.  In order to test application logic and style changes on
@@ -73,19 +56,26 @@ in [What are the different APIs under Statuspage?](https://support.atlassian.com
 
 ## Test
 
-To run the unit tests with Jest:
+To run the unit tests:
+
+```shell
+npm run test
+```
+
+In Docker:
 
 ```
 docker compose run test
 ```
 
-To watch and re-run tests automatically, after uncommenting the volumes under the `test` service in the docker-compose file:
+To watch and re-run tests automatically:
 
+```shell
+npm run test:watch
 ```
-docker compose run test jest --watchAll
+
+In Docker:
+
+```shell
+docker compose run test-watch
 ```
-
-## To-do
-
-- Integration tests with karma?
-- Deploy to S3 CDN bucket via CircleCI (see libguides-styles for implementation)

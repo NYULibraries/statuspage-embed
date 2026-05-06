@@ -5,7 +5,7 @@ import {
     PROD_STATUSPAGE_SUMMARY_URL,
     getBaseUrl,
     getStatuspageSummaryUrl,
-} from '../js/config';
+} from '../src/js/config';
 
 describe( 'getBaseUrl', () => {
     beforeEach( () => {
@@ -14,7 +14,7 @@ describe( 'getBaseUrl', () => {
 
     it( 'should set properly for local', () => {
         document.currentScript.src = 'https://localhost';
-        expect( getBaseUrl() ).toEqual( '/dist' );
+        expect( getBaseUrl() ).toEqual( 'http://localhost:3000' );
     } );
 
     it( 'should set properly for dev', () => {
