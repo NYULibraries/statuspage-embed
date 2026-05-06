@@ -26,3 +26,12 @@ services:
       - -c
       - |
         npm run test
+
+  test-watch:
+    build: .
+    image: statuspage-embed
+    command:
+      - /bin/sh
+      - -c
+      - |
+        npm run test:watch

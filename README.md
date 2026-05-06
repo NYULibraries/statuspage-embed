@@ -74,9 +74,8 @@ To watch and re-run tests automatically:
 npm run test:watch
 ```
 
-In Docker, after uncommenting the volumes under the `test` service in the
-_docker-compose.yaml_:
+In Docker:
 
 ```shell
-docker compose run test:watch
+docker compose run test-watch
 ```
