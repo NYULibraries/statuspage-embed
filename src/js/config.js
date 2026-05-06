@@ -26,7 +26,8 @@ function getSourceFileHostname() {
     if ( document.currentScript ) {
         return new URL( document.currentScript.src ).hostname;
     } else if ( document.location.hostname === LOCALHOST_HOSTNAME ) {
-        // Vite dev server, most likely
+        // User is most likely viewing the fake host page served by the Vite
+        // dev server, which is also going to be serving the widget.
         return LOCALHOST_HOSTNAME;
     } else {
         // Should never get here!
