@@ -56,9 +56,9 @@ jobs:
       - *docker_build
       - *test
       - run:
-          name: Webpack compile stage
+          name: Vite build
           command: |
-            docker compose run compile build:stage
+            docker compose run compile
       - *copy_build
       - *test_build
       - *aws_env
@@ -71,9 +71,9 @@ jobs:
       - *docker_build
       - *test
       - run:
-          name: Webpack compile prod
+          name: Vite build
           command: |
-            docker compose run compile build:prod
+            docker compose run compile
       - *copy_build
       - *test_build
       - *aws_env
