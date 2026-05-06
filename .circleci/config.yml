@@ -15,15 +15,15 @@ test: &test
     command: |
       docker compose run test
 
-webpack_copy: &webpack_copy
+copy_build: &copy_build
   run:
-    name: Copy Webpack build
+    name: Copy vite build
     command: |
       docker cp $(docker ps -a -q --filter name=compile):/app/dist ./
 
-webpack_test: &webpack_test
+test_build: &test_build
   run:
-    name: Test that webpack built correct files
+    name: Test that vite built correct files
     command: |
       test -e dist/index.min.css
       test -e dist/index.min.js
@@ -59,8 +59,8 @@ jobs:
           name: Webpack compile stage
           command: |
             docker compose run compile build:stage
-      - *webpack_copy
-      - *webpack_test
+      - *copy_build
+      - *test_build
       - *aws_env
       - *aws-sync-s3
 
@@ -71,11 +71,11 @@ jobs:
       - *docker_build
       - *test
       - run:
-          name: Webpack compile prod 
+          name: Webpack compile prod
           command: |
             docker compose run compile build:prod
-      - *webpack_copy
-      - *webpack_test
+      - *copy_build
+      - *test_build
       - *aws_env
       - *aws-sync-s3
 
