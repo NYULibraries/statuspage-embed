@@ -1,9 +1,6 @@
 x-volumes: &default-volumes
   volumes:
     - ./dist:/app/dist
-    - ./public:/app/public
-    - ./spec:/app/spec
-    - ./src:/app/src
 
 services:
   compile:

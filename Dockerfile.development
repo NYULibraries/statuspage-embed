@@ -2,6 +2,8 @@ FROM node:24.15.0-trixie
 
 WORKDIR /app
 
+COPY public/ ./public
+COPY src/ ./src
 COPY index.html .
 COPY package.json .
 COPY package-lock.json .
