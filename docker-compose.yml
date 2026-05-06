@@ -6,7 +6,7 @@ services:
   compile:
     build: .
     image: statuspage-embed
-    entrypoint: ["npm", "run"]
+    entrypoint: ["npm", "run", "build"]
     #<<: *default-volumes
 
   dev:
