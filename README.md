@@ -28,7 +28,7 @@ Note that HMR does not seem able to detect changes in the source files made in
 the hypervisor, so all changes need to be made to the source code from inside
 the container.
 
-# To render and test alert banners locally
+## Render and test alert banners locally
 
 Unless there is an active Incident or Maintenance, nothing will be visible on
 the local test page.  In order to test application logic and style changes on
