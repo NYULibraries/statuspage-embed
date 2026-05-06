@@ -16,7 +16,7 @@ services:
     ports:
       - "5173:5173"
     command: ["npm", "run", "dev"]
-    <<: *default-volumes
+    #<<: *default-volumes
 
   test:
     build: .
@@ -26,4 +26,3 @@ services:
       - -c
       - |
         npm run test
-        #<<: *default-volumes
