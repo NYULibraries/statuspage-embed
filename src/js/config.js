@@ -1,6 +1,6 @@
 // Names of hosts which serve statuspage-embed.
-const LOCALHOST_HOSTNAME = 'localhost';
 const DEV_CDN_HOSTNAME = 'cdn-dev.library.nyu.edu';
+const LOCALHOST_HOSTNAME = 'localhost';
 const PROD_CDN_HOSTNAME = 'cdn.library.nyu.edu';
 
 const DEV_STATUSPAGE_SUMMARY_URL =
