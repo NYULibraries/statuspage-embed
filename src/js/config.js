@@ -1,12 +1,22 @@
-// Names of hosts which serve statuspage-embed.
-const DEV_CDN_HOSTNAME = 'cdn-dev.library.nyu.edu';
+// For development
 const LOCALHOST_HOSTNAME = 'localhost';
+// Real hosts
+const DEV_CDN_HOSTNAME = 'cdn-dev.library.nyu.edu';
 const PROD_CDN_HOSTNAME = 'cdn.library.nyu.edu';
 
+// This URL will hit the `tools/statuspage-summary-cors-proxy.mjs` server, which
+// needs to be running before the widget loads.  The proxy script imports this
+// module and will listen on the port used in this URL, so if a different port
+// number needs to be used, it can be changed here without having to make the
+// same change in the proxy script.
+const LOCAL_STATUSPAGE_SUMMARY_URL =
+    'http://localhost:3000/api/v2/summary.json';
+// Real statuspage summary.json URLs
 const DEV_STATUSPAGE_SUMMARY_URL =
     'https://alerts-dev.library.nyu.edu/api/v2/summary.json';
 const PROD_STATUSPAGE_SUMMARY_URL =
     'https://alerts.library.nyu.edu/api/v2/summary.json';
+
 
 // determine base url for stylesheet based on environment
 function getBaseUrl() {
@@ -54,9 +64,7 @@ function getStatuspageSummaryUrl() {
     if ( sourceFileHostname === 'cdn-dev.library.nyu.edu' ) {
         return DEV_STATUSPAGE_SUMMARY_URL;
     } else if ( sourceFileHostname === LOCALHOST_HOSTNAME ) {
-        // TODO: Make a statuspage REST API for local development.  For now,
-        //       just use dev.
-        return DEV_STATUSPAGE_SUMMARY_URL;
+        return LOCAL_STATUSPAGE_SUMMARY_URL;
     }
 
     // For all other instances of this widget, use the prod Statuspage page.
@@ -82,6 +90,7 @@ const config = {
 export {
     config as default,
     DEV_STATUSPAGE_SUMMARY_URL,
+    LOCAL_STATUSPAGE_SUMMARY_URL,
     PROD_STATUSPAGE_SUMMARY_URL,
     getBaseUrl,
     getStatuspageSummaryUrl,
