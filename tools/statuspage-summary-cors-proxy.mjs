@@ -1,5 +1,5 @@
 import * as http from 'http';
-import { LOCAL_STATUSPAGE_SUMMARY_URL } from '../src/js/config.js';
+import { LOCAL_STATUSPAGE_SUMMARY_URL } from '../src/js/config.mjs';
 
 // An API key is required if `STATUSPAGE_URL` points to a private statuspage.
 const API_KEY = process.env.API_KEY;
