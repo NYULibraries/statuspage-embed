@@ -1,12 +1,10 @@
 FROM node:24.15.0-trixie
 
-ENV INSTALL_PATH /app
+WORKDIR /app
 
-COPY package.json $INSTALL_PATH
-COPY src/js/config.mjs $INSTALL_PATH/src/js/
-COPY tools $INSTALL_PATH/tools
-
-WORKDIR $INSTALL_PATH
+COPY package.json .
+COPY src ./src
+COPY tools ./tools
 
 CMD ["npm", "run", "statuspage-proxy"]
 
