@@ -1,11 +1,16 @@
 import * as http from 'http';
 import { LOCAL_STATUSPAGE_SUMMARY_URL } from '../src/js/config.mjs';
 
+// `Internal` statuspage: https://internal18.statuspage.io/
+const DEFAULT_STATUSPAGE_URL_TO_PROXY =
+    'https://66x84091slz4.statuspage.io/api/v2/summary.json';
+
 // An API key is required if `STATUSPAGE_URL` points to a private statuspage.
 const API_KEY = process.env.API_KEY;
 // URL of server to proxy.  It can be a real statuspage URL or the URL for a
 // fake summary.json file (served without the necessary CORS header).
-const STATUSPAGE_URL_TO_PROXY = process.env.STATUSPAGE_URL;
+const STATUSPAGE_URL_TO_PROXY = process.env.STATUSPAGE_URL ||
+                                DEFAULT_STATUSPAGE_URL_TO_PROXY;
 
 try {
     new URL( STATUSPAGE_URL_TO_PROXY );
