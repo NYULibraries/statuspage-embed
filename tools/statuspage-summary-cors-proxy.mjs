@@ -56,3 +56,6 @@ async function requestListener( request, response ) {
 
 server.on( 'request', requestListener );
 server.listen( port );
+
+console.log( `Local proxy: http://localhost:${ port }
+Proxied statuspage: ${ STATUSPAGE_URL_TO_PROXY }` );
