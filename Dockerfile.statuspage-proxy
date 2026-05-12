@@ -1,0 +1,10 @@
+FROM node:24.15.0-trixie
+
+ENV INSTALL_PATH /app
+
+COPY . $INSTALL_PATH
+
+WORKDIR $INSTALL_PATH
+
+CMD ["node", "statuspage-summary-cors-proxy.mjs"]
+
