@@ -1,5 +1,9 @@
+dist/
 node_modules/
+
+.env
+.node-version
+
 npm-debug.log
 yarn-error.log
-.node-version
-dist/
+
