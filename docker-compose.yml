@@ -23,6 +23,17 @@ services:
     # hypervisor in the "Develop" section of README.md.
     #<<: *default-volumes
 
+  statuspage-proxy:
+    build:
+      dockerfile: Dockerfile.statuspage-proxy
+    environment:
+      - API_KEY=${API_KEY}
+      - STATUSPAGE_URL=${STATUSPAGE_URL}
+    image: statuspage-summary-cors-proxy
+    ports:
+      - "3000:3000"
+    #<<: *default-volumes
+
   test:
     build: .
     image: statuspage-embed

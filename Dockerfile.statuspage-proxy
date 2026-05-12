@@ -2,9 +2,11 @@ FROM node:24.15.0-trixie
 
 ENV INSTALL_PATH /app
 
-COPY . $INSTALL_PATH
+COPY package.json $INSTALL_PATH
+COPY src/js/config.mjs $INSTALL_PATH/src/js/
+COPY tools $INSTALL_PATH/tools
 
 WORKDIR $INSTALL_PATH
 
-CMD ["node", "statuspage-summary-cors-proxy.mjs"]
+CMD ["npm", "run", "statuspage-proxy"]
 
