@@ -1,0 +1,12 @@
+{
+  "name": "statuspage-embed-unit-tests",
+  "version": "1.0.0",
+  "license": "ISC",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest watch"
+  },
+  "dependencies": {
+    "vitest": "4.0.18"
+  }
+}

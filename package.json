@@ -7,8 +7,10 @@
     "eslint": "eslint . --ext .js,.jsx,.cjs,.mjs",
     "eslint:fix": "npm run eslint -- --fix",
     "statuspage-proxy": "node ./tools/statuspage-summary-cors-proxy.mjs",
-    "test": "vitest run",
-    "test:watch": "vitest watch"
+    "test": "npm run test:unit && npm run test:e2e",
+    "test:e2e": "cd test/e2e/ && npm run test",
+    "test:unit": "cd test/unit/ && npm run test",
+    "test:unit:watch": "cd test/unit/ && npm run test:watch"
   },
   "devDependencies": {
     "@eslint/compat": "2.0.2",
@@ -17,7 +19,6 @@
     "eslint": "10.0.0",
     "globals": "17.3.0",
     "jsdom": "24.1.0",
-    "vite": "8.0.0",
-    "vitest": "4.0.18"
+    "vite": "8.0.0"
   }
 }
