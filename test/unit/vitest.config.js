@@ -6,6 +6,6 @@ export default defineConfig( {
         environment: 'jsdom',
         exclude    : [ ...configDefaults.exclude ],
         root       : fileURLToPath( new URL( './', import.meta.url ) ),
-        setupFiles : [ './stubDocument.js' ],
+        setupFiles : [ './setup-files/stubDocument.js' ],
     },
 } );
