@@ -1,0 +1,22 @@
+FROM node:24.15.0-trixie
+
+ENV APP_INSTALL_PATH /app
+ENV UNIT_TESTS_INSTALL_PATH ${APP_INSTALL_PATH}/test/unit
+
+COPY src $APP_INSTALL_PATH/src
+
+COPY test/unit/package.json test/unit/package-lock.json /tmp/
+
+RUN cd /tmp && npm install \
+  && mkdir -p ${UNIT_TESTS_INSTALL_PATH} \
+  && cd ${UNIT_TESTS_INSTALL_PATH} \
+  && cp -R /tmp/node_modules ${UNIT_TESTS_INSTALL_PATH} \
+  && rm -r /tmp/*
+
+COPY test/unit ${UNIT_TESTS_INSTALL_PATH}
+
+WORKDIR ${UNIT_TESTS_INSTALL_PATH}
+
+# Run playwright tests
+CMD [ "npm", "run", "test" ]
+

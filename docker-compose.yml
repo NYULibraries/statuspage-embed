@@ -34,14 +34,16 @@ services:
       - "3000:3000"
     #<<: *default-volumes
 
-  test:
-    build: .
-    image: statuspage-embed
+  unit-tests:
+    build:
+      dockerfile: Dockerfile.unit-tests
+    image: statuspage-embed-unit-tests
     command: ["npm", "run", "test"]
     #<<: *default-volumes
 
-  test-watch:
-    build: .
-    image: statuspage-embed
+  unit-tests-watch:
+    build:
+      dockerfile: Dockerfile.unit-tests
+    image: statuspage-embed-unit-tests
     command: ["npm", "run", "test:watch"]
     #<<: *default-volumes
