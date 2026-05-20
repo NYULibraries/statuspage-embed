@@ -3,7 +3,7 @@ x-volumes: &default-volumes
     - ./dist:/app/dist
     - ./js:/app/js
     - ./public:/app/public
-    - ./spec:/app/spec
+    - ./test/unit:/app/test/unit
 
 services:
   compile:
