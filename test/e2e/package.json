@@ -1,9 +1,14 @@
 {
   "name": "e2e",
   "version": "1.0.0",
+  "scripts": {
+    "test": "node_modules/.bin/playwright test",
+    "test:headed": "node_modules/.bin/playwright test --headed"
+  },
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "1.58.2",
     "@types/node": "25.3.0"
-  }
+  },
+  "type": "module"
 }

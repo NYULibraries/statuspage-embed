@@ -1,0 +1,100 @@
+import { execSync } from 'child_process';
+import { readFileSync, unlinkSync, writeFileSync } from 'node:fs';
+
+import { test, expect } from '@playwright/test';
+
+import { getTestCases, updateGoldenFiles } from '../testutils';
+
+import { getStatuspageSummaryUrl } from '../../../src/js/config.mjs';
+
+const PAGE_URL = process.env.PLAYWRIGHT_BASE_URL;
+const STATUSPAGE_SUMMARY_URL = getStatuspageSummaryUrl();
+
+const testCases = getTestCases();
+
+testCases.forEach( ( testCase ) => {
+    test.beforeEach( async ( { page } ) => {
+        await page.route( STATUSPAGE_SUMMARY_URL, async route => {
+            const body = testCase.summary;
+            await route.fulfill( {
+                body,
+                headers: {
+                    'content-type': 'application/json; charset=utf-8',
+                },
+            } );
+        } );
+
+        await page.goto( PAGE_URL );
+
+        // TODO:
+        // Figure out a less brittle `waitFor`.  One possibility is to wait for
+        // the banner and continue if it times out to allow a proper test for
+        // an appropriate absence of banner.
+        await page.waitForTimeout( 1_000 );
+    } );
+
+    // TODO: Re-enable after application changes are done.
+    test.describe.skip( `${ testCase.name }`, () => {
+        test( 'page HTML matches expected', async ( { page } ) => {
+            // Clean actual/ and diffs/ files
+            // NOTE:
+            // We don't bother with error handling because these files get
+            // overwritten anyway, and if there were no previous files, or if a
+            // previous cleaning/reset script or process already deleted the
+            // previous files, we don't want the errors causing distraction.
+            // If deletion fails on existing files, there's a good chance there
+            // will be errors thrown later, which will then correctly fail the
+            // test.
+            const actualFile = `tests/actual/${ testCase.key }.txt`;
+            try {
+                unlinkSync( actualFile );
+                // eslint-disable-next-line no-unused-vars
+            } catch ( error ) { /* empty */ }
+            const diffFile = `tests/diffs/${ testCase.key }.html`;
+            try {
+                unlinkSync( diffFile );
+                // eslint-disable-next-line no-unused-vars
+            } catch ( error ) { /* empty */ }
+
+            const actual = await page.locator( 'html' ).innerHTML();
+
+            const goldenFile = `tests/golden/${ testCase.key }.html`;
+            if ( updateGoldenFiles() ) {
+                writeFileSync( goldenFile, actual );
+
+                console.log( `Updated golden file ${ goldenFile }` );
+
+                return;
+            }
+            const golden = readFileSync( goldenFile, { encoding: 'utf8' } );
+
+            writeFileSync( actualFile, actual );
+
+            const ok = actual === golden;
+
+            let message =
+                `Actual HTML for "${ testCase.name }" does not match expected HTML`;
+            if ( !ok ) {
+                const command = `diff ${ goldenFile } ${ actualFile } | tee ${ diffFile }`;
+                let diffOutput;
+                try {
+                    diffOutput = new TextDecoder().decode( execSync( command ) );
+                    message += `
+
+======= BEGIN DIFF OUTPUT ========
+${ diffOutput }
+======== END DIFF OUTPUT =========
+
+[Recorded in diff file: ${ diffFile }]`;
+                } catch ( e ) {
+                    // `diff` command failed to create the diff file.
+                    message += `  Diff command \`${ command }\` failed:
+
+${ e.stderr.toString() }`;
+                }
+            }
+
+            expect( ok, message ).toBe( true );
+        } );
+    } );
+} );

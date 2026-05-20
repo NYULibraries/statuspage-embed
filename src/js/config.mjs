@@ -42,6 +42,13 @@ function getBaseUrl() {
 }
 
 function getSourceFileHostname() {
+    if ( typeof document === 'undefined' ) {
+        // Very likely we are in a Playwright context or some other local
+        // situation where this config file is being imported for its data
+        // and/or helper functions.
+        return LOCALHOST_HOSTNAME;
+    }
+
     if ( document.currentScript ) {
         return new URL( document.currentScript.src ).hostname;
     } else if ( document.location.hostname === LOCALHOST_HOSTNAME ) {
