@@ -7,13 +7,13 @@ docker_build: &docker_build
   run:
     name: Docker build
     command: |
-      docker compose build test compile
+      docker compose build unit-tests compile
 
 test: &test
   run:
     name: Test
     command: |
-      docker compose run test
+      docker compose run unit-tests
 
 copy_build: &copy_build
   run:
