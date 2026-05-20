@@ -4,7 +4,7 @@ import { defineConfig, configDefaults } from 'vitest/config';
 export default defineConfig( {
     test: {
         environment: 'jsdom',
-        exclude    : [ ...configDefaults.exclude, 'e2e/*' ],
+        exclude    : [ ...configDefaults.exclude, 'test/e2e/tests/*' ],
         root       : fileURLToPath( new URL( './', import.meta.url ) ),
         setupFiles : [ './test/unit/stubDocument.js' ],
     },
