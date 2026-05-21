@@ -1,3 +1,10 @@
+!tests/actual/
+tests/actual/*
+!tests/actual/.gitkeep
+
+!tests/diffs/
+tests/diffs/*
+!tests/diffs/.gitkeep
 
 # Playwright
 node_modules/
