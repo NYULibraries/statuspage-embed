@@ -43,7 +43,7 @@ testCases.forEach( ( testCase ) => {
                 unlinkSync( actualFile );
                 // eslint-disable-next-line no-unused-vars
             } catch ( error ) { /* empty */ }
-            const diffFile = `tests/diffs/${ testCase.key }.html`;
+            const diffFile = `tests/diffs/${ testCase.key }.txt`;
             try {
                 unlinkSync( diffFile );
                 // eslint-disable-next-line no-unused-vars
