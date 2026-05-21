@@ -12,7 +12,7 @@ beforeEach( () => {
     alertBanner = new AlertBanner();
 } );
 
-describe( '#bannerClass', () => {
+describe( 'bannerClass', () => {
     it( 'should return red when investigating', () => {
         alertBanner.status = 'investigating';
         expect( alertBanner.bannerClass() ).toEqual(
@@ -61,7 +61,7 @@ describe( '#bannerClass', () => {
     } );
 } );
 
-describe( '#insertBanner', () => {
+describe( 'insertBanner', () => {
     beforeEach( () => {
         alertBanner.message = 'Some content';
         alertBanner.linkPath = 'http://example.com';
@@ -86,7 +86,7 @@ describe( '#insertBanner', () => {
     } );
 } );
 
-describe( '#insertStylesheet', () => {
+describe( 'insertStylesheet', () => {
     it( 'should not be called automatically', () => {
         expect( document.head.children.length ).toBe( 0 );
     } );
@@ -104,7 +104,7 @@ describe( '#insertStylesheet', () => {
     } );
 } );
 
-describe( '#init', () => {
+describe( 'init', () => {
     let mockChosenIncident = true;
 
     beforeEach( () => {
