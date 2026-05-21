@@ -26,12 +26,6 @@ testCases.forEach( ( testCase ) => {
             } );
 
             await page.goto( PAGE_URL );
-
-            // TODO:
-            // Figure out a less brittle `waitFor`.  One possibility is to wait for
-            // the banner and continue if it times out to allow a proper test for
-            // an appropriate absence of banner.
-            await page.waitForTimeout( 1_000 );
         } );
 
         test( 'page HTML matches expected', async ( { page } ) => {
