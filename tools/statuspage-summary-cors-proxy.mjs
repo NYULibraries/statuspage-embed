@@ -1,5 +1,5 @@
 import * as http from 'http';
-import { LOCAL_STATUSPAGE_SUMMARY_URL } from '../../src/js/config.mjs';
+import { LOCAL_STATUSPAGE_SUMMARY_URL } from '../src/js/config.mjs';
 
 // `Internal` statuspage: https://internal18.statuspage.io/
 const DEFAULT_STATUSPAGE_URL_TO_PROXY =
