@@ -105,7 +105,6 @@ describe( '#insertStylesheet', () => {
 } );
 
 describe( '#init', () => {
-    let mockHasMatchingHashtag;
     let mockChosenIncident = true;
 
     beforeEach( () => {
@@ -114,61 +113,15 @@ describe( '#init', () => {
         alertBanner.statuspage.fetchData = vi.fn( () => true );
         alertBanner.statuspage.chosenIncident = vi.fn(
             () => mockChosenIncident );
-        alertBanner.statuspage.hasMatchingHashtag = vi.fn(
-            () => mockHasMatchingHashtag );
         alertBanner.statuspage.alertName = vi.fn(
             () => 'Incident Name' );
         alertBanner.statuspage.alertUrl = vi.fn(
             () => 'http://example.com/path' );
-        alertBanner.statuspage.lastStatus = vi.fn(
+        alertBanner.statuspage.status = vi.fn(
             () => 'somestatus' );
     } );
 
-    describe( 'with matching hashtag', () => {
-        beforeEach( () => {
-            mockHasMatchingHashtag = true;
-        } );
-
-        it( 'should call helpers in order', async () => {
-            await alertBanner.init();
-            expect( AlertBanner.insertStylesheet ).toHaveBeenCalled();
-            expect( alertBanner.statuspage.fetchData ).toHaveBeenCalled();
-            expect( alertBanner.insertBanner ).toHaveBeenCalled();
-        } );
-
-        it( 'should assign values', async () => {
-            await alertBanner.init();
-            expect( alertBanner.message ).toEqual( 'Incident Name' );
-            expect( alertBanner.linkPath ).toEqual( 'http://example.com/path' );
-            expect( alertBanner.lastStatus ).toEqual( 'somestatus' );
-        } );
-    } );
-
-    describe( 'without matching hashtag', () => {
-        beforeEach( () => {
-            mockHasMatchingHashtag = false;
-        } );
-
-        it( 'should not call insertBanner', async () => {
-            await alertBanner.init();
-            expect( AlertBanner.insertStylesheet ).toHaveBeenCalled();
-            expect( alertBanner.statuspage.fetchData ).toHaveBeenCalled();
-            expect( alertBanner.insertBanner ).not.toHaveBeenCalled();
-        } );
-
-        it( 'should not assign values', async () => {
-            await alertBanner.init();
-            expect( alertBanner.message ).toBeUndefined();
-            expect( alertBanner.linkPath ).toBeUndefined();
-            expect( alertBanner.lastStatus ).toBeUndefined();
-        } );
-    } );
-
     describe( 'without valid incident', () => {
-        beforeEach( () => {
-            mockChosenIncident = false;
-        } );
-
         it( 'should not call insertBanner', async () => {
             await alertBanner.init();
             expect( AlertBanner.insertStylesheet ).toHaveBeenCalled();
