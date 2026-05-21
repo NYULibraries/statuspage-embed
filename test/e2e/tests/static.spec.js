@@ -3,7 +3,7 @@ import { readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 
 import { test, expect } from '@playwright/test';
 
-import { getTestCases, updateGoldenFiles } from '../testutils';
+import { getTestCases, replaceHashWithDummyString, updateGoldenFiles } from '../testutils';
 
 import { getStatuspageSummaryUrl } from '../../../src/js/config.mjs';
 
@@ -50,10 +50,11 @@ testCases.forEach( ( testCase ) => {
             } catch ( error ) { /* empty */ }
 
             const actual = await page.locator( 'html' ).innerHTML();
+            const actualMassaged = replaceHashWithDummyString( actual );
 
             const goldenFile = `tests/golden/${ testCase.key }.html`;
             if ( updateGoldenFiles() ) {
-                writeFileSync( goldenFile, actual );
+                writeFileSync( goldenFile, actualMassaged );
 
                 console.log( `Updated golden file ${ goldenFile }` );
 
@@ -61,9 +62,9 @@ testCases.forEach( ( testCase ) => {
             }
             const golden = readFileSync( goldenFile, { encoding: 'utf8' } );
 
-            writeFileSync( actualFile, actual );
+            writeFileSync( actualFile, actualMassaged );
 
-            const ok = actual === golden;
+            const ok = actualMassaged === golden;
 
             let message =
                 `Actual HTML for "${ testCase.name }" does not match expected HTML`;

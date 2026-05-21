@@ -34,6 +34,17 @@ function getTestCases() {
     return testCases;
 }
 
+function replaceHashWithDummyString( html ) {
+    const regexp = new RegExp(
+        '<script type="module" src="\\/src\\/js\\/index\\.js\\?t=[\\d]+"><\\/script>',
+    );
+
+    return html.replace(
+        regexp,
+        '<script type="module" src="/src/js/index.js?t=[HASH]"></script>',
+    );
+}
+
 function parseTestCaseName( fixtureFilename ) {
     const filenameTokens =
         path.basename( fixtureFilename, '.json' ).split( '_' );
@@ -66,6 +77,7 @@ function updateGoldenFiles() {
 
 export {
     getTestCases,
+    replaceHashWithDummyString,
     updateGoldenFiles,
 };
 
