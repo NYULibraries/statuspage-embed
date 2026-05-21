@@ -14,6 +14,7 @@ const getMockData = () => ( {
             name            : 'FirstIncident',
             shortlink       : 'http://example.com/1',
             updated_at      : firstIncidentsDate,
+            status          : 'identified',
             incident_updates: [
                 { body, status: 'identified' },
                 { body: 'Fake body', status: 'monitoring' },
@@ -23,6 +24,7 @@ const getMockData = () => ( {
             name            : 'SecondIncident ',
             shortlink       : 'http://example.com/2',
             updated_at      : '2019-07-01T09:11:40.438-04:00',
+            status          : 'investigating',
             incident_updates: [
                 { body: 'Another fake body', status: 'investigating' },
                 { body: 'Fake body', status: 'monitoring' },
@@ -34,6 +36,7 @@ const getMockData = () => ( {
             name            : 'FirstMaintenance',
             shortlink       : 'http://example.com/1',
             updated_at      : firstMaintenanceDate,
+            status          : 'in_progress',
             incident_updates: [
                 { body: scheduledMaintenanceBody, status: 'in_progress' },
                 { body: 'Fake body', status: 'identified' },
@@ -43,6 +46,7 @@ const getMockData = () => ( {
             name            : 'SecondMaintenance',
             shortlink       : 'http://example.com/2',
             updated_at      : '2019-07-01T09:11:40.438-04:00',
+            status          : 'scheduled',
             incident_updates: [
                 { body: 'Another fake body', status: 'scheduled' },
                 { body: 'Fake body', status: 'monitoring' },
@@ -55,11 +59,11 @@ beforeEach( () => {
     statuspageApi = new StatuspageApi();
 } );
 
-describe( '#getData', () => {
+describe( 'fetchData', () => {
     let mockResponse;
 
     beforeEach( () => {
-    // Prevent error "TypeError: Invalid URL".
+        // Prevent error "TypeError: Invalid URL".
         document.currentScript.src = 'https://does-not-matter.com';
 
         mockResponse = {};
@@ -67,15 +71,45 @@ describe( '#getData', () => {
         mockResponse.json = vi.fn( () => getMockData() );
     } );
 
-    it( 'assign json data from fetch', async () => {
-        await statuspageApi.getData();
+    it( 'sets `data` field to correct value', async () => {
+        await statuspageApi.fetchData();
+
         expect( global.fetch ).toHaveBeenCalled();
         expect( statuspageApi.data ).toEqual( getMockData() );
     } );
+
+    describe( 'sets `#alert` field to correct value', async () => {
+        it( 'alertName() should return the name of the chosen alert', async () => {
+            await statuspageApi.fetchData();
+
+            expect( statuspageApi.alertName() ).toEqual( 'FirstIncident' );
+        } );
+
+        it( 'alertUrl() should return the URL of the chosen alert', async () => {
+            await statuspageApi.fetchData();
+
+            expect( statuspageApi.alertUrl() ).toEqual( 'http://example.com/1' );
+        } );
+    } );
+
+    describe( 'sets `#status` field to correct value', async () => {
+        it( 'status() should return the status of the chosen alert', async () => {
+            await statuspageApi.fetchData();
+
+            expect( statuspageApi.status() ).toEqual( 'identified' );
+        } );
+    } );
 } );
 
-describe( '#chosenAlert', () => {
+describe( 'chosenAlert', () => {
     it( 'should return false if no active incidents', () => {
+        // Prevent error "TypeError: Invalid URL".
+        document.currentScript.src = 'https://does-not-matter.com';
+
+        const mockResponse = {};
+        global.fetch = vi.fn( () => mockResponse );
+        mockResponse.json = vi.fn( () => getMockData() );
+
         statuspageApi.data = { incidents: [] };
         expect( statuspageApi.chosenAlert() ).toEqual( false );
     } );
@@ -147,211 +181,3 @@ describe( '#chosenAlert', () => {
     } );
 } );
 
-describe( '#alertName', () => {
-    beforeEach( () => {
-        statuspageApi.data = getMockData();
-    } );
-
-    it( 'should return last alert name', () => {
-        expect( statuspageApi.alertName() ).toEqual( 'FirstIncident' );
-    } );
-} );
-
-describe( '#alertUrl', () => {
-    beforeEach( () => {
-        statuspageApi.data = getMockData();
-    } );
-
-    it( 'should return last incident name', () => {
-        expect( statuspageApi.alertUrl() ).toEqual( 'http://example.com/1' );
-    } );
-} );
-
-describe( '#lastStatus', () => {
-    beforeEach( () => {
-        statuspageApi.data = getMockData();
-    } );
-
-    it( 'should return last status', () => {
-        expect( statuspageApi.lastStatus() ).toEqual( 'identified' );
-    } );
-} );
-
-describe( '#hasMatchingHashtag', () => {
-    describe( 'with #majoroutage hashtag in body', () => {
-        beforeEach( () => {
-            statuspageApi.data = getMockData();
-        } );
-
-        it( 'should return truthy', () => {
-            expect( statuspageApi.hasMatchingHashtag() ).toBeTruthy();
-        } );
-    } );
-
-    describe( 'with #weatherclosure hashtag in body', () => {
-        beforeEach( () => {
-            body = 'Some other #weatherclosure';
-            statuspageApi.data = getMockData();
-        } );
-
-        it( 'should return truthy', () => {
-            expect( statuspageApi.hasMatchingHashtag() ).toBeTruthy();
-        } );
-    } );
-
-    describe( 'with #buildingclosure hashtag in body', () => {
-        beforeEach( () => {
-            body = 'Some other #buildingclosure';
-            statuspageApi.data = getMockData();
-        } );
-
-        it( 'should return truthy', () => {
-            expect( statuspageApi.hasMatchingHashtag() ).toBeTruthy();
-        } );
-    } );
-
-    describe( 'with #scheduledmaintenance hashtag in body', () => {
-        beforeEach( () => {
-            body = 'Some other #scheduledmaintenance';
-            statuspageApi.data = getMockData();
-        } );
-
-        it( 'should return truthy', () => {
-            expect( statuspageApi.hasMatchingHashtag() ).toBeTruthy();
-        } );
-    } );
-
-    describe( 'with non-matching hashtag in body', () => {
-        beforeEach( () => {
-            body = 'Some other #hashtag';
-            statuspageApi.data = getMockData();
-        } );
-
-        it( 'should return falsy', () => {
-            expect( statuspageApi.hasMatchingHashtag() ).toBeFalsy();
-        } );
-    } );
-
-    describe( 'with #bobcatmigration hashtag in body', () => {
-        beforeEach( () => {
-            body = 'Some other #bobcatmigration';
-            statuspageApi.data = getMockData();
-        } );
-
-        describe( 'on library.nyu.edu', () => {
-            beforeEach( () => {
-                // must delete before reassigning, otherwise it doesn't work
-                delete window.location;
-                window.location = new URL( 'https://library.nyu.edu' );
-            } );
-
-            it( 'should return falsy', () => {
-                expect( window.location.hostname ).toEqual( 'library.nyu.edu' );
-                expect( statuspageApi.hasMatchingHashtag() ).toBeFalsy();
-            } );
-        } );
-
-        describe( 'on bobcat.library.nyu.edu', () => {
-            beforeEach( () => {
-                // must delete before reassigning, otherwise it doesn't work
-                delete window.location;
-                window.location = new URL( 'https://bobcat.library.nyu.edu' );
-            } );
-
-            it( 'should return truthy', () => {
-                expect( window.location.hostname ).toEqual( 'bobcat.library.nyu.edu' );
-                expect( statuspageApi.hasMatchingHashtag() ).toBeTruthy();
-            } );
-        } );
-
-        describe( 'on bobcatdev.library.nyu.edu', () => {
-            beforeEach( () => {
-                // must delete before reassigning, otherwise it doesn't work
-                delete window.location;
-                window.location = new URL( 'https://bobcatdev.library.nyu.edu' );
-            } );
-
-            it( 'should return falsy', () => {
-                expect( window.location.hostname ).toEqual( 'bobcatdev.library.nyu.edu' );
-                expect( statuspageApi.hasMatchingHashtag() ).toBeFalsy();
-            } );
-        } );
-    } );
-
-    describe( 'with #bobcatdevmigration hashtag in body', () => {
-        beforeEach( () => {
-            body = 'Some other #bobcatdevmigration';
-            statuspageApi.data = getMockData();
-        } );
-
-        describe( 'on library.nyu.edu', () => {
-            beforeEach( () => {
-                // must delete before reassigning, otherwise it doesn't work
-                delete window.location;
-                window.location = new URL( 'https://library.nyu.edu' );
-            } );
-
-            it( 'should return falsy', () => {
-                expect( window.location.hostname ).toEqual( 'library.nyu.edu' );
-                expect( statuspageApi.hasMatchingHashtag() ).toBeFalsy();
-            } );
-        } );
-
-        describe( 'on bobcat.library.nyu.edu', () => {
-            beforeEach( () => {
-                // must delete before reassigning, otherwise it doesn't work
-                delete window.location;
-                window.location = new URL( 'https://bobcat.library.nyu.edu' );
-            } );
-
-            it( 'should return falsy', () => {
-                expect( window.location.hostname ).toEqual( 'bobcat.library.nyu.edu' );
-                expect( statuspageApi.hasMatchingHashtag() ).toBeFalsy();
-            } );
-        } );
-
-        describe( 'on bobcatdev.library.nyu.edu', () => {
-            beforeEach( () => {
-                // must delete before reassigning, otherwise it doesn't work
-                delete window.location;
-                window.location = new URL( 'https://bobcatdev.library.nyu.edu' );
-            } );
-
-            it( 'should return truthy', () => {
-                expect( window.location.hostname ).toEqual( 'bobcatdev.library.nyu.edu' );
-                expect( statuspageApi.hasMatchingHashtag() ).toBeTruthy();
-            } );
-        } );
-    } );
-
-    describe( 'with no hashtag in body', () => {
-        beforeEach( () => {
-            body = 'Some body';
-            statuspageApi.data = getMockData();
-        } );
-
-        it( 'should return falsy', () => {
-            expect( statuspageApi.hasMatchingHashtag() ).toBeFalsy();
-        } );
-    } );
-
-    describe( 'with no body', () => {
-        beforeEach( () => {
-            body = null;
-            statuspageApi.data = getMockData();
-        } );
-
-        it( 'should return falsy', () => {
-            expect( statuspageApi.hasMatchingHashtag() ).toBeFalsy();
-        } );
-    } );
-} );
-
-describe( 'Test the private method lastUpdate', () => {
-    test( 'Should throw an error when trying to call the private method lastUpdate', () => {
-        const statusPage = new StatuspageApi();
-        expect( () => {
-            statusPage.lastUpdate();
-        } ).toThrow( 'statusPage.lastUpdate is not a function' );
-    } );
-} );
