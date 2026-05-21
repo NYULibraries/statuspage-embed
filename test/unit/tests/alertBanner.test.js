@@ -111,7 +111,7 @@ describe( '#init', () => {
     beforeEach( () => {
         AlertBanner.insertStylesheet = vi.fn( () => true );
         alertBanner.insertBanner = vi.fn( () => true );
-        alertBanner.statuspage.getData = vi.fn( () => true );
+        alertBanner.statuspage.fetchData = vi.fn( () => true );
         alertBanner.statuspage.chosenIncident = vi.fn(
             () => mockChosenIncident );
         alertBanner.statuspage.hasMatchingHashtag = vi.fn(
@@ -132,7 +132,7 @@ describe( '#init', () => {
         it( 'should call helpers in order', async () => {
             await alertBanner.init();
             expect( AlertBanner.insertStylesheet ).toHaveBeenCalled();
-            expect( alertBanner.statuspage.getData ).toHaveBeenCalled();
+            expect( alertBanner.statuspage.fetchData ).toHaveBeenCalled();
             expect( alertBanner.insertBanner ).toHaveBeenCalled();
         } );
 
@@ -152,7 +152,7 @@ describe( '#init', () => {
         it( 'should not call insertBanner', async () => {
             await alertBanner.init();
             expect( AlertBanner.insertStylesheet ).toHaveBeenCalled();
-            expect( alertBanner.statuspage.getData ).toHaveBeenCalled();
+            expect( alertBanner.statuspage.fetchData ).toHaveBeenCalled();
             expect( alertBanner.insertBanner ).not.toHaveBeenCalled();
         } );
 
@@ -172,7 +172,7 @@ describe( '#init', () => {
         it( 'should not call insertBanner', async () => {
             await alertBanner.init();
             expect( AlertBanner.insertStylesheet ).toHaveBeenCalled();
-            expect( alertBanner.statuspage.getData ).toHaveBeenCalled();
+            expect( alertBanner.statuspage.fetchData ).toHaveBeenCalled();
             expect( alertBanner.insertBanner ).not.toHaveBeenCalled();
         } );
 

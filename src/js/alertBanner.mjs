@@ -48,13 +48,13 @@ class AlertBanner {
     // initialize banner: pull latest statuspage data, and insert if matching hastag
     async init() {
         this.constructor.insertStylesheet();
-        await this.statuspage.getData();
+        await this.statuspage.fetchData();
         if ( !this.statuspage.validAlert() ) {
             return false;
         }
         this.message = this.statuspage.alertName();
         this.linkPath = this.statuspage.alertUrl();
-        this.lastStatus = this.statuspage.lastStatus();
+        this.lastStatus = this.statuspage.status();
         return this.insertBanner();
     }
 }

@@ -1,25 +1,15 @@
 import { getStatuspageSummaryUrl } from './config';
 
+const IMPACT_NONE = 'none';
+
 class StatuspageApi {
-    #getCurrentHostname() {
-        return window.location.hostname;
-    }
+    #alert;
+    #data;
+    #status;
 
-    #lastUpdate() {
-        return this.chosenAlert().incident_updates[ 0 ];
-    }
-
-    alertName() {
-        return this.chosenAlert().name;
-    }
-
-    alertUrl() {
-        return this.chosenAlert().shortlink;
-    }
-
-    chosenAlert() {
-        const incident = this.data?.incidents?.[ 0 ];
-        const scheduledMaintenance = this.data?.scheduled_maintenances?.[ 0 ];
+    #chosenAlert() {
+        const incident = this.#data?.incidents?.[ 0 ];
+        const scheduledMaintenance = this.#data?.scheduled_maintenances?.[ 0 ];
 
         if ( !incident && !scheduledMaintenance ) return false;
         if ( !incident && scheduledMaintenance ) return scheduledMaintenance;
@@ -35,53 +25,27 @@ class StatuspageApi {
             scheduledMaintenance;
     }
 
-    async getData() {
+    alertName() {
+        return this.#chosenAlert().name;
+    }
+
+    alertUrl() {
+        return this.#chosenAlert().shortlink;
+    }
+
+    async fetchData() {
         const response = await fetch( getStatuspageSummaryUrl() );
-        this.data = await response.json();
+        this.#data = await response.json();
+        this.#alert = this.#chosenAlert();
+        this.#status = this.#alert.status;
     }
 
-    // private / protected methods
-    getHashtagRegexp() {
-        const defaultHashtagArr = [
-            'majoroutage',
-            'weatherclosure',
-            'buildingclosure',
-            'scheduledmaintenance',
-            'nyureturns',
-        ];
-        const bobcatdevHashtagArr =
-            defaultHashtagArr.concat( [ 'bobcatdevmigration' ] );
-        const bobcatHashtagArr =
-            defaultHashtagArr.concat( [ 'bobcatmigration' ] );
-
-        var hashtagArr;
-        switch ( this.#getCurrentHostname() ) {
-            case 'bobcat.library.nyu.edu':
-                hashtagArr = bobcatHashtagArr;
-                break;
-            case 'bobcatdev.library.nyu.edu':
-                hashtagArr = bobcatdevHashtagArr;
-                break;
-            default:
-                hashtagArr = defaultHashtagArr;
-        }
-        return new RegExp( '#(' + hashtagArr.join( '|' ) + ')($|[^a-zA-Z0-9_])' );
-    }
-
-
-    // true if matches hashtag from lists below, which depend on hostname
-    hasMatchingHashtag() {
-        if ( this.chosenAlert() )
-            return !!this.getHashtagRegexp().exec( this.#lastUpdate().body );
-        return false;
-    }
-
-    lastStatus() {
-        return this.#lastUpdate().status;
+    status() {
+        return this.#status;
     }
 
     validAlert() {
-        return this.hasMatchingHashtag();
+        return this.#alert && this.#alert.status !== IMPACT_NONE;
     }
 }
 
