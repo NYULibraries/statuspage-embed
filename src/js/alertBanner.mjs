@@ -18,7 +18,7 @@ class AlertBanner {
 
     // returns class string with appropriate color class for set status
     bannerClass() {
-        const color = config.statusToColorMapping[ this.lastStatus ];
+        const color = config.statusToColorMapping[ this.status ];
         return `nyulibraries-alert-banner alert-${ color }`;
     }
 
@@ -54,7 +54,7 @@ class AlertBanner {
         }
         this.message = this.statuspage.alertName();
         this.linkPath = this.statuspage.alertUrl();
-        this.lastStatus = this.statuspage.status();
+        this.status = this.statuspage.status();
         return this.insertBanner();
     }
 }

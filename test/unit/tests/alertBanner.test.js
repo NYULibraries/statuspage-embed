@@ -14,43 +14,43 @@ beforeEach( () => {
 
 describe( '#bannerClass', () => {
     it( 'should return red when investigating', () => {
-        alertBanner.lastStatus = 'investigating';
+        alertBanner.status = 'investigating';
         expect( alertBanner.bannerClass() ).toEqual(
             'nyulibraries-alert-banner alert-red' );
     } );
 
     it( 'should return orange when identified', () => {
-        alertBanner.lastStatus = 'identified';
+        alertBanner.status = 'identified';
         expect( alertBanner.bannerClass() ).toEqual(
             'nyulibraries-alert-banner alert-orange' );
     } );
 
     it( 'should return orange when in_progress', () => {
-        alertBanner.lastStatus = 'in_progress';
+        alertBanner.status = 'in_progress';
         expect( alertBanner.bannerClass() ).toEqual(
             'nyulibraries-alert-banner alert-orange' );
     } );
 
     it( 'should return green when monitoring', () => {
-        alertBanner.lastStatus = 'monitoring';
+        alertBanner.status = 'monitoring';
         expect( alertBanner.bannerClass() ).toEqual(
             'nyulibraries-alert-banner alert-green' );
     } );
 
     it( 'should return green when resolved', () => {
-        alertBanner.lastStatus = 'resolved';
+        alertBanner.status = 'resolved';
         expect( alertBanner.bannerClass() ).toEqual(
             'nyulibraries-alert-banner alert-green' );
     } );
 
     it( 'should return green when scheduled', () => {
-        alertBanner.lastStatus = 'scheduled';
+        alertBanner.status = 'scheduled';
         expect( alertBanner.bannerClass() ).toEqual(
             'nyulibraries-alert-banner alert-green' );
     } );
 
     it( 'should return undefined when unrecognized', () => {
-        alertBanner.lastStatus = 'something else';
+        alertBanner.status = 'something else';
         expect( alertBanner.bannerClass() ).toEqual(
             'nyulibraries-alert-banner alert-undefined' );
     } );
@@ -180,7 +180,7 @@ describe( '#init', () => {
             await alertBanner.init();
             expect( alertBanner.message ).toBeUndefined();
             expect( alertBanner.linkPath ).toBeUndefined();
-            expect( alertBanner.lastStatus ).toBeUndefined();
+            expect( alertBanner.status ).toBeUndefined();
         } );
     } );
 } );
