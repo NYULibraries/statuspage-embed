@@ -13,28 +13,27 @@ const STATUSPAGE_SUMMARY_URL = getStatuspageSummaryUrl();
 const testCases = getTestCases();
 
 testCases.forEach( ( testCase ) => {
-    test.beforeEach( async ( { page } ) => {
-        await page.route( STATUSPAGE_SUMMARY_URL, async route => {
-            const body = testCase.summary;
-            await route.fulfill( {
-                body,
-                headers: {
-                    'content-type': 'application/json; charset=utf-8',
-                },
+    test.describe( `${ testCase.name }`, () => {
+        test.beforeEach( async ( { page } ) => {
+            await page.route( STATUSPAGE_SUMMARY_URL, async route => {
+                const body = testCase.summary;
+                await route.fulfill( {
+                    body,
+                    headers: {
+                        'content-type': 'application/json; charset=utf-8',
+                    },
+                } );
             } );
+
+            await page.goto( PAGE_URL );
+
+            // TODO:
+            // Figure out a less brittle `waitFor`.  One possibility is to wait for
+            // the banner and continue if it times out to allow a proper test for
+            // an appropriate absence of banner.
+            await page.waitForTimeout( 1_000 );
         } );
 
-        await page.goto( PAGE_URL );
-
-        // TODO:
-        // Figure out a less brittle `waitFor`.  One possibility is to wait for
-        // the banner and continue if it times out to allow a proper test for
-        // an appropriate absence of banner.
-        await page.waitForTimeout( 1_000 );
-    } );
-
-    // TODO: Re-enable after application changes are done.
-    test.describe.skip( `${ testCase.name }`, () => {
         test( 'page HTML matches expected', async ( { page } ) => {
             // Clean actual/ and diffs/ files
             // NOTE:
