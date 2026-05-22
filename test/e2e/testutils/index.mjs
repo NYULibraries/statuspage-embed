@@ -41,7 +41,7 @@ function replaceHashWithDummyString( html ) {
 
     return html.replace(
         regexp,
-        '<script type="module" src="/src/js/index.js?t=[HASH]"></script>',
+        '<script type="module" src="/src/js/index.js?t=[TIMESTAMP]"></script>',
     );
 }
 
