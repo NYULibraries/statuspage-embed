@@ -33,14 +33,21 @@ function getTestCases() {
     return testCases;
 }
 
-function replaceHashWithDummyString( html ) {
+// This is used to keep the golden files stable.  Originally this function
+// replaced the `t` query param timestamp cache-bust with "?t=[TIMESTAMP]", but
+// it turns out that the timestamps aren't added on initial dev server startup.
+// Once the code is changed in any way, the cache-bust `t` query param appears.
+// Since `t` is not always there, and it's not significant for testing purposes,
+// we simply remove it completely from golden and actual data so they can be
+// compared.
+function removeCacheBustTimestampQueryParam( html ) {
     const regexp = new RegExp(
         '<script type="module" src="\\/src\\/js\\/index\\.js\\?t=[\\d]+"><\\/script>',
     );
 
     return html.replace(
         regexp,
-        '<script type="module" src="/src/js/index.js?t=[TIMESTAMP]"></script>',
+        '<script type="module" src="/src/js/index.js"></script>',
     );
 }
 
@@ -76,7 +83,7 @@ function updateGoldenFiles() {
 
 export {
     getTestCases,
-    replaceHashWithDummyString,
+    removeCacheBustTimestampQueryParam,
     updateGoldenFiles,
 };
 

@@ -3,7 +3,7 @@ import { readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 
 import { test, expect } from '@playwright/test';
 
-import { getTestCases, replaceHashWithDummyString, updateGoldenFiles } from '../testutils';
+import { getTestCases, removeCacheBustTimestampQueryParam, updateGoldenFiles } from '../testutils';
 
 import { getStatuspageSummaryUrl } from '../../../src/js/config.mjs';
 
@@ -50,7 +50,7 @@ testCases.forEach( ( testCase ) => {
             } catch ( error ) { /* empty */ }
 
             const actual = await page.locator( 'html' ).innerHTML();
-            const actualMassaged = replaceHashWithDummyString( actual );
+            const actualMassaged = removeCacheBustTimestampQueryParam( actual );
 
             const goldenFile = `tests/golden/${ testCase.key }.html`;
             if ( updateGoldenFiles() ) {
