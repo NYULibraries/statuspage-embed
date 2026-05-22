@@ -5,7 +5,6 @@ const STATUSPAGE_SUMMARY_FIXTURES_DIR = path.join(
     import.meta.dirname, '..', 'fixtures', 'statuspage-summaries',
 );
 
-const INCIDENT_TYPE = 'incident';
 const MAINTENANCE_TYPE = 'maintenance';
 
 function getTestCases() {
