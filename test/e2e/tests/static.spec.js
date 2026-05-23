@@ -30,6 +30,15 @@ testCases.forEach( ( testCase ) => {
             } );
 
             await page.goto( PAGE_URL );
+
+            // Originally didn't think needed a `waitFor`, but there was one
+            // occasion when the test ran before the injected stylesheet was
+            // present.  The first thing `alertBanner.init()` does is inject
+            // the stylesheet, but apparently there's still a race condition
+            // with the tests.
+            await page.locator( 'link[ rel = "stylesheet" ]' ).waitFor(
+                { state: 'attached' },
+            );
         } );
 
         test( 'page HTML matches expected', async ( { page } ) => {
