@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "test": "node_modules/.bin/playwright test",
+    "test:update-golden-files": "UPDATE_GOLDEN_FILES=true node_modules/.bin/playwright test",
     "test:headed": "node_modules/.bin/playwright test --headed"
   },
   "license": "ISC",
