@@ -4,10 +4,10 @@ const IMPACT_NONE = 'none';
 
 class StatuspageApi {
     #alert;
+    #status;
 
     // Leaving this public and writeable for now for easier unit testing.
     data;
-    #status;
 
     alertName() {
         return this.#alert.name;
