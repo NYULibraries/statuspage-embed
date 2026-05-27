@@ -1,6 +1,7 @@
 // For development
-const LOCALHOST_HOSTNAME = 'localhost';
 const DOCKER_COMPOSE_HOSTNAME = 'dev';
+const LOCALHOST_HOSTNAME = 'localhost';
+
 // Real hosts
 const DEV_CDN_HOSTNAME = 'cdn-dev.library.nyu.edu';
 const PROD_CDN_HOSTNAME = 'cdn.library.nyu.edu';
@@ -12,12 +13,12 @@ const PROD_CDN_HOSTNAME = 'cdn.library.nyu.edu';
 // same change in the proxy script.
 const LOCAL_STATUSPAGE_SUMMARY_URL =
     'http://localhost:3000/api/v2/summary.json';
+
 // Real statuspage summary.json URLs
 const DEV_STATUSPAGE_SUMMARY_URL =
     'https://alerts-dev.library.nyu.edu/api/v2/summary.json';
 const PROD_STATUSPAGE_SUMMARY_URL =
     'https://alerts.library.nyu.edu/api/v2/summary.json';
-
 
 // determine base url for stylesheet based on environment
 function getBaseUrl() {
