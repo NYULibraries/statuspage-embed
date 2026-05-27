@@ -91,26 +91,54 @@ statuspage proxy.
 
 ## Test
 
+### Unit tests
+
 To run the unit tests:
 
 ```shell
-npm run test
+npm run test:unit
 ```
 
 In Docker:
 
 ```
-docker compose run test
+docker compose run unit-tests
 ```
 
 To watch and re-run tests automatically:
 
 ```shell
-npm run test:watch
+npm run test:unit:watch
 ```
 
 In Docker:
 
 ```shell
-docker compose run test-watch
+docker compose run unit-tests-watch
 ```
+
+### Playwright E2E tests
+
+To run the Playwright E2E tests, first start the dev server if its not already
+running:
+
+```shell
+npm run dev
+```
+
+Then in another terminal window, run the tests:
+
+```shell
+PLAYWRIGHT_BASE_URL=http://localhost:5173 npm run test:e2e
+```
+
+In Docker: TODO
+
+To update the golden files, first make the desired code changes, which the dev
+server will automatically hot reload, then run:
+
+```shell
+PLAYWRIGHT_BASE_URL=http://localhost:5173 npm run test:e2e:update-golden-files
+```
+
+In Docker: TODO
