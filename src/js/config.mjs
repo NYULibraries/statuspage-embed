@@ -96,9 +96,11 @@ const config = {
 
 export {
     config as default,
+    getStatuspageSummaryUrl,
+
+    // Exported for testing purposes only
     DEV_STATUSPAGE_SUMMARY_URL,
     LOCAL_STATUSPAGE_SUMMARY_URL,
     PROD_STATUSPAGE_SUMMARY_URL,
     getBaseUrl,
-    getStatuspageSummaryUrl,
 };
