@@ -5,7 +5,7 @@ import { test, expect } from '@playwright/test';
 
 import {
     getTestCases,
-    removeCacheBustTimestampQueryParam,
+    massageHtmlIntoGolden,
     updateGoldenFiles,
 } from '../testutils';
 
@@ -63,7 +63,7 @@ testCases.forEach( ( testCase ) => {
             } catch ( error ) { /* empty */ }
 
             const actual = await page.locator( 'html' ).innerHTML();
-            const actualMassaged = removeCacheBustTimestampQueryParam( actual );
+            const actualMassaged = massageHtmlIntoGolden( actual );
 
             const goldenFile = `tests/golden/${ testCase.key }.html`;
             if ( updateGoldenFiles() ) {

@@ -33,22 +33,31 @@ function getTestCases() {
     return testCases;
 }
 
-// This is used to keep the golden files stable.  Originally this function
-// replaced the `t` query param timestamp cache-bust with "?t=[TIMESTAMP]", but
-// it turns out that the timestamps aren't added on initial dev server startup.
-// Once the code is changed in any way, the cache-bust `t` query param appears.
-// Since `t` is not always there, and it's not significant for testing purposes,
-// we simply remove it completely from golden and actual data so they can be
-// compared.
-function removeCacheBustTimestampQueryParam( html ) {
-    const regexp = new RegExp(
+function massageHtmlIntoGolden( html ) {
+    // Hostname will be either "localhost" or whatever the name of the dev
+    // server Docker Compose service is (e.g. "dev).
+    const hostnameRegexp = new RegExp(
+        '<link rel="stylesheet" type="text/css" href="http://[a-z]+:5173/index.min.css">',
+    );
+    // Originally we replaced the `t` query param timestamp cache-bust with
+    // "?t=[TIMESTAMP]", but it turns out that the timestamps aren't added on
+    // initial dev server startup.  Once the code is changed in any way, the
+    // cache-bust `t` query param appears.  Since `t` is not always there, and
+    // it's not significant for testing purposes, we simply remove it completely
+    // from golden and actual data so they can be compared.
+    const timestampRegexp = new RegExp(
         '<script type="module" src="\\/src\\/js\\/index\\.js\\?t=[\\d]+"><\\/script>',
     );
 
-    return html.replace(
-        regexp,
-        '<script type="module" src="/src/js/index.js"></script>',
-    );
+    return html
+        .replace(
+            hostnameRegexp,
+            '<link rel="stylesheet" type="text/css" href="http://[HOSTNAME]:5173/index.min.css">',
+        )
+        .replace(
+            timestampRegexp,
+            '<script type="module" src="/src/js/index.js"></script>',
+        );
 }
 
 function parseTestCaseName( fixtureFilename ) {
@@ -83,7 +92,7 @@ function updateGoldenFiles() {
 
 export {
     getTestCases,
-    removeCacheBustTimestampQueryParam,
+    massageHtmlIntoGolden,
     updateGoldenFiles,
 };
 
