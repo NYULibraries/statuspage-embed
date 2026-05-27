@@ -20,7 +20,11 @@ export default defineConfig( {
     // the container, but setting it to `true` to listen to all addresses will
     // be more robust.
     server: {
-        host: true,
-        port: 5173,
+        // This needs to include the names of the dev server and Playwright E2E
+        // tests Docker Compose services in order for the Playwright tests
+        // container to run tests against the dev server container.
+        allowedHosts: [ 'dev', 'e2e-tests' ],
+        host        : true,
+        port        : 5173,
     },
 } );
