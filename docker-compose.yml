@@ -6,6 +6,10 @@ x-volumes: &default-volumes
     - ./test:/app/test
     - ./tools:/app/tools
 
+x-environment: &x-environment
+  CI: ${CI}
+  PLAYWRIGHT_COMMAND_LINE_OPTIONS: ${PLAYWRIGHT_COMMAND_LINE_OPTIONS}
+
 services:
   compile:
     build: .
@@ -13,16 +17,40 @@ services:
     entrypoint: ["npm", "run", "build"]
     #<<: *default-volumes
 
+  # Note that `server.allowedHosts` in vite.config.js needs to include the name
+  # of this service so that the e2e tests container can access the dev server.
   dev:
     build:
       dockerfile: Dockerfile.development
     image: statuspage-embed
     ports:
       - "5173:5173"
-    command: ["npm", "run", "dev"]
+    networks:
+      - statuspage-embed-net
     # See the note about HMR not picking up changes to source files made in the
     # hypervisor in the "Develop" section of README.md.
-    #<<: *default-volumes
+    # <<: *default-volumes
+
+  # Note that `server.allowedHosts` in vite.config.js needs to include the name
+  # of this service so that the container can access the dev server container
+  # it runs the tests against.
+  e2e-tests:
+    build:
+      dockerfile: Dockerfile.e2e-tests
+    image: statuspage-embed-e2e-tests
+    depends_on:
+      - dev
+    environment:
+      <<: *x-environment
+      PLAYWRIGHT_BASE_URL: http://dev:5173
+    # https://playwright.dev/docs/ci#docker
+    # CI configurations > Docker
+    # "Using --ipc=host is also recommended when using Chromium.
+    # Without it Chromium can run out of memory and crash."
+    ipc: host
+    networks:
+      - statuspage-embed-net
+    # <<: *default-volumes
 
   statuspage-proxy:
     build:
@@ -48,3 +76,7 @@ services:
     image: statuspage-embed-unit-tests
     command: ["npm", "run", "test:watch"]
     #<<: *default-volumes
+
+networks:
+  statuspage-embed-net:
+    driver: bridge
