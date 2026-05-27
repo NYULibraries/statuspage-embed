@@ -9,6 +9,7 @@
     "statuspage-proxy": "node ./tools/statuspage-summary-cors-proxy.mjs",
     "test": "npm run test:unit && npm run test:e2e",
     "test:e2e": "cd test/e2e/ && npm run test",
+    "test:e2e:update-golden-files": "cd test/e2e/ && npm run test:update-golden-files",
     "test:unit": "cd test/unit/ && npm run test",
     "test:unit:watch": "cd test/unit/ && npm run test:watch"
   },

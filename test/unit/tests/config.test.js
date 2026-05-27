@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
     DEV_STATUSPAGE_SUMMARY_URL,
+    LOCAL_STATUSPAGE_SUMMARY_URL,
     PROD_STATUSPAGE_SUMMARY_URL,
     getBaseUrl,
     getStatuspageSummaryUrl,
@@ -39,7 +40,18 @@ describe( 'getStatuspageSummaryUrl', () => {
         expect( getStatuspageSummaryUrl() ).toEqual( PROD_STATUSPAGE_SUMMARY_URL );
     } );
 
-    it( 'should return the correct URL for any instance that is not hosted in dev or prod CDN', () => {
+    it( 'should return the correct URL for local dev server instance', () => {
+        document.currentScript.src = 'http://localhost:5173';
+        expect( getStatuspageSummaryUrl() ).toEqual( LOCAL_STATUSPAGE_SUMMARY_URL );
+    } );
+
+    it( 'should return the correct URL for the Docker Compose `dev` service in' +
+        'the bridge network used for `e2e-tests` service', () => {
+        document.currentScript.src = 'http://dev:5173';
+        expect( getStatuspageSummaryUrl() ).toEqual( LOCAL_STATUSPAGE_SUMMARY_URL );
+    } );
+
+    it( 'should return the correct URL for the fallthrough case', () => {
         document.currentScript.src = 'https://some-cdn.company.com';
         expect( getStatuspageSummaryUrl() ).toEqual( PROD_STATUSPAGE_SUMMARY_URL );
     } );
