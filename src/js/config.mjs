@@ -6,6 +6,8 @@ const LOCALHOST_HOSTNAME = 'localhost';
 const DEV_CDN_HOSTNAME = 'cdn-dev.library.nyu.edu';
 const PROD_CDN_HOSTNAME = 'cdn.library.nyu.edu';
 
+const FAKE_STATUSPAGE_SUMMARY_URL =
+    'http://fake-statuspage-url/api/v2/summary.json';
 // This URL will hit the `tools/statuspage-summary-cors-proxy.mjs` server, which
 // needs to be running before the widget loads.  The proxy script imports this
 // module and will listen on the port used in this URL, so if a different port
@@ -27,18 +29,18 @@ function getBaseUrl() {
     switch ( sourceFileHostname ) {
         case DEV_CDN_HOSTNAME:
             return 'https://cdn-dev.library.nyu.edu/statuspage-embed';
-        case DOCKER_COMPOSE_HOSTNAME:
-            return new URL( document.URL ).origin;
-        case LOCALHOST_HOSTNAME:
-            // User is most likely viewing the fake host page served by the Vite
-            // dev server, which is also going to be serving the widget, so
-            // return the current origin.  We use `document.URL` instead of
-            // `window.location.href` because we are already using a `document`
-            // fake in tests, so it will be more convenient to just add `URL` to
-            // it.
-            return new URL( document.URL ).origin;
         case PROD_CDN_HOSTNAME:
             return 'https://cdn.library.nyu.edu/statuspage-embed';
+        // The widget is most likely loaded into the fake host page served by
+        // the Vite dev server.  `DOCKER_COMPOSE_HOSTNAME` is used when running
+        // the Docker Compose service `e2e-tests`, which accesses the dev server
+        // Docker Compose service through a bridge network.  It's also possible
+        // that this `config` module is being imported into test script for DRY
+        // access to the URL building stuff.
+        case LOCALHOST_HOSTNAME:
+        case DOCKER_COMPOSE_HOSTNAME:
+            return `http://${ sourceFileHostname }` +
+                   `:${ new URL( document.URL ).port }`;
         default:
             // Should never get here, but just in case...
             return `https://${ sourceFileHostname }/statuspage-embed`;
@@ -95,9 +97,7 @@ function getStatuspageSummaryUrl() {
         // API endpoint.
         case 'cdn-dev.library.nyu.edu':
             return DEV_STATUSPAGE_SUMMARY_URL;
-        // These cover cases where this function is called in the context of:
-        //   - The widget being served from a local dev server instance in a
-        //     standard development workflow.
+
         //   - The widget being served from the dev server Docker Compose
         //     service as part of the bridge network used to allow the
         //     `e2e-tests` Docker Compose service access it.  The widget is
@@ -109,8 +109,13 @@ function getStatuspageSummaryUrl() {
         //     the same URL.  The actual URL doesn't matter since it is
         //     intercepted by Playwright.
         case LOCALHOST_HOSTNAME:
-        case DOCKER_COMPOSE_HOSTNAME:
             return LOCAL_STATUSPAGE_SUMMARY_URL;
+        case DOCKER_COMPOSE_HOSTNAME:
+            // It doesn't matter what this URL is, because the Playwright test
+            // suite running in the `e2e-tests` service will make its own call
+            // to this function in order to intercept the `fetch` call to this
+            // URL and respond with a fake summary.json.
+            return FAKE_STATUSPAGE_SUMMARY_URL;
     }
 
     // For all other instances of this widget, use the prod Statuspage page.
@@ -140,6 +145,7 @@ export {
     // Exported for testing purposes only
     DEV_STATUSPAGE_SUMMARY_URL,
     DOCKER_COMPOSE_HOSTNAME,
+    FAKE_STATUSPAGE_SUMMARY_URL,
     LOCAL_STATUSPAGE_SUMMARY_URL,
     PROD_STATUSPAGE_SUMMARY_URL,
     getBaseUrl,
