@@ -6,8 +6,6 @@ const LOCALHOST_HOSTNAME = 'localhost';
 const DEV_CDN_HOSTNAME = 'cdn-dev.library.nyu.edu';
 const PROD_CDN_HOSTNAME = 'cdn.library.nyu.edu';
 
-const FAKE_STATUSPAGE_SUMMARY_URL =
-    'http://fake-statuspage-url/api/v2/summary.json';
 // This URL will hit the `tools/statuspage-summary-cors-proxy.mjs` server, which
 // needs to be running before the widget loads.  The proxy script imports this
 // module and will listen on the port used in this URL, so if a different port
@@ -56,11 +54,9 @@ function getSourceFileHostname() {
     if ( document.currentScript ) {
         return new URL( document.currentScript.src ).hostname;
     } else {
-        // Most likely this the dev server instance loading the widget with HMR.
+        // Most likely this is the dev server instance loading the widget with HMR.
         // `document.currentScript` is `null`.
         if ( document.location.hostname === LOCALHOST_HOSTNAME ) {
-            // User is most likely viewing the fake host page served by the Vite
-            // dev server, which is also going to be serving the widget.
             return LOCALHOST_HOSTNAME;
         } else if ( document.location.hostname === DOCKER_COMPOSE_HOSTNAME ) {
             // User is most likely running the Docker Compose `e2e-tests`
@@ -80,29 +76,36 @@ function getStatuspageSummaryUrl() {
     const sourceFileHostname = getSourceFileHostname();
 
     switch ( sourceFileHostname ) {
-        // If this is the dev CDN instance of this widget, use the dev Statuspage page
-        // API endpoint.
+        // If this is the dev CDN instance of this widget, use the dev Statuspage
+        // page API endpoint.
         case DEV_CDN_HOSTNAME:
             return DEV_STATUSPAGE_SUMMARY_URL;
 
-        //   - The widget being served from the dev server Docker Compose
-        //     service as part of the bridge network used to allow the
-        //     `e2e-tests` Docker Compose service access it.  The widget is
-        //     being served from the from `DOCKER_COMPOSE_HOSTNAME` (named after
-        //     the Docker Compose service), but when Playwright calls this
-        //     function to get a URL to use in its network routing for
-        //     intercepting the statuspage request, it will be doing so from
-        //     a `localhost` context, so both calls to this function must return
-        //     the same URL.  The actual URL doesn't matter since it is
-        //     intercepted by Playwright.
+        // These cover the cases for:
+        //   - The widget being served from the dev server in a local
+        //     development environment.  The statuspage summary CORS proxy will
+        //     be running and listening at this URL.
+        //   - This config module being imported by a test file in order to get
+        //     DRY access to this function.  The statuspage summary CORS proxy
+        //     may or may not need to be running, depending on what the test
+        //     file is doing.  If running the Playwright tests on local, nothing
+        //     needs to be running there because Playwright will intercept the
+        //     `fetch` requests to this URL and will return a fake fixture
+        //     response.  If importing into an ad hoc script, make sure
+        //     something will respond at this URL.
+        //   - The widget being served from the `dev` Docker Compose service as
+        //     part of the bridge network used by the `e2e-tests` service.  In
+        //     this case the URL can be anything as both `dev` and `e2e-tests`
+        //     service containers will both be using the same URL thanks to
+        //     this fallthrough compound case, which will return the same URL
+        //     for http://dev:5173 used by the Playwright controlled browser
+        //     and http://localhost:5173 used by the Playwright tests running
+        //     in Node.  Playwright will intercept the `fetch` request to this
+        //     URL and will return a fake fixture response, so the statuspage
+        //     summary CORS proxy does not need to be running on this URL.
         case LOCALHOST_HOSTNAME:
-            return LOCAL_STATUSPAGE_SUMMARY_URL;
         case DOCKER_COMPOSE_HOSTNAME:
-            // It doesn't matter what this URL is, because the Playwright test
-            // suite running in the `e2e-tests` service will make its own call
-            // to this function in order to intercept the `fetch` call to this
-            // URL and respond with a fake summary.json.
-            return FAKE_STATUSPAGE_SUMMARY_URL;
+            return LOCAL_STATUSPAGE_SUMMARY_URL;
     }
 
     // For all other instances of this widget, use the prod Statuspage page.
@@ -126,7 +129,6 @@ const config = {
     // Exported for testing purposes only
     DOCKER_COMPOSE_HOSTNAME,
     DEV_STATUSPAGE_SUMMARY_URL,
-    FAKE_STATUSPAGE_SUMMARY_URL,
     LOCAL_STATUSPAGE_SUMMARY_URL,
     PROD_STATUSPAGE_SUMMARY_URL,
 };

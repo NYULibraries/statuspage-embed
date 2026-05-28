@@ -55,7 +55,7 @@ describe( 'getStatuspageSummaryUrl', () => {
     it( 'should return the correct URL for the Docker Compose `dev` service in' +
         'the bridge network used for `e2e-tests` service', () => {
         document.currentScript.src = 'http://dev:5173';
-        expect( config.getStatuspageSummaryUrl() ).toEqual( config.FAKE_STATUSPAGE_SUMMARY_URL );
+        expect( config.getStatuspageSummaryUrl() ).toEqual( config.LOCAL_STATUSPAGE_SUMMARY_URL );
     } );
 
     it( 'should return the correct URL for the fallthrough case', () => {
