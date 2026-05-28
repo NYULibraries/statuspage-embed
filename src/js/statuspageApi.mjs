@@ -1,4 +1,4 @@
-import { getStatuspageSummaryUrl } from './config';
+import config from './config';
 
 const IMPACT_NONE = 'none';
 
@@ -34,7 +34,7 @@ class StatuspageApi {
     }
 
     async fetchData() {
-        const response = await fetch( getStatuspageSummaryUrl() );
+        const response = await fetch( config.getStatuspageSummaryUrl() );
         this.#data = await response.json();
         this.#alert = this.chosenAlert();
         this.#status = this.#alert.status;

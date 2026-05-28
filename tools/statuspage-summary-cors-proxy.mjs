@@ -1,5 +1,5 @@
 import * as http from 'http';
-import { LOCAL_STATUSPAGE_SUMMARY_URL } from '../src/js/config.mjs';
+import config from '../src/js/config.mjs';
 
 // `Internal` statuspage: https://internal18.statuspage.io/
 const DEFAULT_STATUSPAGE_URL_TO_PROXY =
@@ -24,7 +24,7 @@ try {
 
 // The proxy server port number is taken from the widget's own config URL for
 // DRY-ness.
-const localStatuspageSummaryUrl = new URL( LOCAL_STATUSPAGE_SUMMARY_URL );
+const localStatuspageSummaryUrl = new URL( config.LOCAL_STATUSPAGE_SUMMARY_URL );
 const port = localStatuspageSummaryUrl.port;
 
 const server = http.createServer();

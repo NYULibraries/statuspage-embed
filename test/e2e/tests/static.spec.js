@@ -9,10 +9,10 @@ import {
     updateGoldenFiles,
 } from '../testutils';
 
-import { getStatuspageSummaryUrl } from '../../../src/js/config.mjs';
+import config from '../../../src/js/config.mjs';
 
 const PAGE_URL = process.env.PLAYWRIGHT_BASE_URL;
-const STATUSPAGE_SUMMARY_URL = getStatuspageSummaryUrl();
+const STATUSPAGE_SUMMARY_URL = config.getStatuspageSummaryUrl();
 
 const testCases = getTestCases();
 

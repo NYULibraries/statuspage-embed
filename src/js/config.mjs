@@ -85,7 +85,7 @@ function getSourceFileHostname() {
 function getStatuspageSummaryUrl() {
     const sourceFileHostname = getSourceFileHostname();
 
-    console.log( `[INFO] getStatuspageSummaryUrl(): sourceFileHostname === "${ sourceFileHostname }"` );
+    console.log( `[INFO] config.getStatuspageSummaryUrl(): sourceFileHostname === "${ sourceFileHostname }"` );
 
     switch ( sourceFileHostname ) {
         // If this is the dev CDN instance of this widget, use the dev Statuspage page
@@ -119,6 +119,7 @@ function getStatuspageSummaryUrl() {
 
 // need to factor this out into separate yaml/json file
 const config = {
+    getStatuspageSummaryUrl,
     getStylesheetUrl,
     statusToColorMapping: {
         investigating: 'red',
@@ -129,11 +130,6 @@ const config = {
         scheduled    : 'green',
         verifying    : 'green',
     },
-};
-
-export {
-    config as default,
-    getStatuspageSummaryUrl,
 
     // Exported for testing purposes only
     DOCKER_COMPOSE_HOSTNAME,
@@ -141,5 +137,8 @@ export {
     FAKE_STATUSPAGE_SUMMARY_URL,
     LOCAL_STATUSPAGE_SUMMARY_URL,
     PROD_STATUSPAGE_SUMMARY_URL,
-    getStylesheetUrl,
+};
+
+export {
+    config as default,
 };

@@ -53,7 +53,7 @@ function massageHtmlIntoGolden( html ) {
     return html
         .replace(
             hostnameRegexp,
-            '<link rel="stylesheet" type="text/css" href="http://[HOSTNAME]:5173/statuspage-embed/index.min.css">',
+            '<link rel="stylesheet" type="text/css" href="http://[HOSTNAME]:5173/index.min.css">',
         )
         .replace(
             timestampRegexp,
