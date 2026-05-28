@@ -24,7 +24,7 @@ In Docker:
 docker compose up dev
 ```
 
-Note that HMR does not seem to be able to detect changes in the source files
+Note that the HMR does not seem to be able to detect changes in the source files
 made in the hypervisor, so all changes need to be made to the source code from
 inside the container.
 
@@ -119,7 +119,7 @@ docker compose run unit-tests-watch
 
 ### Playwright E2E tests
 
-To run the Playwright E2E tests, first start the dev server if its not already
+To run the Playwright E2E tests, first start the dev server if it's not already
 running:
 
 ```shell
