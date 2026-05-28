@@ -31,12 +31,6 @@ function getBaseUrl() {
             return `https://${ DEV_CDN_HOSTNAME }/statuspage-embed`;
         case PROD_CDN_HOSTNAME:
             return `https://${ PROD_CDN_HOSTNAME }/statuspage-embed`;
-        // The widget is most likely loaded into the fake host page served by
-        // the Vite dev server.  `DOCKER_COMPOSE_HOSTNAME` is used when running
-        // the Docker Compose service `e2e-tests`, which accesses the dev server
-        // Docker Compose service through a bridge network.  It's also possible
-        // that this `config` module is being imported into test script for DRY
-        // access to the URL building stuff.
         case LOCALHOST_HOSTNAME:
         case DOCKER_COMPOSE_HOSTNAME:
             return `http://${ sourceFileHostname }` +
