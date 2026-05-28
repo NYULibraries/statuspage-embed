@@ -7,20 +7,6 @@ describe( 'getStylesheetUrl', () => {
         vi.resetModules();
     } );
 
-    it( 'should return the correct URL for local', () => {
-        document.currentScript.src = 'https://localhost';
-        expect( config.getStylesheetUrl() ).toEqual(
-            'http://localhost:3000/index.min.css',
-        );
-    } );
-
-    it( 'should return the correct URL for the Docker Compose `e2e-tests` service use case', () => {
-        document.currentScript.src = 'http://dev';
-        expect( config.getStylesheetUrl() ).toEqual(
-            'http://dev:3000/index.min.css',
-        );
-    } );
-
     it( 'should return the correct URL for dev', () => {
         document.currentScript.src = 'https://cdn-dev.library.nyu.edu';
         expect( config.getStylesheetUrl() ).toEqual(
@@ -32,6 +18,20 @@ describe( 'getStylesheetUrl', () => {
         document.currentScript.src = 'https://cdn.library.nyu.edu';
         expect( config.getStylesheetUrl() ).toEqual(
             'https://cdn.library.nyu.edu/statuspage-embed/index.min.css',
+        );
+    } );
+
+    it( 'should return the correct URL for local', () => {
+        document.currentScript.src = 'https://localhost';
+        expect( config.getStylesheetUrl() ).toEqual(
+            'http://localhost:3000/index.min.css',
+        );
+    } );
+
+    it( 'should return the correct URL for the Docker Compose `e2e-tests` service use case', () => {
+        document.currentScript.src = 'http://dev';
+        expect( config.getStylesheetUrl() ).toEqual(
+            'http://dev:3000/index.min.css',
         );
     } );
 } );
