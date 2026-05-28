@@ -22,22 +22,23 @@ const DEV_STATUSPAGE_SUMMARY_URL =
 const PROD_STATUSPAGE_SUMMARY_URL =
     'https://alerts.library.nyu.edu/api/v2/summary.json';
 
-// determine base url for stylesheet based on environment
-function getBaseUrl() {
+function getStylesheetUrl() {
+    const cdnStylesheetPath = '/statuspage-embed/index.min.css';
+
     const sourceFileHostname = getSourceFileHostname();
 
     switch ( sourceFileHostname ) {
         case DEV_CDN_HOSTNAME:
-            return `https://${ DEV_CDN_HOSTNAME }/statuspage-embed`;
+            return `https://${ DEV_CDN_HOSTNAME }${ cdnStylesheetPath }`;
         case PROD_CDN_HOSTNAME:
-            return `https://${ PROD_CDN_HOSTNAME }/statuspage-embed`;
+            return `https://${ PROD_CDN_HOSTNAME }${ cdnStylesheetPath }`;
         case LOCALHOST_HOSTNAME:
         case DOCKER_COMPOSE_HOSTNAME:
             return `http://${ sourceFileHostname }` +
-                   `:${ new URL( document.URL ).port }`;
+                   `:${ new URL( document.URL ).port }/index.min.css`;
         default:
             // Should never get here, but just in case...
-            return `https://${ sourceFileHostname }/statuspage-embed`;
+            return `https://${ sourceFileHostname }${ cdnStylesheetPath }`;
     }
 }
 
@@ -118,9 +119,7 @@ function getStatuspageSummaryUrl() {
 
 // need to factor this out into separate yaml/json file
 const config = {
-    getStylesheetUrl: function() {
-        return getBaseUrl() + '/index.min.css';
-    },
+    getStylesheetUrl,
     statusToColorMapping: {
         investigating: 'red',
         identified   : 'orange',
@@ -142,5 +141,5 @@ export {
     FAKE_STATUSPAGE_SUMMARY_URL,
     LOCAL_STATUSPAGE_SUMMARY_URL,
     PROD_STATUSPAGE_SUMMARY_URL,
-    getBaseUrl,
+    getStylesheetUrl,
 };

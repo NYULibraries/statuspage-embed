@@ -37,7 +37,8 @@ function massageHtmlIntoGolden( html ) {
     // Hostname will be either "localhost" or whatever the name of the dev
     // server Docker Compose service is (e.g. "dev).
     const hostnameRegexp = new RegExp(
-        '<link rel="stylesheet" type="text/css" href="http://[a-z]+:5173/index.min.css">',
+        '<link rel="stylesheet" type="text\\/css" ' +
+        'href="http:\\/\\/[a-z]+:5173\\/(?:statuspage-embed\\/)?index.min.css">',
     );
     // Originally we replaced the `t` query param timestamp cache-bust with
     // "?t=[TIMESTAMP]", but it turns out that the timestamps aren't added on
@@ -52,7 +53,7 @@ function massageHtmlIntoGolden( html ) {
     return html
         .replace(
             hostnameRegexp,
-            '<link rel="stylesheet" type="text/css" href="http://[HOSTNAME]:5173/index.min.css">',
+            '<link rel="stylesheet" type="text/css" href="http://[HOSTNAME]:5173/statuspage-embed/index.min.css">',
         )
         .replace(
             timestampRegexp,

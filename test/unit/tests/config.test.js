@@ -5,33 +5,41 @@ import {
     FAKE_STATUSPAGE_SUMMARY_URL,
     LOCAL_STATUSPAGE_SUMMARY_URL,
     PROD_STATUSPAGE_SUMMARY_URL,
-    getBaseUrl,
+    getStylesheetUrl,
     getStatuspageSummaryUrl,
 } from '../../../src/js/config';
 
-describe( 'getBaseUrl', () => {
+describe( 'getStylesheetUrl', () => {
     beforeEach( () => {
         vi.resetModules();
     } );
 
-    it( 'should set properly for local', () => {
+    it( 'should return the correct URL for local', () => {
         document.currentScript.src = 'https://localhost';
-        expect( getBaseUrl() ).toEqual( 'http://localhost:3000' );
+        expect( getStylesheetUrl() ).toEqual(
+            'http://localhost:3000/statuspage-embed/index.min.css',
+        );
     } );
 
-    it( 'should set properly for the Docker Compose `e2e-tests` service use case', () => {
+    it( 'should return the correct URL for the Docker Compose `e2e-tests` service use case', () => {
         document.currentScript.src = 'http://dev';
-        expect( getBaseUrl() ).toEqual( 'http://dev:3000' );
+        expect( getStylesheetUrl() ).toEqual(
+            'http://dev:3000/statuspage-embed/index.min.css',
+        );
     } );
 
-    it( 'should set properly for dev', () => {
+    it( 'should return the correct URL for dev', () => {
         document.currentScript.src = 'https://cdn-dev.library.nyu.edu';
-        expect( getBaseUrl() ).toEqual( 'https://cdn-dev.library.nyu.edu/statuspage-embed' );
+        expect( getStylesheetUrl() ).toEqual(
+            'https://cdn-dev.library.nyu.edu/statuspage-embed/index.min.css',
+        );
     } );
 
-    it( 'should set properly for prod', () => {
+    it( 'should return the correct URL for prod', () => {
         document.currentScript.src = 'https://cdn.library.nyu.edu';
-        expect( getBaseUrl() ).toEqual( 'https://cdn.library.nyu.edu/statuspage-embed' );
+        expect( getStylesheetUrl() ).toEqual(
+            'https://cdn.library.nyu.edu/statuspage-embed/index.min.css',
+        );
     } );
 } );
 
