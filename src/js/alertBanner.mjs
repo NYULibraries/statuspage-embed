@@ -48,7 +48,9 @@ class AlertBanner {
     // initialize banner: pull latest statuspage data, and insert if matching hastag
     async init() {
         this.constructor.insertStylesheet();
+
         await this.statuspage.fetchData();
+
         if ( !this.statuspage.validAlert() ) {
             return false;
         }
