@@ -2,7 +2,7 @@ import config from './config';
 
 const IMPACT_NONE = 'none';
 
-class StatuspageApi {
+class Statuspage {
     #alert;
     #data;
     #status;
@@ -53,4 +53,4 @@ class StatuspageApi {
     }
 }
 
-export { StatuspageApi as default };
+export { Statuspage as default };

@@ -1,4 +1,4 @@
-import StatuspageApi from './statuspageApi';
+import Statuspage from './statuspage.mjs';
 import config from './config';
 
 // helper to create element with attributes; not exported or independently tested
@@ -13,7 +13,7 @@ const createElementWithAttrs = ( tagName, content, attributes ) => {
 
 class AlertBanner {
     constructor() {
-        this.statuspage = new StatuspageApi();
+        this.statuspage = new Statuspage();
     }
 
     // returns class string with appropriate color class for set status

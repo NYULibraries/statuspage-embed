@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, test, vi } from 'vitest';
 
-import StatuspageApi from '../../../src/js/statuspageApi';
+import Statuspage from '../../../src/js/statuspage.mjs';
 
 let statuspageApi;
 let body = 'Test body #majoroutage';
@@ -55,7 +55,7 @@ const mockData = {
 };
 
 beforeEach( () => {
-    statuspageApi = new StatuspageApi();
+    statuspageApi = new Statuspage();
 } );
 
 describe( 'fetchData', () => {
