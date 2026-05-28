@@ -8,7 +8,7 @@ let body = 'Test body #majoroutage';
 const scheduledMaintenanceBody = 'Test';
 const firstIncidentsDate = '2020-07-15T09:11:40.438-04:00';
 const firstMaintenanceDate = '2020-07-15T09:11:40.438-04:00';
-const getMockData = () => ( {
+const mockData = {
     incidents: [
         {
             name            : 'FirstIncident',
@@ -53,29 +53,25 @@ const getMockData = () => ( {
             ],
         },
     ],
-} );
+};
 
 beforeEach( () => {
     statuspageApi = new StatuspageApi();
 } );
 
 describe( 'fetchData', () => {
-    let mockResponse;
-
     beforeEach( () => {
         // Prevent error "TypeError: Invalid URL".
         document.currentScript.src = 'https://does-not-matter.com';
 
-        mockResponse = {};
-        global.fetch = vi.fn( () => mockResponse );
-        mockResponse.json = vi.fn( () => getMockData() );
+        mockResponse( mockData );
     } );
 
     it( 'sets `data` field to correct value', async () => {
         await statuspageApi.fetchData();
 
         expect( global.fetch ).toHaveBeenCalled();
-        expect( statuspageApi.data ).toEqual( getMockData() );
+        expect( statuspageApi.data ).toEqual( mockData );
     } );
 
     describe( 'sets `#alert` field to correct value', async () => {
@@ -102,30 +98,37 @@ describe( 'fetchData', () => {
 } );
 
 describe( 'chosenAlert', () => {
-    it( 'should return false if no active incidents', () => {
+    beforeEach( () => {
         // Prevent error "TypeError: Invalid URL".
         document.currentScript.src = 'https://does-not-matter.com';
+    } );
 
-        const mockResponse = {};
-        global.fetch = vi.fn( () => mockResponse );
-        mockResponse.json = vi.fn( () => getMockData() );
+    it( 'should return false if no active incidents', async () => {
+        mockResponse( { incidents: [] } );
 
-        statuspageApi.data = { incidents: [] };
+        await statuspageApi.fetchData();
+
         expect( statuspageApi.chosenAlert() ).toEqual( false );
     } );
 
-    it( 'should return last incident, if populated', () => {
-        statuspageApi.data = getMockData();
-        expect( statuspageApi.chosenAlert() ).toEqual( getMockData().incidents[ 0 ] );
+    it( 'should return last incident, if populated', async () => {
+        mockResponse( mockData );
+
+        await statuspageApi.fetchData();
+
+        expect( statuspageApi.chosenAlert() ).toEqual( mockData.incidents[ 0 ] );
     } );
 
-    it( 'should return false if no scheduled maintenances', () => {
-        statuspageApi.data = { scheduled_maintenances: [] };
+    it( 'should return false if no scheduled maintenances', async () => {
+        mockResponse( { scheduled_maintenances: [] } );
+
+        await statuspageApi.fetchData();
+
         expect( statuspageApi.chosenAlert() ).toEqual( false );
     } );
 
-    it( 'should return last scheduled maintenance, if populated', () => {
-        statuspageApi.data = {
+    it( 'should return last scheduled maintenance, if populated', async () => {
+        mockResponse( {
             scheduled_maintenances: [
                 {
                     name            : 'FirstMaintenance',
@@ -146,12 +149,15 @@ describe( 'chosenAlert', () => {
                     ],
                 },
             ],
-        };
+        } );
+
+        await statuspageApi.fetchData();
+
         expect( statuspageApi.chosenAlert() ).toEqual( statuspageApi.data.scheduled_maintenances[ 0 ] );
     } );
 
-    it( 'should return the incident with higher priority', () => {
-        statuspageApi.data = {
+    it( 'should return the incident with higher priority', async () => {
+        mockResponse( {
             incidents: [
                 {
                     name            : 'FirstIncident',
@@ -174,10 +180,20 @@ describe( 'chosenAlert', () => {
                     ],
                 },
             ],
-        };
+        } );
+
+        await statuspageApi.fetchData();
 
         const expected = statuspageApi.data.incidents[ 0 ];
         expect( statuspageApi.chosenAlert() ).toEqual( expected );
     } );
 } );
 
+function mockResponse( responseJson ) {
+    const mockResponse = {};
+    global.fetch = vi.fn( () => mockResponse );
+
+    // Defensive clone
+    const responseJsonClone = { ...responseJson };
+    mockResponse.json = vi.fn( () => responseJsonClone );
+}
