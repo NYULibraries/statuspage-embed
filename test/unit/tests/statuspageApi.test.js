@@ -3,7 +3,6 @@ import { beforeEach, describe, expect, it, test, vi } from 'vitest';
 import StatuspageApi from '../../../src/js/statuspageApi';
 
 let statuspageApi;
-// Define mock data as function so we can edit incident update body for certain tests
 let body = 'Test body #majoroutage';
 const scheduledMaintenanceBody = 'Test';
 const firstIncidentsDate = '2020-07-15T09:11:40.438-04:00';
