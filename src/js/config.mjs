@@ -47,8 +47,6 @@ function getStylesheetUrl() {
 // - Determining which statuspage summary.json URL to use in the fetch.
 function getSourceFileHostname() {
     if ( typeof document === 'undefined' ) {
-        console.log( '[INFO] getSourceFileHostname(): `document` is undefined' );
-
         // Very likely we are in local backend context where this file is being
         // imported for its constants and/or helper functions.
         return LOCALHOST_HOSTNAME;
@@ -56,14 +54,10 @@ function getSourceFileHostname() {
 
     // The compiled widget is being loaded via <script> tag into a host page.
     if ( document.currentScript ) {
-        console.log( `[INFO] getSourceFileHostname(): document.currentScript === "${ document.currentScript }"` );
-
         return new URL( document.currentScript.src ).hostname;
     } else {
         // Most likely this the dev server instance loading the widget with HMR.
         // `document.currentScript` is `null`.
-        console.log( `[INFO] getSourceFileHostname(): document.location.hostname === ${ document.location.hostname }` );
-
         if ( document.location.hostname === LOCALHOST_HOSTNAME ) {
             // User is most likely viewing the fake host page served by the Vite
             // dev server, which is also going to be serving the widget.
@@ -84,8 +78,6 @@ function getSourceFileHostname() {
 
 function getStatuspageSummaryUrl() {
     const sourceFileHostname = getSourceFileHostname();
-
-    console.log( `[INFO] config.getStatuspageSummaryUrl(): sourceFileHostname === "${ sourceFileHostname }"` );
 
     switch ( sourceFileHostname ) {
         // If this is the dev CDN instance of this widget, use the dev Statuspage page
