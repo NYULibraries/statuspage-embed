@@ -129,7 +129,13 @@ npm run dev
 Then in another terminal window, run the tests:
 
 ```shell
-PLAYWRIGHT_BASE_URL=http://localhost:5173 npm run test:e2e
+npm run test:e2e
+```
+
+To prevent Playwright from automatically opening up an HTML report in a browser:
+
+```shell
+PLAYWRIGHT_HTML_OPEN=never npm run test:e2e
 ```
 
 In Docker:
@@ -142,7 +148,17 @@ To update the golden files, first make the desired code changes, which the dev
 server will automatically hot reload, then run:
 
 ```shell
-PLAYWRIGHT_BASE_URL=http://localhost:5173 npm run test:e2e:update-golden-files
+npm run test:e2e:update-golden-files
 ```
 
-In Docker: TODO
+To prevent Playwright from automatically opening up an HTML report in a browser:
+
+```shell
+PLAYWRIGHT_HTML_OPEN=never npm run test:e2e:update-golden-files
+```
+
+In Docker, first uncomment `<<: *default-volumes` if desired, then run:
+
+```shell
+docker compose up e2e-tests-update-golden-files
+```
