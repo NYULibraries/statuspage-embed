@@ -49,7 +49,7 @@ class Statuspage {
     }
 
     validAlert() {
-        return this.#alert && this.#alert.status !== IMPACT_NONE;
+        return this.#alert && this.#alert.impact !== IMPACT_NONE;
     }
 }
 
