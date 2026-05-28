@@ -14,7 +14,7 @@ const FAKE_STATUSPAGE_SUMMARY_URL =
 // number needs to be used, it can be changed here without having to make the
 // same change in the proxy script.
 const LOCAL_STATUSPAGE_SUMMARY_URL =
-    'http://localhost:3000/api/v2/summary.json';
+    `http://${ LOCALHOST_HOSTNAME }:3000/api/v2/summary.json`;
 
 // Real statuspage summary.json URLs
 const DEV_STATUSPAGE_SUMMARY_URL =
