@@ -4,10 +4,8 @@ const IMPACT_NONE = 'none';
 
 class StatuspageApi {
     #alert;
+    #data;
     #status;
-
-    // Leaving this public and writeable for now for easier unit testing.
-    data;
 
     alertName() {
         return this.#alert.name;
@@ -18,8 +16,8 @@ class StatuspageApi {
     }
 
     chosenAlert() {
-        const incident = this.data?.incidents?.[ 0 ];
-        const scheduledMaintenance = this.data?.scheduled_maintenances?.[ 0 ];
+        const incident = this.#data?.incidents?.[ 0 ];
+        const scheduledMaintenance = this.#data?.scheduled_maintenances?.[ 0 ];
 
         if ( !incident && !scheduledMaintenance ) return false;
         if ( !incident && scheduledMaintenance ) return scheduledMaintenance;
@@ -37,9 +35,13 @@ class StatuspageApi {
 
     async fetchData() {
         const response = await fetch( getStatuspageSummaryUrl() );
-        this.data = await response.json();
+        this.#data = await response.json();
         this.#alert = this.chosenAlert();
         this.#status = this.#alert.status;
+    }
+
+    getData() {
+        return this.#data;
     }
 
     status() {

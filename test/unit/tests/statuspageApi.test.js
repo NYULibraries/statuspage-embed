@@ -71,7 +71,7 @@ describe( 'fetchData', () => {
         await statuspageApi.fetchData();
 
         expect( global.fetch ).toHaveBeenCalled();
-        expect( statuspageApi.data ).toEqual( mockData );
+        expect( statuspageApi.getData() ).toEqual( mockData );
     } );
 
     describe( 'sets `#alert` field to correct value', async () => {
@@ -153,7 +153,7 @@ describe( 'chosenAlert', () => {
 
         await statuspageApi.fetchData();
 
-        expect( statuspageApi.chosenAlert() ).toEqual( statuspageApi.data.scheduled_maintenances[ 0 ] );
+        expect( statuspageApi.chosenAlert() ).toEqual( statuspageApi.getData().scheduled_maintenances[ 0 ] );
     } );
 
     it( 'should return the incident with higher priority', async () => {
@@ -184,7 +184,7 @@ describe( 'chosenAlert', () => {
 
         await statuspageApi.fetchData();
 
-        const expected = statuspageApi.data.incidents[ 0 ];
+        const expected = statuspageApi.getData().incidents[ 0 ];
         expect( statuspageApi.chosenAlert() ).toEqual( expected );
     } );
 } );
