@@ -52,6 +52,24 @@ services:
       - statuspage-embed-net
     # <<: *default-volumes
 
+  e2e-tests-update-golden-files:
+    build:
+      dockerfile: Dockerfile.e2e-tests
+    image: statuspage-embed-e2e-tests
+    depends_on:
+      - dev
+    environment:
+      <<: *x-environment
+      PLAYWRIGHT_BASE_URL: http://dev:5173
+    # https://playwright.dev/docs/ci#docker
+    # CI configurations > Docker
+    # "Using --ipc=host is also recommended when using Chromium. Without it Chromium can run out of memory and crash."
+    ipc: host
+    networks:
+      - statuspage-embed-net
+    command: [ "npm", "run", "test:update-golden-files" ]
+    #<<: *default-volumes
+
   statuspage-proxy:
     build:
       dockerfile: Dockerfile.statuspage-proxy
