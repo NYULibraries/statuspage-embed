@@ -28,9 +28,9 @@ function getBaseUrl() {
 
     switch ( sourceFileHostname ) {
         case DEV_CDN_HOSTNAME:
-            return 'https://cdn-dev.library.nyu.edu/statuspage-embed';
+            return `https://${ DEV_CDN_HOSTNAME }/statuspage-embed`;
         case PROD_CDN_HOSTNAME:
-            return 'https://cdn.library.nyu.edu/statuspage-embed';
+            return `https://${ PROD_CDN_HOSTNAME }/statuspage-embed`;
         // The widget is most likely loaded into the fake host page served by
         // the Vite dev server.  `DOCKER_COMPOSE_HOSTNAME` is used when running
         // the Docker Compose service `e2e-tests`, which accesses the dev server
@@ -95,7 +95,7 @@ function getStatuspageSummaryUrl() {
     switch ( sourceFileHostname ) {
         // If this is the dev CDN instance of this widget, use the dev Statuspage page
         // API endpoint.
-        case 'cdn-dev.library.nyu.edu':
+        case DEV_CDN_HOSTNAME:
             return DEV_STATUSPAGE_SUMMARY_URL;
 
         //   - The widget being served from the dev server Docker Compose
