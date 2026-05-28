@@ -132,7 +132,11 @@ Then in another terminal window, run the tests:
 PLAYWRIGHT_BASE_URL=http://localhost:5173 npm run test:e2e
 ```
 
-In Docker: TODO
+In Docker:
+
+```shell
+docker compose up e2e-tests
+```
 
 To update the golden files, first make the desired code changes, which the dev
 server will automatically hot reload, then run:
