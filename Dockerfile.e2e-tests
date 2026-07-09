@@ -1,0 +1,48 @@
+FROM mcr.microsoft.com/playwright:v1.58.2-jammy AS builder
+
+WORKDIR /e2e
+
+COPY test/e2e/package.json test/e2e/package-lock.json ./
+
+# Install dependencies
+RUN npm install \
+    # Install only the Chromium browser, as it is the only browser needed for the project. \
+    && npx playwright install chromium
+
+# Copy over remaining e2e files
+COPY test/e2e/ .
+
+FROM node:26-bookworm
+
+ENV INSTALL_PATH /app
+
+COPY src/js/config.mjs $INSTALL_PATH/src/js/
+
+RUN apt-get update -y && apt-get install -y curl
+
+WORKDIR $INSTALL_PATH/test/e2e
+
+# Install Chromium dependencies using the Playwright CLI
+# Separation of concerns: The build stage is primarily focused on building and preparing the application,
+# including installing dependencies required for the application to run.
+# Installing Chromium dependencies in the production stage ensures that only the necessary dependencies
+# for running the application are included in the final image, reducing the overall image size
+RUN npx playwright install-deps chromium
+
+# Copy dependencies and the app
+COPY --from=builder /e2e .
+
+# Copy the browser binaries
+# https://github.com/microsoft/playwright/blob/1f209204cd18bce7d1bfae50f5af105dec752df8/utils/docker/Dockerfile.focal#L33
+COPY --from=builder /ms-playwright /ms-playwright
+
+ENV CONTAINER_MODE true
+# Set the PLAYWRIGHT_BROWSERS_PATH environment variable to tell Playwright where to look for the browser binaries
+# https://github.com/microsoft/playwright/blob/1f209204cd18bce7d1bfae50f5af105dec752df8/utils/docker/Dockerfile.focal#L24
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+
+# Entrypoint ensures $PLAYWRIGHT_BASE_URL has started
+ENTRYPOINT [ "./scripts/docker-entrypoint.sh" ]
+
+# Run playwright tests
+CMD ["npm", "run", "test"]

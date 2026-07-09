@@ -1,0 +1,26 @@
+/* TODO: Set up vite minification of CSS in public/ abd change the name of this
+   file back to index.css.  For now, just copy it as-is into dist/.  */
+
+aside.nyulibraries-alert-banner {
+    background-color: #CC0D00;
+    padding: 1em;
+    font-weight: bold;
+    font-size: 18px;
+}
+aside.nyulibraries-alert-banner, aside.nyulibraries-alert-banner a {
+    color: #ffffff;
+}
+aside.nyulibraries-alert-banner a {
+    text-decoration: underline;
+}
+
+aside.nyulibraries-alert-banner.alert-orange {
+    background-color: #F89763;
+}
+aside.nyulibraries-alert-banner.alert-orange, aside.nyulibraries-alert-banner.alert-orange a {
+    color: #333333;
+}
+
+aside.nyulibraries-alert-banner.alert-green {
+    background-color: #1C7533;
+}

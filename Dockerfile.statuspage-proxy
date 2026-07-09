@@ -1,0 +1,10 @@
+FROM node:24.15.0-trixie
+
+WORKDIR /app
+
+COPY package.json .
+COPY src ./src
+COPY tools ./tools
+
+CMD ["npm", "run", "statuspage-proxy"]
+

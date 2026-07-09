@@ -12,39 +12,153 @@ Include the following script as close to end of your `body` tag as possible:
 
 ## Develop
 
-Bring up the development environment:
+### Step #1: Run the vite dev server with HMR (hot module reloading):
+
+```shell
+npm run dev
+```
+
+In Docker:
 
 ```
 docker compose up dev
 ```
 
-and visit `localhost:8080`.
+Note that the HMR does not seem to be able to detect changes in the source files
+made in the hypervisor, so all changes need to be made to the source code from
+inside the container.
 
-This will also bring up webpack in watch mode so any changes you make to the asset files will recompile live.
+---
 
-To render and test alert banners locally:
-- create them using the Internal page of `https://manage.statuspage.io/`
-- comment out the `statuspageUrl` key value of the config object in config.js and replace it with the following string:
+### Step #2: Run the local statuspage summary CORS proxy
 
-`https://$INTERNAL_PAGE_ID.statuspage.io/api/v2/summary.json?api_key=$LIB_SERVICES_API_KEY` 
+The statuspage-embed widget fetches a statuspage summary from whichever URL is
+configured for the current runtime environment.  For local development it is
+obviously not practical to fetch the summary from real live statuspages, because
+in order to test changes in application logic and CSS styles we need to create a
+variety of Incidents and Maintenances that would throw up an alert banner.
 
-env variables can be found in the `API Info` section of the Profile menu of `https://manage.statuspage.io/`
+While it is very easy to create a new statuspage for testing and development,
+an Activated (public) page costs money, and private statuspages that have not
+been Activated do not serve the necessary CORS headers to allow a local dev
+instance to fetch the _summary.json_.  This is by design -- from "A note on CORS
+(related to using the Status API with a Private Status Page)" in
+[What are the different APIs under Statuspage?](https://support.atlassian.com/statuspage/docs/what-are-the-different-apis-under-statuspage/):
+
+> We don't allow CORS on private pages or trial pages. You'll need to use an API
+> proxy for any request which needs access to an authenticated API. This will
+> allow your custom HTML page to access your local API proxy without requiring
+> any Authorization header, and it will then add the required header and sent it
+> downstream to our API.
+
+So for local dev work we use a local statuspage CORS proxy to connect with
+private statuspages we create for testing and development. To run the local
+statuspage CORS proxy to connect to a private statuspage (note that we don't
+use the API key directly so that it won't appear in shell command history):
+
+```shell
+API_KEY=$( cat [PATH TO API KEY FILE READABLE ONLY BY YOU] ) \
+STATUSPAGE_URL=https://[STATUSPAGE ID].statuspage.io/api/v2/summary.json \
+npm run statuspage-proxy
+```
+
+If using an IDE, these environment variables can be stored in a run configuration.
+
+In Docker:
+
+```shell
+API_KEY=$( cat [PATH TO API KEY FILE READABLE ONLY BY YOU] ) \
+STATUSPAGE_URL=https://[STATUSPAGE ID].statuspage.io/api/v2/summary.json \
+docker compose up statuspage-proxy
+```
+
+Alternatively, the `API_KEY` and `STATUSPAGE_URL` values can be stored in a
+[\.env file](https://docs.docker.com/compose/how-tos/environment-variables/variable-interpolation/#env-file).
+
+Environment variables:
+
+* `STATUSPAGE_URL`: This can be the URL for any valid _summary.json_ response.
+If not provided, the local statuspage proxy will use the URL for the
+[Internal](https://internal18.statuspage.io/) statuspage
+_[summary.json](https://66x84091slz4.statuspage.io/api/v2/summary.json)_.
+* `API_KEY`: the API key for the proxied private statuspage.  If `API_KEY` is not
+provided, the proxy will pass through the statuspage service error:
+"Your page is inactive. Please include an API key to access this resource."
+Since `STATUSPAGE_URL` could be set to a public statuspage or a fake statuspage
+which does not require an API key (but presumably does require CORS headers to be
+added), the `API_KEY` environment variable is not strictly required by the local
+statuspage proxy.
 
 ## Test
 
-To run the unit tests with Jest:
+### Unit tests
 
-```
-docker compose run test
-```
+To run the unit tests:
 
-To watch and re-run tests automatically, after uncommenting the volumes under the `test` service in the docker-compose file:
-
-```
-docker compose run test jest --watchAll
+```shell
+npm run test:unit
 ```
 
-## To-do
+In Docker:
 
-- Integration tests with karma?
-- Deploy to S3 CDN bucket via CircleCI (see libguides-styles for implementation)
+```
+docker compose run unit-tests
+```
+
+To watch and re-run tests automatically:
+
+```shell
+npm run test:unit:watch
+```
+
+In Docker:
+
+```shell
+docker compose run unit-tests-watch
+```
+
+### Playwright E2E tests
+
+To run the Playwright E2E tests, first start the dev server if it's not already
+running:
+
+```shell
+npm run dev
+```
+
+Then in another terminal window, run the tests:
+
+```shell
+npm run test:e2e
+```
+
+To prevent Playwright from automatically opening up an HTML report in a browser:
+
+```shell
+PLAYWRIGHT_HTML_OPEN=never npm run test:e2e
+```
+
+In Docker:
+
+```shell
+docker compose up e2e-tests
+```
+
+To update the golden files, first make the desired code changes, which the dev
+server will automatically hot reload, then run:
+
+```shell
+npm run test:e2e:update-golden-files
+```
+
+To prevent Playwright from automatically opening up an HTML report in a browser:
+
+```shell
+PLAYWRIGHT_HTML_OPEN=never npm run test:e2e:update-golden-files
+```
+
+In Docker, first uncomment `<<: *default-volumes` if desired, then run:
+
+```shell
+docker compose up e2e-tests-update-golden-files
+```

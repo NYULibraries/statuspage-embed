@@ -1,45 +1,100 @@
 x-volumes: &default-volumes
   volumes:
-    - ./nginx/html/index.html:/app/index.html
     - ./dist:/app/dist
-    - ./js:/app/js
-    - ./scss:/app/scss
-    - ./webpack.config.js:/app/webpack.config.js
-    - ./babel.config.js:/app/babel.config.js
-    - ./spec:/app/spec
+    - ./public:/app/public
+    - ./src:/app/src
+    - ./test:/app/test
+    - ./tools:/app/tools
+
+x-environment: &x-environment
+  CI: ${CI}
+  PLAYWRIGHT_COMMAND_LINE_OPTIONS: ${PLAYWRIGHT_COMMAND_LINE_OPTIONS}
 
 services:
   compile:
     build: .
     image: statuspage-embed
-    entrypoint: ["yarn"]
+    entrypoint: ["npm", "run", "build"]
     #<<: *default-volumes
-  
-  watch:
-    build: .
-    image: statuspage-embed
-    command: ["yarn", "build:dev:watch"]
-    <<: *default-volumes
 
-  test:
-    build: .
-    image: statuspage-embed
-    command:
-      - /bin/sh
-      - -c
-      - |
-        yarn build:dev
-        yarn test
-        #<<: *default-volumes
-
+  # Note that `server.allowedHosts` in vite.config.js needs to include the name
+  # of this service so that the e2e tests container can access the dev server.
   dev:
     build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    image: statuspage-embed-nginx
+      dockerfile: Dockerfile.development
+    image: statuspage-embed
     ports:
-      - "8080:8080"
+      - "5173:5173"
+    networks:
+      - statuspage-embed-net
+    # See the note about HMR not picking up changes to source files made in the
+    # hypervisor in the "Develop" section of README.md.
+    # <<: *default-volumes
+
+  # Note that `server.allowedHosts` in vite.config.js needs to include the name
+  # of this service so that the container can access the dev server container
+  # it runs the tests against.
+  e2e-tests:
+    build:
+      dockerfile: Dockerfile.e2e-tests
+    image: statuspage-embed-e2e-tests
     depends_on:
-      - watch
-    <<: *default-volumes
-    
+      - dev
+    environment:
+      <<: *x-environment
+      PLAYWRIGHT_BASE_URL: http://dev:5173
+    # https://playwright.dev/docs/ci#docker
+    # CI configurations > Docker
+    # "Using --ipc=host is also recommended when using Chromium.
+    # Without it Chromium can run out of memory and crash."
+    ipc: host
+    networks:
+      - statuspage-embed-net
+    # <<: *default-volumes
+
+  e2e-tests-update-golden-files:
+    build:
+      dockerfile: Dockerfile.e2e-tests
+    image: statuspage-embed-e2e-tests
+    depends_on:
+      - dev
+    environment:
+      <<: *x-environment
+      PLAYWRIGHT_BASE_URL: http://dev:5173
+    # https://playwright.dev/docs/ci#docker
+    # CI configurations > Docker
+    # "Using --ipc=host is also recommended when using Chromium. Without it Chromium can run out of memory and crash."
+    ipc: host
+    networks:
+      - statuspage-embed-net
+    command: [ "npm", "run", "test:update-golden-files" ]
+    #<<: *default-volumes
+
+  statuspage-proxy:
+    build:
+      dockerfile: Dockerfile.statuspage-proxy
+    environment:
+      - API_KEY=${API_KEY}
+      - STATUSPAGE_URL=${STATUSPAGE_URL}
+    image: statuspage-summary-cors-proxy
+    ports:
+      - "3000:3000"
+    #<<: *default-volumes
+
+  unit-tests:
+    build:
+      dockerfile: Dockerfile.unit-tests
+    image: statuspage-embed-unit-tests
+    command: ["npm", "run", "test"]
+    #<<: *default-volumes
+
+  unit-tests-watch:
+    build:
+      dockerfile: Dockerfile.unit-tests
+    image: statuspage-embed-unit-tests
+    command: ["npm", "run", "test:watch"]
+    #<<: *default-volumes
+
+networks:
+  statuspage-embed-net:
+    driver: bridge
