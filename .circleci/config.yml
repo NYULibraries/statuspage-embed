@@ -11,6 +11,12 @@ copy_build: &copy_build
     command: |
       docker cp $(docker ps -a -q --filter name=compile):/app/dist ./
 
+dev_server: &dev_server
+  run:
+    name: Dev server
+    command: |
+      docker compose up dev
+
 docker_build: &docker_build
   run:
     name: Docker build
@@ -60,6 +66,7 @@ jobs:
     steps:
       - checkout
       - *docker_build
+      - *dev_server
       - *unit_tests
       - *e2e_tests
       - run:
@@ -76,6 +83,7 @@ jobs:
     steps:
       - checkout
       - *docker_build
+      - *dev_server
       - *unit_tests
       - *e2e_tests
       - run:
