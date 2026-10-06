@@ -22,18 +22,18 @@ machine-defaults: &machine-defaults
     image: ubuntu-2204:current
   working_directory: ~/app
 
-test: &test
-  run:
-    name: Test
-    command: |
-      docker compose run unit-tests
-
 test_build: &test_build
   run:
     name: Test that vite built correct files
     command: |
       test -e dist/index.min.css
       test -e dist/index.min.js
+
+unit_tests: &unit_tests
+  run:
+    name: Unit tests
+    command: |
+      docker compose run unit-tests
 
 # Note that `aws s3 sync ... --exact-timestamps` only works for downloads from S3,
 # not uploads: https://github.com/aws/aws-cli/issues/4460.  The only safe way
@@ -54,7 +54,7 @@ jobs:
     steps:
       - checkout
       - *docker_build
-      - *test
+      - *unit_tests
       - run:
           name: Vite build
           command: |
@@ -69,7 +69,7 @@ jobs:
     steps:
       - checkout
       - *docker_build
-      - *test
+      - *unit_tests
       - run:
           name: Vite build
           command: |
