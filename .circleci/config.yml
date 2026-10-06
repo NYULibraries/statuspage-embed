@@ -17,6 +17,12 @@ docker_build: &docker_build
     command: |
       docker compose build unit-tests compile
 
+e2e_tests: &e2e_tests
+  run:
+    name: E2E tests
+    command: |
+      docker compose run e2e-tests
+
 machine-defaults: &machine-defaults
   machine:
     image: ubuntu-2204:current
@@ -55,6 +61,7 @@ jobs:
       - checkout
       - *docker_build
       - *unit_tests
+      - *e2e_tests
       - run:
           name: Vite build
           command: |
@@ -70,6 +77,7 @@ jobs:
       - checkout
       - *docker_build
       - *unit_tests
+      - *e2e_tests
       - run:
           name: Vite build
           command: |
