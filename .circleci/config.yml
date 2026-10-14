@@ -15,7 +15,7 @@ dev: &dev
   run:
     name: Dev server
     command: |
-      docker compose up dev
+      docker compose up --detach dev
 
 docker_build: &docker_build
   run:
