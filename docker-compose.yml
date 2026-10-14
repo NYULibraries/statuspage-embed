@@ -13,7 +13,7 @@ x-environment: &x-environment
 services:
   compile:
     build: .
-    image: statuspage-embed
+    image: statuspage-embed-build
     entrypoint: ["npm", "run", "build"]
     #<<: *default-volumes
 
@@ -22,7 +22,7 @@ services:
   dev:
     build:
       dockerfile: Dockerfile.development
-    image: statuspage-embed
+    image: statuspage-embed-dev-server
     ports:
       - "5173:5173"
     networks:
