@@ -1,25 +1,38 @@
-machine-defaults: &machine-defaults
-  machine:
-    image: ubuntu-2204:current
-  working_directory: ~/app
-
-docker_build: &docker_build
+aws_env: &aws_env
   run:
-    name: Docker build
+    name: Export AWS env vars
     command: |
-      docker compose build unit-tests compile
-
-test: &test
-  run:
-    name: Test
-    command: |
-      docker compose run unit-tests
+      echo 'export AWS_ACCESS_KEY_ID=${WEB_CDN_AWS_ACCESS_KEY_ID}' >> $BASH_ENV
+      echo 'export AWS_SECRET_ACCESS_KEY=${WEB_CDN_AWS_SECRET_ACCESS_KEY}' >> $BASH_ENV
 
 copy_build: &copy_build
   run:
     name: Copy vite build
     command: |
       docker cp $(docker ps -a -q --filter name=compile):/app/dist ./
+
+dev: &dev
+  run:
+    name: Dev server
+    command: |
+      docker compose up --detach dev
+
+docker_build: &docker_build
+  run:
+    name: Docker build
+    command: |
+      docker compose build dev e2e-tests unit-tests
+
+e2e_tests: &e2e_tests
+  run:
+    name: E2E tests
+    command: |
+      docker compose run e2e-tests
+
+machine-defaults: &machine-defaults
+  machine:
+    image: ubuntu-2204:current
+  working_directory: ~/app
 
 test_build: &test_build
   run:
@@ -28,12 +41,11 @@ test_build: &test_build
       test -e dist/index.min.css
       test -e dist/index.min.js
 
-aws_env: &aws_env
+unit_tests: &unit_tests
   run:
-    name: Export AWS env vars
+    name: Unit tests
     command: |
-      echo 'export AWS_ACCESS_KEY_ID=${WEB_CDN_AWS_ACCESS_KEY_ID}' >> $BASH_ENV
-      echo 'export AWS_SECRET_ACCESS_KEY=${WEB_CDN_AWS_SECRET_ACCESS_KEY}' >> $BASH_ENV
+      docker compose run unit-tests
 
 # Note that `aws s3 sync ... --exact-timestamps` only works for downloads from S3,
 # not uploads: https://github.com/aws/aws-cli/issues/4460.  The only safe way
@@ -54,7 +66,9 @@ jobs:
     steps:
       - checkout
       - *docker_build
-      - *test
+      - *dev
+      - *unit_tests
+      - *e2e_tests
       - run:
           name: Vite build
           command: |
@@ -69,7 +83,9 @@ jobs:
     steps:
       - checkout
       - *docker_build
-      - *test
+      - *dev
+      - *unit_tests
+      - *e2e_tests
       - run:
           name: Vite build
           command: |
