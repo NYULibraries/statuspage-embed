@@ -21,7 +21,7 @@ docker_build: &docker_build
   run:
     name: Docker build
     command: |
-      docker compose build
+      docker compose build dev e2e-tests unit-tests
 
 e2e_tests: &e2e_tests
   run:
